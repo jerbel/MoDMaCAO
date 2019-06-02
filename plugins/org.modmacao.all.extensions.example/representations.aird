@@ -985,7 +985,7 @@
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='NetworkInterfaceContainer']/@subContainerMappings[name='IpNetworkInterfaceMixin']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='NetworkInterfaceContainer']/@subContainerMappings[name='IpNetworkInterfaceMixin']"/>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_rrxUoC-oEemI4t-0Ickcnw" name="occiNetworkinterfaceAddress = 192.168.35.47">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_rrxUoC-oEemI4t-0Ickcnw" name="occiNetworkinterfaceAddress = 192.168.35.23">
           <target xmi:type="infrastructure:Ipnetworkinterface" href="test-ansible.all#//@resources.0/@links.0/@parts.0"/>
           <semanticElements xmi:type="infrastructure:Ipnetworkinterface" href="test-ansible.all#//@resources.0/@links.0/@parts.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_rr0_AS-oEemI4t-0Ickcnw"/>
