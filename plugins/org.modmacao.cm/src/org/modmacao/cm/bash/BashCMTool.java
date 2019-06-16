@@ -1,24 +1,31 @@
 package org.modmacao.cm.bash;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
 import org.modmacao.cm.ConfigurationManagementTool;
+import org.modmacao.cm.ansible.AnsibleCMTool;
+import org.modmacao.cm.ansible.AnsibleHelper;
 import org.modmacao.occi.platform.Application;
 import org.modmacao.occi.platform.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BashCMTool implements ConfigurationManagementTool {
+	static Logger LOGGER = LoggerFactory.getLogger(BashCMTool.class);
 
 	@Override
 	public int deploy(Application app) {
-		List<String> roles = getScripts(app);
-		if (roles.isEmpty())
+		List<String> softwareComponents = getSoftwareComponents(app);
+		if (softwareComponents.isEmpty())
 			return 0;
 		
 		int status = -1;
 		
 		try {
-			status = executeScripts(app, roles);
+			status = executeSoftwareComponents(app, softwareComponents);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -80,11 +87,23 @@ public class BashCMTool implements ConfigurationManagementTool {
 		return 0;
 	}
 
-	private List<String> getScripts(Resource resource) {
-		return null;
+	private List<String> getSoftwareComponents(Resource resource) {
+		List<String> softwareComponents = new ArrayList<String>();
+		for (MixinBase mixin : resource.getParts()) {
+			LOGGER.debug("Mixin has schema: " + mixin.getMixin().getScheme());
+			if (mixin.getMixin().getScheme().matches(".*(schemas\\.modmacao\\.org).*") || mixin instanceof modmacao.Component){
+				LOGGER.info("Found mixin " + mixin.getMixin().getName());
+				softwareComponents.add(mixin.getMixin().getName().toLowerCase());
+			}
+		}
+		return softwareComponents;
 	}
 	
-	private int executeScripts(Resource resource, List<String> scripts) {
+	private int executeSoftwareComponents(Resource resource, List<String> softwareComponents) {
+		BashHelper helper = new BashHelper(resource);
+		
+		BashReturnState state = helper.executeSoftwareComponents();
+		
 		return 0;
 	}
 }
