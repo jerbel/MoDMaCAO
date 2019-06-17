@@ -1,11 +1,14 @@
 package org.modmacao.cm.bash;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Link;
@@ -16,7 +19,6 @@ import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
 import org.eclipse.emf.common.util.EList;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
-import org.modmacao.cm.ansible.AnsibleCMTool;
 import org.modmacao.placement.Placementlink;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -29,8 +31,9 @@ public class BashHelper {
 	String user;
 	String options;
 	String keypath;
+	String task;
 	
-	public BashHelper(Resource resource) {
+	public BashHelper(Resource resource, String task) {
 		loadProperties();
 		
 		this.resource = resource;
@@ -38,12 +41,16 @@ public class BashHelper {
 		this.user = getProperties().getProperty("ansible_user");
 		options = null;
 		keypath = getProperties().getProperty("private_key_path");
+		this.task = task;
 		
 		if (ipaddress.equals("127.0.0.1")) {
 			options = "--connection=local";
 		}
 	}
 	
+	/*
+	 * copied
+	 */
 	public Properties getProperties() {
 		if (props == null)
 			loadProperties();
@@ -51,6 +58,9 @@ public class BashHelper {
 		return props;
 	}
 	
+	/*
+	 * copied
+	 */
 	private void loadProperties() {
 		props = new Properties();
 		InputStream input = null;
@@ -83,6 +93,9 @@ public class BashHelper {
         }
 	}
 	
+	/*
+	 * copied
+	 */
 	public String getTitle(Resource resource) {
 		if (resource.getTitle() != null)
 			return resource.getTitle();
@@ -95,6 +108,9 @@ public class BashHelper {
 		return null;
 	}
 	
+	/*
+	 * copied
+	 */
 	public String getIPAddress(Resource resource) {
 		EList<Link> links = resource.getLinks();
 		Networkinterface networklink = null;
@@ -168,7 +184,30 @@ public class BashHelper {
 		return ipaddress;
 	}
 	
-	public BashReturnState executeSoftwareComponents() {
-		return null;
+	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException{
+		String command = createCommand();
+		Process process = null;
+		String message = null;
+		
+		if(options == null)
+			process = new ProcessBuilder(command).start();
+		else {
+			process = new ProcessBuilder(command, options).start();
+		}
+		
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
+					  .lines().collect(Collectors.joining(System.lineSeparator())));
+		
+		process.waitFor();
+				
+		message = buffer.toString();
+		
+		return new BashReturnState(process.exitValue(), message);
+	}
+	
+	private String createCommand() {
+		return "ssh -i " + keypath + " " + user + "@" + ipaddress + " < " + this.getProperties().getProperty("bash_soft_comp_path") + "/" + task;
+	
 	}
 }

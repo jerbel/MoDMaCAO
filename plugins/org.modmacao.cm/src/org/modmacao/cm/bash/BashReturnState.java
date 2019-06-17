@@ -1,5 +1,8 @@
 package org.modmacao.cm.bash;
 
+/*
+ * copied
+ */
 public class BashReturnState {
 	private int exitValue;
 	private String stateMessage;
