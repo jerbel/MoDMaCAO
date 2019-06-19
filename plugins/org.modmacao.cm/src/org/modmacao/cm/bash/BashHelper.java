@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -32,16 +33,18 @@ public class BashHelper {
 	String options;
 	String keypath;
 	String task;
+	List<String> softwareComponents;
 	
 	public BashHelper(Resource resource, String task) {
 		loadProperties();
 		
 		this.resource = resource;
 		ipaddress = getIPAddress(this.resource);
-		this.user = getProperties().getProperty("ansible_user");
+		this.user = getProperties().getProperty("user");
 		options = null;
 		keypath = getProperties().getProperty("private_key_path");
 		this.task = task;
+		softwareComponents = getSoftwareComponents(resource);
 		
 		if (ipaddress.equals("127.0.0.1")) {
 			options = "--connection=local";
@@ -184,15 +187,30 @@ public class BashHelper {
 		return ipaddress;
 	}
 	
+	private List<String> getSoftwareComponents(Resource resource) {
+		List<String> softwareComponents = new ArrayList<String>();
+		for (MixinBase mixin : resource.getParts()) {
+			BashCMTool.LOGGER.debug("Mixin has schema: " + mixin.getMixin().getScheme());
+			if (mixin.getMixin().getScheme().matches(".*(schemas\\.modmacao\\.org).*") || mixin instanceof modmacao.Component){
+				BashCMTool.LOGGER.info("Found mixin " + mixin.getMixin().getName());
+				softwareComponents.add(mixin.getMixin().getName().toLowerCase());
+			}
+		}
+		return softwareComponents;
+	}
+	
 	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException{
-		String command = createCommand();
+//		String command = createCommand();
 		Process process = null;
 		String message = null;
 		
+		if(softwareComponents.isEmpty())
+			return new BashReturnState(0, message);;
+		
 		if(options == null)
-			process = new ProcessBuilder(command).start();
+			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task).start();
 		else {
-			process = new ProcessBuilder(command, options).start();
+			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task, options).start();
 		}
 		
 		StringBuffer buffer = new StringBuffer();
@@ -203,11 +221,13 @@ public class BashHelper {
 				
 		message = buffer.toString();
 		
+		BashCMTool.LOGGER.info("Executing software component " + softwareComponents + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
+		
 		return new BashReturnState(process.exitValue(), message);
 	}
 	
-	private String createCommand() {
-		return "ssh -i " + keypath + " " + user + "@" + ipaddress + " < " + this.getProperties().getProperty("bash_soft_comp_path") + "/" + task;
-	
-	}
+//	private String createCommand() {
+//		return "ssh -i " + keypath + " " + user + "@" + ipaddress + " < " + this.getProperties().getProperty("bash_soft_comp_path") + "/" + task;
+//	
+//	}
 }

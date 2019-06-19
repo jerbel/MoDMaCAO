@@ -23,14 +23,14 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int deploy(Application app) {
-		List<String> softwareComponents = getSoftwareComponents(app);
-		if (softwareComponents.isEmpty())
-			return 0;
+//		List<String> softwareComponents = getSoftwareComponents(app);
+//		if (softwareComponents.isEmpty())
+//			return 0;
 		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(app, softwareComponents,DEPLOY_SCRIPT);
+			status = executeSoftwareComponents(app,DEPLOY_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -40,14 +40,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int configure(Application app) {
-		List<String> softwareComponents = getSoftwareComponents(app);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(app, softwareComponents,CONFIGURE_SCRIPT);
+			status = executeSoftwareComponents(app,CONFIGURE_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -57,14 +53,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int start(Application app) {
-		List<String> softwareComponents = getSoftwareComponents(app);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(app, softwareComponents,START_SCRIPT);
+			status = executeSoftwareComponents(app,START_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -74,14 +66,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int stop(Application app) {
-		List<String> softwareComponents = getSoftwareComponents(app);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(app, softwareComponents,STOP_SCRIPT);
+			status = executeSoftwareComponents(app,STOP_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -91,14 +79,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int undeploy(Application app) {
-		List<String> softwareComponents = getSoftwareComponents(app);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(app, softwareComponents,UNDEPLOY_SCRIPT);
+			status = executeSoftwareComponents(app,UNDEPLOY_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -108,14 +92,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int deploy(Component comp) {
-		List<String> softwareComponents = getSoftwareComponents(comp);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(comp, softwareComponents,DEPLOY_SCRIPT);
+			status = executeSoftwareComponents(comp,DEPLOY_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -125,14 +105,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int configure(Component comp) {
-		List<String> softwareComponents = getSoftwareComponents(comp);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(comp, softwareComponents,CONFIGURE_SCRIPT);
+			status = executeSoftwareComponents(comp,CONFIGURE_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -142,14 +118,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int start(Component comp) {
-		List<String> softwareComponents = getSoftwareComponents(comp);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(comp, softwareComponents,START_SCRIPT);
+			status = executeSoftwareComponents(comp,START_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -159,14 +131,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int stop(Component comp) {
-		List<String> softwareComponents = getSoftwareComponents(comp);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(comp, softwareComponents,STOP_SCRIPT);
+			status = executeSoftwareComponents(comp,STOP_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -176,14 +144,10 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int undeploy(Component comp) {
-		List<String> softwareComponents = getSoftwareComponents(comp);
-		if (softwareComponents.isEmpty())
-			return 0;
-		
 		int status = -1;
 		
 		try {
-			status = executeSoftwareComponents(comp, softwareComponents,UNDEPLOY_SCRIPT);
+			status = executeSoftwareComponents(comp,UNDEPLOY_SCRIPT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -194,19 +158,19 @@ public class BashCMTool implements ConfigurationManagementTool {
 	/*
 	 * copied
 	 */
-	private List<String> getSoftwareComponents(Resource resource) {
-		List<String> softwareComponents = new ArrayList<String>();
-		for (MixinBase mixin : resource.getParts()) {
-			LOGGER.debug("Mixin has schema: " + mixin.getMixin().getScheme());
-			if (mixin.getMixin().getScheme().matches(".*(schemas\\.modmacao\\.org).*") || mixin instanceof modmacao.Component){
-				LOGGER.info("Found mixin " + mixin.getMixin().getName());
-				softwareComponents.add(mixin.getMixin().getName().toLowerCase());
-			}
-		}
-		return softwareComponents;
-	}
+//	private List<String> getSoftwareComponents(Resource resource) {
+//		List<String> softwareComponents = new ArrayList<String>();
+//		for (MixinBase mixin : resource.getParts()) {
+//			LOGGER.debug("Mixin has schema: " + mixin.getMixin().getScheme());
+//			if (mixin.getMixin().getScheme().matches(".*(schemas\\.modmacao\\.org).*") || mixin instanceof modmacao.Component){
+//				LOGGER.info("Found mixin " + mixin.getMixin().getName());
+//				softwareComponents.add(mixin.getMixin().getName().toLowerCase());
+//			}
+//		}
+//		return softwareComponents;
+//	}
 	
-	private int executeSoftwareComponents(Resource resource, List<String> softwareComponents, String task) throws IOException, InterruptedException {
+	private int executeSoftwareComponents(Resource resource, String task) throws IOException, InterruptedException {
 		BashHelper helper = new BashHelper(resource, task);
 		
 		BashReturnState state = helper.executeSoftwareComponents();
@@ -220,7 +184,7 @@ public class BashCMTool implements ConfigurationManagementTool {
 				((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
 			}
 		}
-		
+		System.out.println("EXIT VALUE: " + state.getExitValue());
 		return state.getExitValue();
 	}
 }
