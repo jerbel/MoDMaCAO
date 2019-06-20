@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.eclipse.cmf.occi.core.Link;
 import org.modmacao.cm.ConfigurationManagementTool;
-import org.modmacao.cm.ansible.AnsibleCMTool;
+import org.modmacao.cm.bash.BashCMTool;
 import org.modmacao.occi.platform.Component;
 import org.modmacao.occi.platform.Componentlink;
 import org.modmacao.occi.platform.Status;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ApplicationConnector extends org.modmacao.occi.platform.impl.ApplicationImpl
 {
-	private ConfigurationManagementTool cmtool = new AnsibleCMTool();
+	private ConfigurationManagementTool cmtool = new BashCMTool();
 	
 	/**
 	 * Initialize the logger.
