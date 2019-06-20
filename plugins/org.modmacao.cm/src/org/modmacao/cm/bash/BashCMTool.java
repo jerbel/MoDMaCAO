@@ -184,7 +184,7 @@ public class BashCMTool implements ConfigurationManagementTool {
 				((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
 			}
 		}
-		System.out.println("EXIT VALUE: " + state.getExitValue());
+//		System.out.println("EXIT VALUE: " + state.getExitValue());
 		return state.getExitValue();
 	}
 }

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -230,4 +231,36 @@ public class BashHelper {
 //		return "ssh -i " + keypath + " " + user + "@" + ipaddress + " < " + this.getProperties().getProperty("bash_soft_comp_path") + "/" + task;
 //	
 //	}
+	
+	public static void main(String[] args) {
+		try {
+//			Process process = new ProcessBuilder("ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost","<","/home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts"+"/"+"example_component"+"/"+"DEPLOY.sh").start();
+//			Process process = new ProcessBuilder("ssh -i /home/lennart/.ssh/key lennart@localhost < /home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts/example_component/DEPLOY.sh").start();
+			Runtime runtime = Runtime.getRuntime();
+			
+//			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost","<","/home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts"+"/"+"example_component"+"/"+"DEPLOY.sh"};
+			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost"};
+			
+			Process process = runtime.exec(commands);
+			
+			process.waitFor();
+			
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
+						  .lines().collect(Collectors.joining(System.lineSeparator())));
+					
+			String message = buffer.toString();
+			
+			System.out.println(message);
+			System.out.println(process.exitValue());
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }
