@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -238,21 +237,37 @@ public class BashHelper {
 //			Process process = new ProcessBuilder("ssh -i /home/lennart/.ssh/key lennart@localhost < /home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts/example_component/DEPLOY.sh").start();
 			Runtime runtime = Runtime.getRuntime();
 			
-//			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost","<","/home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts"+"/"+"example_component"+"/"+"DEPLOY.sh"};
-			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost"};
+			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost","<","/home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts/example_component/DEPLOY.sh"};
+//			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost"};
 			
 			Process process = runtime.exec(commands);
 			
+//			StringBuffer buffer = new StringBuffer();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line = "";
+//			String message = "";
+			System.out.println("Input Stream:");
+			while ((line = bufferedReader.readLine()) != null)
+			     System.out.println(line);
+			
+//			buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
+//						  .lines().collect(Collectors.joining(System.lineSeparator())));
+			
+			
+					
+//			String message = buffer.toString();
+			
+//			System.out.println(message);
+			
 			process.waitFor();
 			
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
-						  .lines().collect(Collectors.joining(System.lineSeparator())));
-					
-			String message = buffer.toString();
+			System.out.println("EXIT VALUE: " + process.exitValue());
 			
-			System.out.println(message);
-			System.out.println(process.exitValue());
+			BufferedReader bufferedReader2 = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			line = "";
+			System.out.println("Error Stream:");
+			while ((line = bufferedReader2.readLine()) != null)
+			     System.out.println(line);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
