@@ -28,67 +28,66 @@ public class BashCMTool implements ConfigurationManagementTool {
 //		if (softwareComponents.isEmpty())
 //			return 0;
 		
-		int status = -1;
+//		int status = -1;
+//		
+//		try {
+//			status = executeSoftwareComponents(app,DEPLOY_SCRIPT);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}		
 		
-		try {
-			status = executeSoftwareComponents(app,DEPLOY_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return 0;
 	}
 
 	@Override
 	public int configure(Application app) {
-		int status = -1;
-		
-		try {
-			status = executeSoftwareComponents(app,CONFIGURE_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+//		int status = -1;
+//		
+//		try {
+//			status = executeSoftwareComponents(app,CONFIGURE_SCRIPT);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}	
+		return 0;
 	}
 
 	@Override
 	public int start(Application app) {
-		int status = -1;
+//		int status = -1;
+//		
+//		try {
+//			status = executeSoftwareComponents(app,START_SCRIPT);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}		
 		
-		try {
-			status = executeSoftwareComponents(app,START_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return 0;
 	}
 
 	@Override
 	public int stop(Application app) {
-		int status = -1;
+//		int status = -1;
+//		
+//		try {
+//			status = executeSoftwareComponents(app,STOP_SCRIPT);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}		
 		
-		try {
-			status = executeSoftwareComponents(app,STOP_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return 0;
 	}
 
 	@Override
 	public int undeploy(Application app) {
-		int status = -1;
+//		int status = -1;
+//		
+//		try {
+//			status = executeSoftwareComponents(app,UNDEPLOY_SCRIPT);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}		
 		
-		try {
-			status = executeSoftwareComponents(app,UNDEPLOY_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return 0;
 	}
 
 	@Override

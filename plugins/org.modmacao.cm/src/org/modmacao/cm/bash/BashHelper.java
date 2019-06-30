@@ -1,6 +1,7 @@
 package org.modmacao.cm.bash;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,6 +24,12 @@ import org.modmacao.ansibleconfiguration.Ansibleendpoint;
 import org.modmacao.placement.Placementlink;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 public class BashHelper {
 	Properties props;
@@ -200,82 +207,72 @@ public class BashHelper {
 	}
 	
 	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException{
-//		String command = createCommand();
-		Process process = null;
+//		Process process = null;
 		String message = null;
-		
-		if(softwareComponents.isEmpty())
-			return new BashReturnState(0, message);;
-		
-		if(options == null)
-			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task).start();
-		else {
-			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task, options).start();
-		}
-		
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
-					  .lines().collect(Collectors.joining(System.lineSeparator())));
-		
-		process.waitFor();
-				
-		message = buffer.toString();
 		
 		BashCMTool.LOGGER.info("Executing software component " + softwareComponents + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
 		
-		return new BashReturnState(process.exitValue(), message);
-	}
-	
-//	private String createCommand() {
-//		return "ssh -i " + keypath + " " + user + "@" + ipaddress + " < " + this.getProperties().getProperty("bash_soft_comp_path") + "/" + task;
-//	
-//	}
-	
-	public static void main(String[] args) {
 		try {
-//			Process process = new ProcessBuilder("ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost","<","/home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts"+"/"+"example_component"+"/"+"DEPLOY.sh").start();
-//			Process process = new ProcessBuilder("ssh -i /home/lennart/.ssh/key lennart@localhost < /home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts/example_component/DEPLOY.sh").start();
-			Runtime runtime = Runtime.getRuntime();
+			if(softwareComponents.isEmpty())
+				return new BashReturnState(0, message);;
+				
+			JSch jsch = new JSch();
+			JSch.setConfig("StrictHostKeyChecking", "no");
+			jsch.addIdentity(keypath);
 			
-			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost","<","/home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts/example_component/DEPLOY.sh"};
-//			String[] commands = {"ssh","-i","/home/lennart/.ssh/key","lennart"+"@"+"localhost"};
+			Session session = jsch.getSession(user, ipaddress);
+			session.connect();
 			
-			Process process = runtime.exec(commands);
+			Channel channel = session.openChannel("exec");
+			String command = getCommand(softwareComponents.get(0));
+			((ChannelExec)channel).setCommand(command);
+			channel.connect();
 			
-//			StringBuffer buffer = new StringBuffer();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line = "";
-//			String message = "";
-			System.out.println("Input Stream:");
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(channel.getInputStream()));
+			String line;
+//		System.out.println("Input Stream:");
 			while ((line = bufferedReader.readLine()) != null)
-			     System.out.println(line);
-			
-//			buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
-//						  .lines().collect(Collectors.joining(System.lineSeparator())));
-			
-			
-					
-//			String message = buffer.toString();
-			
-//			System.out.println(message);
-			
-			process.waitFor();
-			
-			System.out.println("EXIT VALUE: " + process.exitValue());
-			
-			BufferedReader bufferedReader2 = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-			line = "";
-			System.out.println("Error Stream:");
-			while ((line = bufferedReader2.readLine()) != null)
-			     System.out.println(line);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+				message += line + "\n";
+		} catch (JSchException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new BashReturnState(-1, message);
 		}
 		
+//		if(options == null)
+//			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task).start();
+//		else {
+//			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task, options).start();
+//		}
+//		
+//		StringBuffer buffer = new StringBuffer();
+//		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
+//					  .lines().collect(Collectors.joining(System.lineSeparator())));
+//		
+//		process.waitFor();
+//				
+//		message = buffer.toString();
+		
+		BashCMTool.LOGGER.info("Executing software component " + softwareComponents + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
+		
+		return new BashReturnState(0, message);
+	}
+	
+	private static String getCommand(String path) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		try {
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		    	if(!line.equals("#!/bin/bash") & !line.equals("")) {
+			        sb.append(line);
+			        sb.append(";");
+		    	}
+		        line = br.readLine();
+		    }
+		    return sb.toString();
+		} finally {
+		    br.close();
+		}
 	}
 }
