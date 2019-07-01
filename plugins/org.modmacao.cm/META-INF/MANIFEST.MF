@@ -4,7 +4,8 @@ Bundle-Name: org.modmacao.ansible.connector
 Bundle-SymbolicName: org.modmacao.cm;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
- lib/commons-io-2.5.jar
+ lib/commons-io-2.5.jar,
+ lib/jsch-0.1.55.jar
 Bundle-Vendor: OCCIware
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
