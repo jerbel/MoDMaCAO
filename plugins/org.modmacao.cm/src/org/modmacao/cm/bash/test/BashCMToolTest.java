@@ -3,59 +3,61 @@ package org.modmacao.cm.bash.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.nio.file.Paths;
 
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Mixin;
 import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.OCCIFactory;
+import org.eclipse.cmf.occi.core.OCCIPackage;
+import org.eclipse.cmf.occi.core.util.OcciRegistry;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.InfrastructureFactory;
+import org.eclipse.cmf.occi.infrastructure.InfrastructurePackage;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
-import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.modmacao.ansibleconfiguration.AnsibleconfigurationFactory;
+import org.modmacao.ansibleconfiguration.AnsibleconfigurationPackage;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
-import org.modmacao.cm.ansible.AnsibleCMTool;
 import org.modmacao.cm.bash.BashCMTool;
 import org.modmacao.occi.platform.Application;
 import org.modmacao.occi.platform.Component;
+import org.modmacao.occi.platform.PlatformPackage;
 import org.modmacao.occi.platform.impl.PlatformFactoryImpl;
 import org.modmacao.placement.PlacementFactory;
 import org.modmacao.placement.Placementlink;
 
 import com.jcraft.jsch.*;
 
+import modmacao.ModmacaoPackage;
 import modmacao.impl.ModmacaoFactoryImpl;
 
 public class BashCMToolTest {
 	
 	BashCMTool cmtool = new BashCMTool();
-	Component cut;
+	Component component;
 	Application aut;
 	
 	
 	@Before
 	public void setUP() {
+		setupExtensions();
 		// Create component
-		cut = new PlatformFactoryImpl().createComponent();
+		component = new PlatformFactoryImpl().createComponent();
 		
-		cut.setTitle("shard1");
 		MixinBase modmacaoComponentMixinBase = new ModmacaoFactoryImpl().createComponent();
 		Mixin mixin = OCCIFactory.eINSTANCE.createMixin();
 		mixin.setScheme("http://schemas.modmacao.org/modmacao#");
 		mixin.setName("example_component");
 		modmacaoComponentMixinBase.setMixin(mixin);
 				
-		cut.getParts().add(modmacaoComponentMixinBase);
+		component.getParts().add(modmacaoComponentMixinBase);
 
 		
 		// create compute 
@@ -81,12 +83,29 @@ public class BashCMToolTest {
 		// set link between vm and component
 		Placementlink link = PlacementFactory.eINSTANCE.createPlacementlink();
 		link.setTarget(vm1);
-		cut.getLinks().add(link);	
+		component.getLinks().add(link);	
+		System.out.println(component);
+	}
+	
+	private void setupExtensions() {
+		InfrastructurePackage.eINSTANCE.eClass();
+		OCCIPackage.eINSTANCE.eClass();
+		PlatformPackage.eINSTANCE.eClass();
+		ModmacaoPackage.eINSTANCE.eClass();
+		AnsibleconfigurationPackage.eINSTANCE.eClass();
+		
+		OcciRegistry.getInstance().registerExtension("http://schemas.modmacao.org/modmacao#",Paths.get("testextensions/modmacao.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.modmacao.org/occi/platform#",Paths.get("testextensions/platform.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.ogf.org/occi/infrastructure#",Paths.get("testextensions/Infrastructure.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.ogf.org/occi/core#",Paths.get("testextensions/Core.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.modmacao.org/occi/ansible#",Paths.get("testextensions/ansibleconfiguration.occie").toString());
+		
+		System.out.println(OcciRegistry.getInstance().getRegisteredExtensions());
 	}
 	
 	@Test
 	public void testComponentDeploy() {
-		assertEquals(0, cmtool.deploy(cut));
+		assertEquals(0, cmtool.deploy(component));
 	}
 	
 //	@Test

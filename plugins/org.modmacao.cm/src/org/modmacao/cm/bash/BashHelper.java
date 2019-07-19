@@ -40,6 +40,7 @@ public class BashHelper {
 	String options;
 	String keypath;
 	String task;
+	String softwareComponentPath;
 	List<String> softwareComponents;
 	
 	public BashHelper(Resource resource, String task) {
@@ -50,6 +51,7 @@ public class BashHelper {
 		this.user = getProperties().getProperty("user");
 		options = null;
 		keypath = getProperties().getProperty("private_key_path");
+		softwareComponentPath = getProperties().getProperty("bash_soft_comp_path");
 		this.task = task;
 		softwareComponents = getSoftwareComponents(resource);
 		
@@ -77,6 +79,8 @@ public class BashHelper {
 		
 		try {
     		String filename = "bash.properties";
+    		
+    		// try to load bundle
     		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
     		if (bundle != null) {
     			URL url = FrameworkUtil.getBundle(this.getClass()).getResource(filename);
@@ -211,6 +215,7 @@ public class BashHelper {
 		String message = null;
 		
 		BashCMTool.LOGGER.info("Executing software component " + softwareComponents + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
+		BashCMTool.LOGGER.debug("executeSoftwareComponents() debug message");
 		
 		try {
 			if(softwareComponents.isEmpty())
@@ -224,7 +229,7 @@ public class BashHelper {
 			session.connect();
 			
 			Channel channel = session.openChannel("exec");
-			String command = getCommand(softwareComponents.get(0));
+			String command = getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
 			((ChannelExec)channel).setCommand(command);
 			channel.connect();
 			
