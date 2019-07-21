@@ -6,21 +6,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.cmf.occi.core.AttributeState;
+import org.eclipse.cmf.occi.core.Entity;
 import org.eclipse.cmf.occi.core.Link;
 import org.eclipse.cmf.occi.core.MixinBase;
+import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
 import org.eclipse.emf.common.util.EList;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
+import org.modmacao.occi.platform.Component;
 import org.modmacao.placement.Placementlink;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -174,7 +179,7 @@ public class BashHelper {
 				BashCMTool.LOGGER.error("No network interface found for " + target);	
 			} else {
 				// Retrieving object to ensure ip address is correct
-				networklink.occiRetrieve();
+//				networklink.occiRetrieve();
 				List<AttributeState> attributes  = new LinkedList<AttributeState>();
 				attributes.addAll(networklink.getAttributes());
 				for (MixinBase base: networklink.getParts()) {
@@ -210,16 +215,15 @@ public class BashHelper {
 		return softwareComponents;
 	}
 	
-	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException{
-//		Process process = null;
-		String message = null;
+	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException {
+		String message = "";
 		
 		BashCMTool.LOGGER.info("Executing software component " + softwareComponents + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
 		BashCMTool.LOGGER.debug("executeSoftwareComponents() debug message");
 		
 		try {
 			if(softwareComponents.isEmpty())
-				return new BashReturnState(0, message);;
+				return new BashReturnState(0, message);
 				
 			JSch jsch = new JSch();
 			JSch.setConfig("StrictHostKeyChecking", "no");
@@ -229,13 +233,14 @@ public class BashHelper {
 			session.connect();
 			
 			Channel channel = session.openChannel("exec");
-			String command = getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
+			String command = getVarString(resource);
+			command += getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
+			BashCMTool.LOGGER.info("Command: " + command);
 			((ChannelExec)channel).setCommand(command);
 			channel.connect();
 			
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(channel.getInputStream()));
 			String line;
-//		System.out.println("Input Stream:");
 			while ((line = bufferedReader.readLine()) != null)
 				message += line + "\n";
 		} catch (JSchException e) {
@@ -243,25 +248,15 @@ public class BashHelper {
 			return new BashReturnState(-1, message);
 		}
 		
-//		if(options == null)
-//			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task).start();
-//		else {
-//			process = new ProcessBuilder("ssh","-i",keypath,user+"@"+ipaddress,"<",this.getProperties().getProperty("bash_soft_comp_path")+"/"+softwareComponents.get(0)+"/"+task, options).start();
-//		}
-//		
-//		StringBuffer buffer = new StringBuffer();
-//		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
-//					  .lines().collect(Collectors.joining(System.lineSeparator())));
-//		
-//		process.waitFor();
-//				
-//		message = buffer.toString();
-		
-		BashCMTool.LOGGER.info("Executing software component " + softwareComponents + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
-		
 		return new BashReturnState(0, message);
 	}
 	
+	/*
+	 * Loads the content of a file.
+	 * Removes the #!/bin/bash line and adds semicolons at the end of the line.
+	 * @param path Path of the file which content has to be loaded.
+	 * @return Adjusted bash code that can be runned on a shell.
+	 */
 	private static String getCommand(String path) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(path));
 		try {
@@ -279,5 +274,60 @@ public class BashHelper {
 		} finally {
 		    br.close();
 		}
+	}
+	
+	private String getVarString(Entity entity) {	
+		String lb = System.getProperty("line.separator");
+		StringBuilder sb = new StringBuilder();
+		List<AttributeState> attributes  = new LinkedList<AttributeState>();
+		
+		// Collect all attribute states
+		attributes.addAll(entity.getAttributes());
+		for (MixinBase base: entity.getParts()) {
+			attributes.addAll(base.getAttributes());
+		}
+		if (entity instanceof Component) {
+			AttributeState modifiedAttribute = OCCIFactory.eINSTANCE.createAttributeState();
+			modifiedAttribute.setName("ip_address");
+			modifiedAttribute.setValue(getIPAddress((Resource) entity));
+			attributes.add(modifiedAttribute);
+		}
+		
+		// If the entity is a Resource, collect all attribute states of the connected Resources
+		if (entity instanceof Resource) {
+			Resource resource = (Resource) entity;
+			for (Link link: resource.getLinks()) {
+				Resource target = link.getTarget();
+				List<AttributeState> collectedAttributes  = new LinkedList<AttributeState>();
+				collectedAttributes.addAll(target.getAttributes());
+				for (MixinBase base: target.getParts()) {
+					collectedAttributes.addAll(base.getAttributes());
+				}
+				for (AttributeState attribute: collectedAttributes) {
+					AttributeState modifiedAttribute = OCCIFactory.eINSTANCE.createAttributeState();
+					modifiedAttribute.setName("id" + getTitle(target).replaceAll("[- ]","_") +  '_' + attribute.getName());
+					modifiedAttribute.setValue(attribute.getValue());
+					attributes.add(modifiedAttribute);
+				}
+				if (target instanceof Component) {
+					AttributeState modifiedAttribute = OCCIFactory.eINSTANCE.createAttributeState();
+					modifiedAttribute.setName("id" + getTitle(target).replaceAll("[- ]","_") + '_' + "ip_address");
+					modifiedAttribute.setValue(getIPAddress(target));
+					attributes.add(modifiedAttribute);
+				}
+			}
+		}
+		
+		for (AttributeState attribute: attributes) {
+			//  Ansible does not allow variable names with points, so we replace them with underscores
+			String name = attribute.getName().replace('.', '_');
+			sb.append(name);
+			sb.append("=");
+//			sb.append("\"" + attribute.getValue() + "\"");
+			sb.append(attribute.getValue());
+			sb.append(lb);
+		}
+		
+		return sb.toString();
 	}
 }
