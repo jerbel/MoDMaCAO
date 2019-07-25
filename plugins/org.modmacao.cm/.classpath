@@ -13,5 +13,7 @@
 	<classpathentry kind="lib" path="/org.modmacao.core/bin"/>
 	<classpathentry kind="lib" path="/org.modmacao.mongodb/bin"/>
 	<classpathentry kind="lib" path="lib/jsch-0.1.55.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.26.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
