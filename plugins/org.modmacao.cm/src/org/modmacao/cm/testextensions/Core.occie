@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<occi:Extension xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:occi="http://schemas.ogf.org/occi/core/ecore" name="core" scheme="http://schemas.ogf.org/occi/core#" description="OCCI Core Model" specification="https://www.ogf.org/documents/GFD.221.pdf">
+  <kinds name="Entity" scheme="http://schemas.ogf.org/occi/core#" title="Entity type">
+    <attributes name="occi.core.id" mutable="false" required="true" description="The unique identity of the instance."/>
+    <attributes name="occi.core.title" description="The display name of the instance."/>
+  </kinds>
+  <kinds name="Resource" scheme="http://schemas.ogf.org/occi/core#" title="Resource type" parent="//@kinds[term='entity']">
+    <attributes name="occi.core.summary" description="A summarizing description of the Resource instance."/>
+  </kinds>
+  <kinds name="Link" scheme="http://schemas.ogf.org/occi/core#" title="Link type" parent="//@kinds[term='entity']" source="//@kinds[term='resource']" target="//@kinds[term='resource']"/>
+</occi:Extension>
