@@ -83,8 +83,7 @@ public class BashCMToolTest {
 		// set link between vm and component
 		Placementlink link = PlacementFactory.eINSTANCE.createPlacementlink();
 		link.setTarget(vm1);
-		component.getLinks().add(link);	
-		System.out.println(component);
+		component.getLinks().add(link);
 	}
 	
 	private void setupExtensions() {
@@ -200,7 +199,7 @@ public class BashCMToolTest {
 			
 			Channel channel = session.openChannel("exec");
 			String command = getCommand("/home/lennart/git/MoDMaCAO/plugins/org.modmacao.all.extensions.example/bash_scripts/example_component/DEPLOY.sh");
-			System.out.println("Command: " + command);
+			System.out.println("Command:" + command);
 	        ((ChannelExec)channel).setCommand(command);
 	        channel.connect();
 	        
