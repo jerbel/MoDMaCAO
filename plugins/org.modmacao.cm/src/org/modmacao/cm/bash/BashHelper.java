@@ -229,7 +229,7 @@ public class BashHelper {
 			JSch.setConfig("StrictHostKeyChecking", "no");
 			jsch.addIdentity(keypath);
 			
-			Session session = jsch.getSession(user, ipaddress);
+			Session session = jsch.getSession(user, ipaddress,2222);
 			session.connect();
 			
 			Channel channel = session.openChannel("exec");
