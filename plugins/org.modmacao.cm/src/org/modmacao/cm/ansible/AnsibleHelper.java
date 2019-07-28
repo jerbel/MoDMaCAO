@@ -376,7 +376,7 @@ public final class AnsibleHelper {
 					AnsibleCMTool.LOGGER.error("No network interface found for " + target);	
 				} else {
 					// Retrieving object to ensure ip address is correct
-					networklink.occiRetrieve();
+//					networklink.occiRetrieve();
 					List<AttributeState> attributes  = new LinkedList<AttributeState>();
 					attributes.addAll(networklink.getAttributes());
 					for (MixinBase base: networklink.getParts()) {

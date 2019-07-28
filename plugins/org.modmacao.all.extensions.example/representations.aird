@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:infrastructure="http://schemas.ogf.org/occi/infrastructure/ecore" xmlns:lamp="http://schemas.modmacao.org/lamp/ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:occi="http://schemas.ogf.org/occi/core/ecore" xmlns:placement="http://schemas.modmacao.org/placement/ecore" xmlns:platform="http://schemas.modmacao.org/occi/platform/ecore" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:ecore="http://schemas.modmacao.org/occi/platform/ecore" xmlns:ecore_1="http://schemas.modmacao.org/lamp/ecore" xmlns:ecore_2="http://schemas.modmacao.org/placement/ecore" xmlns:infrastructure="http://schemas.ogf.org/occi/infrastructure/ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:occi="http://schemas.ogf.org/occi/core/ecore" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
   <viewpoint:DAnalysis xmi:id="_ITCFcC-oEemwtO_o8kbeYw" selectedViews="_a5OkgC-oEemI4t-0Ickcnw" version="13.0.0.201804031646">
     <semanticResources>test-ansible.all</semanticResources>
     <semanticResources>http://schemas.ogf.org/occi/core</semanticResources>
@@ -727,117 +727,115 @@
       </ownedDiagramElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" xmi:id="_euT_sC-oEemI4t-0Ickcnw" name="component3: Component" outgoingEdges="_gbfTMC-oEemI4t-0Ickcnw" incomingEdges="_JRWSYC-pEemI4t-0Ickcnw" childrenPresentation="VerticalStack">
-      <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-      <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
-      <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_dAfZsC-tEemzH9Va2y6Ojg" labelSize="12" borderSize="1" borderSizeComputationExpression="1" foregroundColor="255,255,255">
-        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@conditionnalStyles.0/@style"/>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_J7tZwJvgEemA6NPKcSPMDQ" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@conditionnalStyles.1/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']"/>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_evkj8C-oEemI4t-0Ickcnw" name="Component">
-        <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-        <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_evpccC-oEemI4t-0Ickcnw" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']"/>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_evuU8C-oEemI4t-0Ickcnw" name="id = urn:uuid:6d996b64-2573-4e6d-96a5-97cf4713ebc6">
-          <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-          <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_evz0gC-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_evzNcC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentId']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentId']"/>
+          <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+          <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_evz0gS-oEemI4t-0Ickcnw" name="title = component3">
-          <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-          <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_ev5UES-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_ev5UEC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentTitle']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentTitle']"/>
+          <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+          <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_ev57IC-oEemI4t-0Ickcnw" name="location = null">
-          <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-          <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_ev-zoS-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_ev-zoC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentLocation']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentLocation']"/>
+          <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+          <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_ev_asC-oEemI4t-0Ickcnw" name="summary = null">
-          <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-          <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_ewETMC-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_ewDsIC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentSummary']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentSummary']"/>
+          <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+          <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_ewETMS-oEemI4t-0Ickcnw" name="occiComponentState = undeployed">
-          <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-          <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_ewETMS-oEemI4t-0Ickcnw" name="occiComponentState = deployed">
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_ewJywC-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_ewJLsC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentOcciComponentState']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentOcciComponentState']"/>
+          <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+          <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_ewJywS-oEemI4t-0Ickcnw" name="occiComponentStateMessage = null">
-          <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
-          <semanticElements xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_ewJywS-oEemI4t-0Ickcnw" name="occiComponentStateMessage = nulldeploy script is running&#xA;Desktop&#xA;Documents&#xA;Downloads&#xA;Dropbox&#xA;example_component_deploy_file&#xA;examples.desktop&#xA;git&#xA;Music&#xA;OCCI&#xA;Pictures&#xA;Public&#xA;snap&#xA;softwareproject_workspace&#xA;Templates&#xA;Videos&#xA;">
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_ewPSUC-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_ewOrQC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentOcciComponentStateMessage']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='SubComponentContainer']/@subNodeMappings[name='ComponentOcciComponentStateMessage']"/>
+          <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+          <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
         </ownedElements>
+        <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+        <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_VzljkC-sEemwruGO_ZsRXw" name="ApacheServer">
-        <target xmi:type="lamp:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
-        <semanticElements xmi:type="lamp:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
         <graphicalFilters xmi:type="diagram:AbsoluteBoundsFilter" xmi:id="_aGBMoC-tEemzH9Va2y6Ojg" height="-1" width="-1"/>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_VzpN8C-sEemwruGO_ZsRXw" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='ApacheServerMixin']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='ApacheServerMixin']"/>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_V3EVYC-sEemwruGO_ZsRXw" name="modmacaoComponentVersion = null">
-          <target xmi:type="lamp:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
-          <semanticElements xmi:type="lamp:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_V3Im0C-sEemwruGO_ZsRXw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_V3H_wC-sEemwruGO_ZsRXw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='ApacheServerMixin']/@subNodeMappings[name='ApacheservermodmacaoComponentVersion']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='ApacheServerMixin']/@subNodeMappings[name='ApacheservermodmacaoComponentVersion']"/>
+          <target xmi:type="ecore_1:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
+          <semanticElements xmi:type="ecore_1:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
         </ownedElements>
+        <target xmi:type="ecore_1:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
+        <semanticElements xmi:type="ecore_1:Apacheserver" href="test-ansible.all#//@resources.2/@parts.0"/>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_ZcQd8C-tEemzH9Va2y6Ojg" name="MySQL">
-        <target xmi:type="lamp:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
-        <semanticElements xmi:type="lamp:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
         <graphicalFilters xmi:type="diagram:AbsoluteBoundsFilter" xmi:id="_Z7R8QC-tEemzH9Va2y6Ojg" height="-1" width="-1"/>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_ZcVWcC-tEemzH9Va2y6Ojg" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='MySQLMixin']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='MySQLMixin']"/>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_ZgOX8C-tEemzH9Va2y6Ojg" name="modmacaoComponentVersion = null">
-          <target xmi:type="lamp:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
-          <semanticElements xmi:type="lamp:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_ZgTQcC-tEemzH9Va2y6Ojg"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_ZgSpYC-tEemzH9Va2y6Ojg" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='MySQLMixin']/@subNodeMappings[name='MysqlmodmacaoComponentVersion']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentContainer']/@subContainerMappings[name='MySQLMixin']/@subNodeMappings[name='MysqlmodmacaoComponentVersion']"/>
+          <target xmi:type="ecore_1:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
+          <semanticElements xmi:type="ecore_1:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
         </ownedElements>
+        <target xmi:type="ecore_1:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
+        <semanticElements xmi:type="ecore_1:Mysql" href="test-ansible.all#//@resources.2/@parts.1"/>
       </ownedDiagramElements>
+      <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
+      <semanticElements xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" xmi:id="_gbBZIC-oEemI4t-0Ickcnw" name=": PlacementLink" outgoingEdges="_gblZ0C-oEemI4t-0Ickcnw" incomingEdges="_gbfTMC-oEemI4t-0Ickcnw" childrenPresentation="VerticalStack">
-      <target xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
-      <semanticElements xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -846,56 +844,58 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']"/>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_gbIt4C-oEemI4t-0Ickcnw" name="PlacementLink">
-        <target xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
-        <semanticElements xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_gbMYQC-oEemI4t-0Ickcnw" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']"/>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_gbQCoC-oEemI4t-0Ickcnw" name="id = urn:uuid:4482ff1b-7610-44af-a223-4b6b3283e4d0">
-          <target xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
-          <semanticElements xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_gbUUEC-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_gbTtAC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']/@subNodeMappings[name='PlacementLinkId']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']/@subNodeMappings[name='PlacementLinkId']"/>
+          <target xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
+          <semanticElements xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_gbUUES-oEemI4t-0Ickcnw" name="title = null">
-          <target xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
-          <semanticElements xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_gbX-cS-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_gbX-cC-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']/@subNodeMappings[name='PlacementLinkTitle']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']/@subNodeMappings[name='PlacementLinkTitle']"/>
+          <target xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
+          <semanticElements xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_gbYlgC-oEemI4t-0Ickcnw" name="location = null">
-          <target xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
-          <semanticElements xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_gbcP4C-oEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_gbbo0C-oEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']/@subNodeMappings[name='PlacementLinkLocation']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='PlacementLinkContainer']/@subContainerMappings[name='SubPlacementLinkContainer']/@subNodeMappings[name='PlacementLinkLocation']"/>
+          <target xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
+          <semanticElements xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
         </ownedElements>
+        <target xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
+        <semanticElements xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
       </ownedDiagramElements>
+      <target xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
+      <semanticElements xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_gbfTMC-oEemI4t-0Ickcnw" sourceNode="_euT_sC-oEemI4t-0Ickcnw" targetNode="_gbBZIC-oEemI4t-0Ickcnw">
-      <target xmi:type="platform:Component" href="test-ansible.all#//@resources.2"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_gbhvcC-oEemI4t-0Ickcnw" size="2">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='ComponentLinksEdge']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_gbhvcS-oEemI4t-0Ickcnw"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='ComponentLinksEdge']"/>
+      <target xmi:type="ecore:Component" href="test-ansible.all#//@resources.2"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_gblZ0C-oEemI4t-0Ickcnw" sourceNode="_gbBZIC-oEemI4t-0Ickcnw" targetNode="_cpIb4C-oEemI4t-0Ickcnw">
-      <target xmi:type="placement:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_gbmA4C-oEemI4t-0Ickcnw" size="2">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='PlacementLinkTargetEdge']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_gbmA4S-oEemI4t-0Ickcnw"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='PlacementLinkTargetEdge']"/>
+      <target xmi:type="ecore_2:Placementlink" href="test-ansible.all#//@resources.2/@links.0"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" xmi:id="_lHhkgC-oEemI4t-0Ickcnw" name=": NetworkInterface" outgoingEdges="_lIvFcC-oEemI4t-0Ickcnw" incomingEdges="_lIsCIC-oEemI4t-0Ickcnw" childrenPresentation="VerticalStack">
       <target xmi:type="infrastructure:Networkinterface" href="test-ansible.all#//@resources.0/@links.0"/>
@@ -985,7 +985,7 @@
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='NetworkInterfaceContainer']/@subContainerMappings[name='IpNetworkInterfaceMixin']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='NetworkInterfaceContainer']/@subContainerMappings[name='IpNetworkInterfaceMixin']"/>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_rrxUoC-oEemI4t-0Ickcnw" name="occiNetworkinterfaceAddress = 192.168.35.23">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_rrxUoC-oEemI4t-0Ickcnw" name="occiNetworkinterfaceAddress = localhost">
           <target xmi:type="infrastructure:Ipnetworkinterface" href="test-ansible.all#//@resources.0/@links.0/@parts.0"/>
           <semanticElements xmi:type="infrastructure:Ipnetworkinterface" href="test-ansible.all#//@resources.0/@links.0/@parts.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_rr0_AS-oEemI4t-0Ickcnw"/>
@@ -1031,8 +1031,6 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='NetworkInterfaceTargetEdge']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" xmi:id="_H-CQYC-pEemI4t-0Ickcnw" name="application4: Application" outgoingEdges="_JRVEQC-pEemI4t-0Ickcnw" childrenPresentation="VerticalStack">
-      <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-      <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -1041,98 +1039,98 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']"/>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_H_dMsC-pEemI4t-0Ickcnw" name="Application">
-        <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-        <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_H_g3EC-pEemI4t-0Ickcnw" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']"/>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_H_j6YC-pEemI4t-0Ickcnw" name="id = urn:uuid:2a24136f-f269-4419-b724-a9979d11df80">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_H_oL0S-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_H_oL0C-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationId']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationId']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_H_oL0i-pEemI4t-0Ickcnw" name="title = application4">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_H_sdQC-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_H_r2MC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationTitle']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationTitle']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_H_sdQS-pEemI4t-0Ickcnw" name="location = null">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_H_wHoS-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_H_wHoC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationLocation']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationLocation']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_H_wusC-pEemI4t-0Ickcnw" name="summary = null">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_H_0ZES-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_H_0ZEC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationSummary']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationSummary']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_H_0ZEi-pEemI4t-0Ickcnw" name="occiAppName = null">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_H_4qgC-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_H_4DcC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppName']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppName']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_H_4qgS-pEemI4t-0Ickcnw" name="occiAppContext = ">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_H_8U4S-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_H_8U4C-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppContext']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppContext']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_H_878C-pEemI4t-0Ickcnw" name="occiAppUrl = ">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_IAAmUS-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_IAAmUC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppUrl']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppUrl']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_IABNYC-pEemI4t-0Ickcnw" name="occiAppState = undeployed">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_IAE3wC-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_IAEQsC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppState']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppState']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_IAE3wS-pEemI4t-0Ickcnw" name="occiAppStateMessage = null">
-          <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
-          <semanticElements xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_IAJJMC-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_IAIiIC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppStateMessage']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ApplicationContainer']/@subContainerMappings[name='SubApplicationContainer']/@subNodeMappings[name='ApplicationOcciAppStateMessage']"/>
+          <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+          <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
         </ownedElements>
+        <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+        <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
       </ownedDiagramElements>
+      <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
+      <semanticElements xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeContainer" xmi:id="_JN2ScC-pEemI4t-0Ickcnw" name=": ComponentLink" outgoingEdges="_JRWSYC-pEemI4t-0Ickcnw" incomingEdges="_JRVEQC-pEemI4t-0Ickcnw" childrenPresentation="VerticalStack">
-      <target xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
-      <semanticElements xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -1141,56 +1139,58 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']"/>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_JN9nMC-pEemI4t-0Ickcnw" name="ComponentLink">
-        <target xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
-        <semanticElements xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_JOAqgC-pEemI4t-0Ickcnw" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']"/>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_JOEU4C-pEemI4t-0Ickcnw" name="id = urn:uuid:74df228f-141b-46fb-bf85-2e7b041296cf">
-          <target xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
-          <semanticElements xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_JOH_QC-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_JOHYMC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']/@subNodeMappings[name='ComponentLinkId']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']/@subNodeMappings[name='ComponentLinkId']"/>
+          <target xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
+          <semanticElements xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_JOH_QS-pEemI4t-0Ickcnw" name="title = null">
-          <target xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
-          <semanticElements xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_JOLpoS-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_JOLpoC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']/@subNodeMappings[name='ComponentLinkTitle']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']/@subNodeMappings[name='ComponentLinkTitle']"/>
+          <target xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
+          <semanticElements xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
         </ownedElements>
         <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_JOMQsC-pEemI4t-0Ickcnw" name="location = null">
-          <target xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
-          <semanticElements xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
           <graphicalFilters xmi:type="diagram:HideLabelFilter" xmi:id="_JOPUAS-pEemI4t-0Ickcnw"/>
           <ownedStyle xmi:type="diagram:Square" xmi:id="_JOPUAC-pEemI4t-0Ickcnw" labelSize="10" labelAlignment="LEFT" hideLabelByDefault="true" color="255,255,255">
             <description xmi:type="style:SquareDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']/@subNodeMappings[name='ComponentLinkLocation']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@containerMappings[name='ComponentLinkContainer']/@subContainerMappings[name='SubComponentLinkContainer']/@subNodeMappings[name='ComponentLinkLocation']"/>
+          <target xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
+          <semanticElements xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
         </ownedElements>
+        <target xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
+        <semanticElements xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
       </ownedDiagramElements>
+      <target xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
+      <semanticElements xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_JRVEQC-pEemI4t-0Ickcnw" sourceNode="_H-CQYC-pEemI4t-0Ickcnw" targetNode="_JN2ScC-pEemI4t-0Ickcnw">
-      <target xmi:type="platform:Application" href="test-ansible.all#//@resources.3"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_JRVEQS-pEemI4t-0Ickcnw" size="2">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='ApplicationLinksEdge']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_JRVEQi-pEemI4t-0Ickcnw"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='ApplicationLinksEdge']"/>
+      <target xmi:type="ecore:Application" href="test-ansible.all#//@resources.3"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_JRWSYC-pEemI4t-0Ickcnw" sourceNode="_JN2ScC-pEemI4t-0Ickcnw" targetNode="_euT_sC-oEemI4t-0Ickcnw">
-      <target xmi:type="platform:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_JRWSYS-pEemI4t-0Ickcnw" size="2">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='ComponentLinkTargetEdge']/@style"/>
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_JRWSYi-pEemI4t-0Ickcnw"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']/@defaultLayer/@edgeMappings[name='ComponentLinkTargetEdge']"/>
+      <target xmi:type="ecore:Componentlink" href="test-ansible.all#//@resources.3/@links.0"/>
     </ownedDiagramElements>
     <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.modmacao.all.extensions.design.extended/description/all.odesign#//@ownedViewpoints[name='AllConfiguration']/@ownedRepresentations[name='AllConfiguration%20Diagram']"/>
     <filterVariableHistory xmi:type="diagram:FilterVariableHistory" xmi:id="_a_EGxC-oEemI4t-0Ickcnw"/>
