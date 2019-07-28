@@ -154,21 +154,6 @@ public class BashCMTool implements ConfigurationManagementTool {
 		
 		return status;
 	}
-
-	/*
-	 * copied
-	 */
-//	private List<String> getSoftwareComponents(Resource resource) {
-//		List<String> softwareComponents = new ArrayList<String>();
-//		for (MixinBase mixin : resource.getParts()) {
-//			LOGGER.debug("Mixin has schema: " + mixin.getMixin().getScheme());
-//			if (mixin.getMixin().getScheme().matches(".*(schemas\\.modmacao\\.org).*") || mixin instanceof modmacao.Component){
-//				LOGGER.info("Found mixin " + mixin.getMixin().getName());
-//				softwareComponents.add(mixin.getMixin().getName().toLowerCase());
-//			}
-//		}
-//		return softwareComponents;
-//	}
 	
 	private int executeSoftwareComponents(Resource resource, String task) throws IOException, InterruptedException {
 		BashHelper helper = new BashHelper(resource, task);

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -37,6 +39,8 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 public class BashHelper {
+	public static final String VAR_PATTERN = "ext_var_(\\w+|\\d+)";
+	
 	Properties props;
 	
 	Resource resource;
@@ -233,8 +237,20 @@ public class BashHelper {
 			session.connect();
 			
 			Channel channel = session.openChannel("exec");
-			String command = getVarString(resource);
-			command += getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
+			
+			ArrayList<String> varDeclarations = new ArrayList<String>();
+			
+			//varDeclarations will get its content from the variables generator
+			
+			varDeclarations.add("ext_var_address=199.129.32.1");
+			varDeclarations.add("ext_var_name=lennart");
+			
+			//---------------------------------------
+			
+			String command = addExternalVarDeclaration(getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task), varDeclarations, VAR_PATTERN);
+			
+			command = getVarString(resource) + command;
+			
 			BashCMTool.LOGGER.info("Command: " + command);
 			((ChannelExec)channel).setCommand(command);
 			channel.connect();
@@ -329,5 +345,34 @@ public class BashHelper {
 		}
 		
 		return sb.toString();
+	}
+	
+	/*
+	 * Filters out extern variables of the script string and looks for matching declarations in the varDeclarations list and adds them to the string.
+	 * @param script the script in which the variable declarations will be inserted
+	 * @param varDeclarations list of variable declarations
+	 * @param sPattern search pattern for the extern variables in the script string
+	 * @return the script with added var declarations
+	 */
+	public static String addExternalVarDeclaration(String script, ArrayList<String> varDeclarations, String sPattern) {
+		Pattern pattern = Pattern.compile(sPattern);
+		
+		Matcher matcher = pattern.matcher(script);
+		
+		ArrayList<String> variables = new ArrayList<String>();
+		
+		while (matcher.find()) {
+			String var = matcher.group();
+			if(!variables.contains(var))
+				variables.add(var);
+		}
+		
+		for(String var: variables)
+			for(String varDec: varDeclarations) {
+				if(varDec.substring(0, varDec.indexOf("=")).equals(var))
+					script = varDec + ";\n" + script;
+			}
+		
+		return script;
 	}
 }
