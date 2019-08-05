@@ -21,6 +21,12 @@ public class BashCMTool implements ConfigurationManagementTool {
 	static final String START_SCRIPT = "START.sh";
 	static final String STOP_SCRIPT = "STOP.sh";
 	static final String UNDEPLOY_SCRIPT = "UNDEPLOY.sh";
+	
+	String propertiesFilePath = "bash.properties";
+	
+	public void setPropertiesFilePath(String propertiesFilePath) {
+		this.propertiesFilePath = propertiesFilePath;
+	}
 
 	@Override
 	public int deploy(Application app) {
@@ -156,7 +162,7 @@ public class BashCMTool implements ConfigurationManagementTool {
 	}
 	
 	private int executeSoftwareComponents(Resource resource, String task) throws IOException, InterruptedException {
-		BashHelper helper = new BashHelper(resource, task);
+		BashHelper helper = new BashHelper(resource, task, propertiesFilePath);
 		
 		BashReturnState state = helper.executeSoftwareComponents();
 		

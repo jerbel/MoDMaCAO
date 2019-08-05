@@ -2,12 +2,7 @@ package org.modmacao.cm.bash.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Mixin;
@@ -20,14 +15,11 @@ import org.eclipse.cmf.occi.infrastructure.InfrastructureFactory;
 import org.eclipse.cmf.occi.infrastructure.InfrastructurePackage;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
-import org.eclipse.emf.common.util.BasicMonitor;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.modmacao.ansibleconfiguration.AnsibleconfigurationFactory;
 import org.modmacao.ansibleconfiguration.AnsibleconfigurationPackage;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
-import org.modmacao.cm.ansible.VariablesGenerator;
 import org.modmacao.cm.bash.BashCMTool;
 import org.modmacao.occi.platform.Application;
 import org.modmacao.occi.platform.Component;
@@ -36,17 +28,17 @@ import org.modmacao.occi.platform.impl.PlatformFactoryImpl;
 import org.modmacao.placement.PlacementFactory;
 import org.modmacao.placement.Placementlink;
 
-import com.jcraft.jsch.*;
-
 import modmacao.ModmacaoPackage;
 import modmacao.impl.ModmacaoFactoryImpl;
 
 public class BashCMToolTest {
 	
+	static final String COMPONENT_NAME = "example_component";
+	static final String IP_ADDRESS = "localhost";
+	
 	BashCMTool cmtool = new BashCMTool();
 	Component component;
 	Application aut;
-	
 	
 	@Before
 	public void setUP() {
@@ -57,7 +49,7 @@ public class BashCMToolTest {
 		MixinBase modmacaoComponentMixinBase = new ModmacaoFactoryImpl().createComponent();
 		Mixin mixin = OCCIFactory.eINSTANCE.createMixin();
 		mixin.setScheme("http://schemas.modmacao.org/modmacao#");
-		mixin.setName("example_component");
+		mixin.setName(COMPONENT_NAME);
 		modmacaoComponentMixinBase.setMixin(mixin);
 				
 		component.getParts().add(modmacaoComponentMixinBase);
@@ -75,8 +67,8 @@ public class BashCMToolTest {
 		AttributeState ipaddress = OCCIFactory.eINSTANCE.createAttributeState();
 		ipaddress.setName("occi.networkinterface.address");
 		// we set ip both as AttributeState and member variable, since otherwise we might encounter inconsistencies
-		ipaddress.setValue("localhost");
-		ipNetworkMixinBase.setOcciNetworkinterfaceAddress("localhost");
+		ipaddress.setValue(IP_ADDRESS);
+		ipNetworkMixinBase.setOcciNetworkinterfaceAddress(IP_ADDRESS);
 		ipNetworkMixinBase.getAttributes().add(ipaddress);
 		nic.getParts().add(ipNetworkMixinBase);
 		nic.getParts().add(ansibleendpoint);
@@ -106,32 +98,14 @@ public class BashCMToolTest {
 	}
 	
 //	@Test
-	public void testVariableGenerator() throws IOException {
-		VariablesGenerator gen = new VariablesGenerator(component,Paths.get("/tmp/test_component").toFile(), new ArrayList<String>());
-		gen.doGenerate(new BasicMonitor());
-	}
-	
-	@Test
-	public void testComponentDeploy() {
+	public void testServerComponentDeploy() {
+		cmtool.setPropertiesFilePath("bash_server_connection.properties");
 		assertEquals(0, cmtool.deploy(component));
 	}
 	
-	public String getCommand(String path) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(path));
-		try {
-		    StringBuilder sb = new StringBuilder();
-		    String line = br.readLine();
-
-		    while (line != null) {
-		    	if(!line.equals("#!/bin/bash") & !line.equals("")) {
-			        sb.append(line);
-			        sb.append(";");
-		    	}
-		        line = br.readLine();
-		    }
-		    return sb.toString();
-		} finally {
-		    br.close();
-		}
+	@Test
+	public void testLocalhostComponentDeploy() {
+		cmtool.setPropertiesFilePath("bash_localhost_connection.properties");
+		assertEquals(0, cmtool.deploy(component));
 	}
 }
