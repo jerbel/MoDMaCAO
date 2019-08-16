@@ -260,7 +260,7 @@ public class BashHelper {
 			
 			createVariableFile(Paths.get(VAR_FILE_NAME), resource);
 			
-			transferVarFile(VAR_FILE_NAME);
+//			transferVarFile(VAR_FILE_NAME);
 			
 			BashCMTool.LOGGER.info("Command: " + command);
 			((ChannelExec)channel).setCommand(command);
