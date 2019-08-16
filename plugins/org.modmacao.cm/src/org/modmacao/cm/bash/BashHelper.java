@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +41,9 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 public class BashHelper {
-	public static final String VAR_PATTERN = "ext_var_(\\w+|\\d+)";
+	
+	static final String VAR_FILE_NAME = "vars.yml";
+	static final String REMOTE_SERVER_VAR_FILE_DESTINATION = "/tmp/";
 	
 	Properties props;
 	
@@ -51,8 +55,11 @@ public class BashHelper {
 	String task;
 	String softwareComponentPath;
 	List<String> softwareComponents;
+	int port;
+	String propertiesFilePath;
 	
-	public BashHelper(Resource resource, String task) {
+	public BashHelper(Resource resource, String task, String propertiesFilePath) {
+		this.propertiesFilePath = propertiesFilePath;
 		loadProperties();
 		
 		this.resource = resource;
@@ -63,6 +70,7 @@ public class BashHelper {
 		softwareComponentPath = getProperties().getProperty("bash_soft_comp_path");
 		this.task = task;
 		softwareComponents = getSoftwareComponents(resource);
+		port = Integer.parseInt(getProperties().getProperty("port"));
 		
 		if (ipaddress.equals("127.0.0.1")) {
 			options = "--connection=local";
@@ -87,7 +95,7 @@ public class BashHelper {
 		InputStream input = null;
 		
 		try {
-    		String filename = "bash.properties";
+    		String filename = propertiesFilePath;
     		
     		// try to load bundle
     		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
@@ -119,7 +127,7 @@ public class BashHelper {
 	/*
 	 * copied
 	 */
-	public String getTitle(Resource resource) {
+	public static String getTitle(Resource resource) {
 		if (resource.getTitle() != null)
 			return resource.getTitle();
 			
@@ -134,7 +142,7 @@ public class BashHelper {
 	/*
 	 * copied
 	 */
-	public String getIPAddress(Resource resource) {
+	public static String getIPAddress(Resource resource) {
 		EList<Link> links = resource.getLinks();
 		Networkinterface networklink = null;
 		Placementlink hosting = null;
@@ -219,6 +227,13 @@ public class BashHelper {
 		return softwareComponents;
 	}
 	
+	
+	/**
+	 * Creates a ssh connection and runs the commands contained in the @softwareComponents.get(0) on the remote server.
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException {
 		String message = "";
 		
@@ -233,23 +248,19 @@ public class BashHelper {
 			JSch.setConfig("StrictHostKeyChecking", "no");
 			jsch.addIdentity(keypath);
 			
-			Session session = jsch.getSession(user, ipaddress,2222);
+			Session session = jsch.getSession(user, ipaddress);
+			if(port != -1)
+				session = jsch.getSession(user, ipaddress,port);
+			
 			session.connect();
 			
 			Channel channel = session.openChannel("exec");
 			
-			ArrayList<String> varDeclarations = new ArrayList<String>();
+			String command = getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
 			
-			//varDeclarations will get its content from the variables generator
+			createVariableFile(Paths.get(VAR_FILE_NAME), resource);
 			
-			varDeclarations.add("ext_var_address=199.129.32.1");
-			varDeclarations.add("ext_var_name=lennart");
-			
-			//---------------------------------------
-			
-			String command = addExternalVarDeclaration(getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task), varDeclarations, VAR_PATTERN);
-			
-			command = getVarString(resource) + command;
+			transferVarFile(VAR_FILE_NAME);
 			
 			BashCMTool.LOGGER.info("Command: " + command);
 			((ChannelExec)channel).setCommand(command);
@@ -292,7 +303,14 @@ public class BashHelper {
 		}
 	}
 	
-	private String getVarString(Entity entity) {	
+	/**
+	 * Creates an variables file at the given path from the AttributeStates of a given OCCI Entity.
+	 * @param variablefile The Path where this variable file should be created.
+	 * @param entity The entity for whichs AttributeStates the variable file should be created.
+	 * @return The path where this variable file was created.
+	 * @throws IOException
+	 */
+	public static Path createVariableFile(Path variablefile, Entity entity) throws IOException{		
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder();
 		List<AttributeState> attributes  = new LinkedList<AttributeState>();
@@ -338,41 +356,35 @@ public class BashHelper {
 			//  Ansible does not allow variable names with points, so we replace them with underscores
 			String name = attribute.getName().replace('.', '_');
 			sb.append(name);
-			sb.append("=");
-//			sb.append("\"" + attribute.getValue() + "\"");
+			sb.append(": ");
 			sb.append(attribute.getValue());
 			sb.append(lb);
 		}
 		
-		return sb.toString();
+		FileUtils.writeStringToFile(variablefile.toFile(), sb.toString(), (Charset) null);
+		
+		return variablefile;
 	}
 	
-	/*
-	 * Filters out extern variables of the script string and looks for matching declarations in the varDeclarations list and adds them to the string.
-	 * @param script the script in which the variable declarations will be inserted
-	 * @param varDeclarations list of variable declarations
-	 * @param sPattern search pattern for the extern variables in the script string
-	 * @return the script with added var declarations
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 */
-	public static String addExternalVarDeclaration(String script, ArrayList<String> varDeclarations, String sPattern) {
-		Pattern pattern = Pattern.compile(sPattern);
+	private void transferVarFile(String file) throws InterruptedException, IOException {
+		String command = "scp " + file + " " + user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION;
+		Process process = new ProcessBuilder(command).start();
 		
-		Matcher matcher = pattern.matcher(script);
+		BashCMTool.LOGGER.info("Try to transfer " + file + " to remote Server (" + ipaddress + ")");
 		
-		ArrayList<String> variables = new ArrayList<String>();
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
+					  .lines().collect(Collectors.joining(System.lineSeparator())));
 		
-		while (matcher.find()) {
-			String var = matcher.group();
-			if(!variables.contains(var))
-				variables.add(var);
-		}
+		process.waitFor();
 		
-		for(String var: variables)
-			for(String varDec: varDeclarations) {
-				if(varDec.substring(0, varDec.indexOf("=")).equals(var))
-					script = varDec + ";\n" + script;
-			}
-		
-		return script;
+		BashCMTool.LOGGER.info("Buffer message:\n" + buffer.toString());
 	}
 }
