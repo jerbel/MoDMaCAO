@@ -98,84 +98,55 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int deploy(Component comp) {
-		int status = -1;
-		
-		try {
-			status = executeSoftwareComponents(comp,DEPLOY_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return executeSoftwareComponents(comp,DEPLOY_SCRIPT);
 	}
 
 	@Override
 	public int configure(Component comp) {
-		int status = -1;
-		
-		try {
-			status = executeSoftwareComponents(comp,CONFIGURE_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return executeSoftwareComponents(comp,CONFIGURE_SCRIPT);
 	}
 
 	@Override
 	public int start(Component comp) {
-		int status = -1;
-		
-		try {
-			status = executeSoftwareComponents(comp,START_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return executeSoftwareComponents(comp,START_SCRIPT);
 	}
 
 	@Override
 	public int stop(Component comp) {
-		int status = -1;
-		
-		try {
-			status = executeSoftwareComponents(comp,STOP_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return executeSoftwareComponents(comp,STOP_SCRIPT);
 	}
 
 	@Override
 	public int undeploy(Component comp) {
-		int status = -1;
-		
-		try {
-			status = executeSoftwareComponents(comp,UNDEPLOY_SCRIPT);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		
-		return status;
+		return executeSoftwareComponents(comp,UNDEPLOY_SCRIPT);
 	}
 	
-	private int executeSoftwareComponents(Resource resource, String task) throws IOException, InterruptedException {
-		BashHelper helper = new BashHelper(resource, task, propertiesFilePath);
+	private int executeSoftwareComponents(Resource resource, String task) {
+		LOGGER.info("Execute software component (" + resource + ")");
+		LOGGER.info("Executed task: " + task);
 		
-		BashReturnState state = helper.executeSoftwareComponents();
+//		BashHelper helper = new BashHelper(resource, task, propertiesFilePath);
+//		
+//		BashReturnState state;
+//		try {
+//			state = helper.executeSoftwareComponents();
+//			if (state.getStateMessage() != null) {
+//				LOGGER.info("Received state message:\n" + state.getStateMessage());
+//				if (resource instanceof Component) {
+//					((Component) resource).setOcciComponentStateMessage(state.getStateMessage());
+//				} else if (resource instanceof Application) {
+//					((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
+//				}
+//			}
+//			LOGGER.info("EXIT VALUE: " + state.getExitValue());
+//			return state.getExitValue();
+//		} catch (IOException | InterruptedException e) {
+////			e.printStackTrace();
+//			LOGGER.error("Exception: " + e);
+//			return -1;
+//		}
 		
-		if (state.getStateMessage() != null) {
-			LOGGER.info("Received state message.");
-			LOGGER.info(state.getStateMessage());
-			if (resource instanceof Component) {
-				((Component) resource).setOcciComponentStateMessage(state.getStateMessage());
-			} else if (resource instanceof Application) {
-				((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
-			}
-		}
-//		System.out.println("EXIT VALUE: " + state.getExitValue());
-		return state.getExitValue();
+		LOGGER.info("Doing nothing!");
+		return -1;
 	}
 }

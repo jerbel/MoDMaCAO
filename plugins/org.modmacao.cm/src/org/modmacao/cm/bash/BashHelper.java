@@ -55,7 +55,6 @@ public class BashHelper {
 	String task;
 	String softwareComponentPath;
 	List<String> softwareComponents;
-	int port;
 	String propertiesFilePath;
 	
 	public BashHelper(Resource resource, String task, String propertiesFilePath) {
@@ -70,7 +69,6 @@ public class BashHelper {
 		softwareComponentPath = getProperties().getProperty("bash_soft_comp_path");
 		this.task = task;
 		softwareComponents = getSoftwareComponents(resource);
-		port = Integer.parseInt(getProperties().getProperty("port"));
 		
 		if (ipaddress.equals("127.0.0.1")) {
 			options = "--connection=local";
@@ -111,8 +109,11 @@ public class BashHelper {
     		
     		props.load(input);
     		
+    		BashCMTool.LOGGER.info("Loaded properties: " + props);
+    		
     	} catch (IOException ex) {
-    		ex.printStackTrace();
+//    		ex.printStackTrace();
+    		BashCMTool.LOGGER.error("IOException: " + ex);
         } finally {
         	if(input!=null){
 	        	try {
@@ -237,20 +238,17 @@ public class BashHelper {
 	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException {
 		String message = "";
 		
-		BashCMTool.LOGGER.info("Executing software component " + softwareComponents + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
-		BashCMTool.LOGGER.debug("executeSoftwareComponents() debug message");
-		
 		try {
-			if(softwareComponents.isEmpty())
+			if(softwareComponents.isEmpty()) {
+				BashCMTool.LOGGER.error("Resource " + resource + " has no software components!");
 				return new BashReturnState(0, message);
+			}
 				
 			JSch jsch = new JSch();
 			JSch.setConfig("StrictHostKeyChecking", "no");
 			jsch.addIdentity(keypath);
 			
 			Session session = jsch.getSession(user, ipaddress);
-			if(port != -1)
-				session = jsch.getSession(user, ipaddress,port);
 			
 			session.connect();
 			
@@ -262,7 +260,7 @@ public class BashHelper {
 			
 //			transferVarFile(VAR_FILE_NAME);
 			
-			BashCMTool.LOGGER.info("Command: " + command);
+			BashCMTool.LOGGER.info("Command that has to be executed on remote server:\n" + command);
 			((ChannelExec)channel).setCommand(command);
 			channel.connect();
 			
@@ -271,7 +269,8 @@ public class BashHelper {
 			while ((line = bufferedReader.readLine()) != null)
 				message += line + "\n";
 		} catch (JSchException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			BashCMTool.LOGGER.error("JSchException: " + e);
 			return new BashReturnState(-1, message);
 		}
 		
@@ -374,7 +373,7 @@ public class BashHelper {
 	 * @throws IOException 
 	 */
 	private void transferVarFile(String file) throws InterruptedException, IOException {
-		String command = "scp " + file + " " + user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION;
+		String command = "scp " + "-i " + keypath + " " + file + " " + user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION;
 		Process process = new ProcessBuilder(command).start();
 		
 		BashCMTool.LOGGER.info("Try to transfer " + file + " to remote Server (" + ipaddress + ")");
@@ -385,6 +384,6 @@ public class BashHelper {
 		
 		process.waitFor();
 		
-		BashCMTool.LOGGER.info("Buffer message:\n" + buffer.toString());
+		BashCMTool.LOGGER.info("Buffer message of key transfer:\n" + buffer.toString());
 	}
 }
