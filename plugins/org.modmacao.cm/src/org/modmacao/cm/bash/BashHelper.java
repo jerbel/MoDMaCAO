@@ -44,6 +44,7 @@ public class BashHelper {
 	
 	static final String VAR_FILE_NAME = "vars.yml";
 	static final String REMOTE_SERVER_VAR_FILE_DESTINATION = "/tmp/";
+	static final String LOCALHOST_IP = "127.0.0.1";
 	
 	Properties props;
 	
@@ -70,7 +71,7 @@ public class BashHelper {
 		this.task = task;
 		softwareComponents = getSoftwareComponents(resource);
 		
-		if (ipaddress.equals("127.0.0.1")) {
+		if (ipaddress.equals(LOCALHOST_IP)) {
 			options = "--connection=local";
 		}
 	}
@@ -95,6 +96,8 @@ public class BashHelper {
 		try {
     		String filename = propertiesFilePath;
     		
+    		BashCMTool.LOGGER.info("Try to load properties from " + propertiesFilePath);
+    		
     		// try to load bundle
     		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
     		if (bundle != null) {
@@ -106,6 +109,8 @@ public class BashHelper {
     			// try to read properties without BundleLoader
     			input = this.getClass().getClassLoader().getResourceAsStream(filename);	
     		}
+    		
+    		BashCMTool.LOGGER.info("Loaded InputStream: " + input);
     		
     		props.load(input);
     		
@@ -158,7 +163,7 @@ public class BashHelper {
 		}
 		if (hosting == null) {
 			BashCMTool.LOGGER.warn("No hosting found for component " + getTitle(resource) + ". Falling back to localhost.");
-			ipaddress = "127.0.0.1";
+			ipaddress = LOCALHOST_IP;
 			return ipaddress;					
 		} else {
 			Compute target = (Compute) hosting.getTarget();
@@ -212,6 +217,10 @@ public class BashHelper {
 //				}
 			}
 		}
+		if(ipaddress == null)
+			ipaddress = LOCALHOST_IP;
+		
+		BashCMTool.LOGGER.error("Loaded ipaddress: " + ipaddress);
 
 		return ipaddress;
 	}

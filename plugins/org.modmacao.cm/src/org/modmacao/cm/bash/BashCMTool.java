@@ -125,28 +125,25 @@ public class BashCMTool implements ConfigurationManagementTool {
 		LOGGER.info("Execute software component (" + resource + ")");
 		LOGGER.info("Executed task: " + task);
 		
-//		BashHelper helper = new BashHelper(resource, task, propertiesFilePath);
-//		
-//		BashReturnState state;
-//		try {
-//			state = helper.executeSoftwareComponents();
-//			if (state.getStateMessage() != null) {
-//				LOGGER.info("Received state message:\n" + state.getStateMessage());
-//				if (resource instanceof Component) {
-//					((Component) resource).setOcciComponentStateMessage(state.getStateMessage());
-//				} else if (resource instanceof Application) {
-//					((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
-//				}
-//			}
-//			LOGGER.info("EXIT VALUE: " + state.getExitValue());
-//			return state.getExitValue();
-//		} catch (IOException | InterruptedException e) {
-////			e.printStackTrace();
-//			LOGGER.error("Exception: " + e);
-//			return -1;
-//		}
+		BashHelper helper = new BashHelper(resource, task, propertiesFilePath);
 		
-		LOGGER.info("Doing nothing!");
-		return -1;
+		BashReturnState state;
+		try {
+			state = helper.executeSoftwareComponents();
+			if (state.getStateMessage() != null) {
+				LOGGER.info("Received state message:\n" + state.getStateMessage());
+				if (resource instanceof Component) {
+					((Component) resource).setOcciComponentStateMessage(state.getStateMessage());
+				} else if (resource instanceof Application) {
+					((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
+				}
+			}
+			LOGGER.info("EXIT VALUE: " + state.getExitValue());
+			return state.getExitValue();
+		} catch (IOException | InterruptedException e) {
+//			e.printStackTrace();
+			LOGGER.error("Exception: " + e);
+			return -1;
+		}
 	}
 }

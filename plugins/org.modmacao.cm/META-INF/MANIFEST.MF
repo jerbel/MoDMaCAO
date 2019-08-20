@@ -19,8 +19,11 @@ Require-Bundle: org.slf4j.api,
  org.apache.log4j,
  org.modmacao.ansible;bundle-version="1.0.0",
  org.eclipse.acceleo.engine,
- org.eclipse.cmf.occi.platform;bundle-version="1.0.0"
-Export-Package: org.modmacao.cm,
+ org.eclipse.cmf.occi.platform;bundle-version="1.0.0",
+ com.jcraft.jsch;bundle-version="0.1.55"
+Export-Package: com.jcraft.jsch,
+ org.modmacao.cm,
  org.modmacao.cm.ansible,
  org.modmacao.cm.bash
-Import-Package: org.eclipse.cmf.occi.infrastructure
+Import-Package: com.jcraft.jsch,
+ org.eclipse.cmf.occi.infrastructure
