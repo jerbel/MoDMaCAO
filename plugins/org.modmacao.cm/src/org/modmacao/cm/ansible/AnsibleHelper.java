@@ -149,14 +149,27 @@ public final class AnsibleHelper {
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder("[defaults]").append(lb);
 		sb.append("timeout = ").append(this.getProperties().getProperty("ssh_timeout")).append(lb);
+		sb.append("forks = ").append(this.getProperties().getProperty("forks")).append(lb);
+		sb.append("gathering = ").append(this.getProperties().getProperty("gathering")).append(lb);
 		sb.append("roles_path = ").append(this.getProperties().getProperty("ansible_rolespath")).append(lb);
 		sb.append("private_key_file = ").append(keyPath.toString()).append(lb);
 		sb.append("[ssh_connection]").append(lb);
-		sb.append("ssh_args = -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no").append(lb);
+		sb.append("pipelining = ").append(this.getProperties().getProperty("pipelining")).append(lb);
+		String sshArgs = this.getProperties().getProperty("ssh_args");
+		sb.append("ssh_args = ").append(removeQuotes(sshArgs)).append(lb);
 		FileUtils.writeStringToFile(configuration.toFile(), sb.toString(), (Charset) null);
 		return configuration;
 	}
 	
+	private String removeQuotes(String sshArgs) {
+		if((sshArgs.startsWith("\"") && sshArgs.endsWith("\"")) || 
+				   (sshArgs.startsWith("\'") && sshArgs.endsWith("\'"))) {
+				sshArgs = sshArgs.substring(1, sshArgs.length()-1);
+				}
+		return sshArgs;
+	}
+
+
 	/**
 	 * Executes an Ansible playbook.
 	 * @param playbook The path to the Ansible playbook.
