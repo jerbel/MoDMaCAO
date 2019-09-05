@@ -220,7 +220,7 @@ public class BashHelper {
 		if(ipaddress == null)
 			ipaddress = LOCALHOST_IP;
 		
-		BashCMTool.LOGGER.error("Loaded ipaddress: " + ipaddress);
+		BashCMTool.LOGGER.info("Loaded ipaddress: " + ipaddress);
 
 		return ipaddress;
 	}

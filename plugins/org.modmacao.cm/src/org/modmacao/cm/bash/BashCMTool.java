@@ -123,7 +123,7 @@ public class BashCMTool implements ConfigurationManagementTool {
 	
 	private int executeSoftwareComponents(Resource resource, String task) {
 		LOGGER.info("Execute software component (" + resource + ")");
-		LOGGER.info("Executed task: " + task);
+		LOGGER.info("Execute task: " + task);
 		
 		BashHelper helper = new BashHelper(resource, task, propertiesFilePath);
 		
