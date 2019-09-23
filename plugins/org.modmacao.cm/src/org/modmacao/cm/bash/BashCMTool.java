@@ -1,11 +1,5 @@
 package org.modmacao.cm.bash;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
 import org.modmacao.cm.ConfigurationManagementTool;
 import org.modmacao.occi.platform.Application;
@@ -128,7 +122,6 @@ public class BashCMTool implements ConfigurationManagementTool {
 		BashHelper helper = new BashHelper(resource, task, propertiesFilePath);
 		
 		BashReturnState state;
-		try {
 			state = helper.executeSoftwareComponents();
 			if (state.getStateMessage() != null) {
 				LOGGER.info("Received state message:\n" + state.getStateMessage());
@@ -140,10 +133,5 @@ public class BashCMTool implements ConfigurationManagementTool {
 			}
 			LOGGER.info("EXIT VALUE: " + state.getExitValue());
 			return state.getExitValue();
-		} catch (IOException | InterruptedException e) {
-//			e.printStackTrace();
-			LOGGER.error("Exception: " + e);
-			return -1;
-		}
 	}
 }

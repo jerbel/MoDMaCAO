@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -29,6 +27,7 @@ import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
 import org.eclipse.emf.common.util.EList;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
+import org.modmacao.cm.ansible.VariablesGenerator;
 import org.modmacao.occi.platform.Component;
 import org.modmacao.placement.Placementlink;
 import org.osgi.framework.Bundle;
@@ -42,8 +41,9 @@ import com.jcraft.jsch.Session;
 
 public class BashHelper {
 	
-	static final String VAR_FILE_NAME = "vars.yml";
-	static final String REMOTE_SERVER_VAR_FILE_DESTINATION = "/tmp/";
+	static final String VAR_FILE_NAME = "/home/ubuntu/martserverbashproject/vars.yml";
+	static final String EXTEND_VAR_FILE_NAME = "/home/ubuntu/martserverbashproject/vars2.yml";
+	static final String REMOTE_SERVER_VAR_FILE_DESTINATION = "";
 	static final String LOCALHOST_IP = "127.0.0.1";
 	
 	Properties props;
@@ -51,7 +51,6 @@ public class BashHelper {
 	Resource resource;
 	String ipaddress;
 	String user;
-	String options;
 	String keypath;
 	String task;
 	String softwareComponentPath;
@@ -65,15 +64,10 @@ public class BashHelper {
 		this.resource = resource;
 		ipaddress = getIPAddress(this.resource);
 		this.user = getProperties().getProperty("user");
-		options = null;
 		keypath = getProperties().getProperty("private_key_path");
 		softwareComponentPath = getProperties().getProperty("bash_soft_comp_path");
 		this.task = task;
 		softwareComponents = getSoftwareComponents(resource);
-		
-		if (ipaddress.equals(LOCALHOST_IP)) {
-			options = "--connection=local";
-		}
 	}
 	
 	/*
@@ -218,9 +212,9 @@ public class BashHelper {
 			}
 		}
 		if(ipaddress == null)
-			ipaddress = LOCALHOST_IP;
-		
-		BashCMTool.LOGGER.info("Loaded ipaddress: " + ipaddress);
+			BashCMTool.LOGGER.error("No IP address found for " + resource);
+		else
+			BashCMTool.LOGGER.info("Loaded ipaddress: " + ipaddress);
 
 		return ipaddress;
 	}
@@ -241,10 +235,8 @@ public class BashHelper {
 	/**
 	 * Creates a ssh connection and runs the commands contained in the @softwareComponents.get(0) on the remote server.
 	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
 	 */
-	public BashReturnState executeSoftwareComponents() throws IOException, InterruptedException {
+	public BashReturnState executeSoftwareComponents() {
 		String message = "";
 		
 		try {
@@ -252,6 +244,14 @@ public class BashHelper {
 				BashCMTool.LOGGER.error("Resource " + resource + " has no software components!");
 				return new BashReturnState(0, message);
 			}
+			
+			if(ipaddress == null) {
+				BashCMTool.LOGGER.error("Resource " + resource + " has no IP address!");
+				return new BashReturnState(0, message);
+			}
+			
+			createVariableFile(Paths.get(VAR_FILE_NAME), resource);
+			createExtendedVariableFile(Paths.get("."), resource);
 				
 			JSch jsch = new JSch();
 			JSch.setConfig("StrictHostKeyChecking", "no");
@@ -265,9 +265,8 @@ public class BashHelper {
 			
 			String command = getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
 			
-			createVariableFile(Paths.get(VAR_FILE_NAME), resource);
-			
-//			transferVarFile(VAR_FILE_NAME);
+			transferVarFile(VAR_FILE_NAME);
+			transferVarFile(EXTEND_VAR_FILE_NAME);
 			
 			BashCMTool.LOGGER.info("Command that has to be executed on remote server:\n" + command);
 			((ChannelExec)channel).setCommand(command);
@@ -279,8 +278,10 @@ public class BashHelper {
 				message += line + "\n";
 		} catch (JSchException e) {
 //			e.printStackTrace();
-			BashCMTool.LOGGER.error("JSchException: " + e);
+			BashCMTool.LOGGER.error("Error when trying to connect to " + user + "@" + ipaddress,e);
 			return new BashReturnState(-1, message);
+		} catch (IOException e) {
+			BashCMTool.LOGGER.error("Can't read bufferedReader of ssh connection!",e);
 		}
 		
 		return new BashReturnState(0, message);
@@ -318,7 +319,8 @@ public class BashHelper {
 	 * @return The path where this variable file was created.
 	 * @throws IOException
 	 */
-	public static Path createVariableFile(Path variablefile, Entity entity) throws IOException{		
+	public static Path createVariableFile(Path variablefile, Entity entity) {
+		BashCMTool.LOGGER.info("Start to create variableFile");
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder();
 		List<AttributeState> attributes  = new LinkedList<AttributeState>();
@@ -369,9 +371,28 @@ public class BashHelper {
 			sb.append(lb);
 		}
 		
-		FileUtils.writeStringToFile(variablefile.toFile(), sb.toString(), (Charset) null);
+		BashCMTool.LOGGER.info("Content of the variable file:\n" + sb.toString());
+		
+		try {
+			FileUtils.writeStringToFile(variablefile.toFile(), sb.toString(), (Charset) null);
+		} catch (IOException e) {
+			BashCMTool.LOGGER.error("Fail to save variables file!", e);
+		}
 		
 		return variablefile;
+	}
+	
+	public Path createExtendedVariableFile(Path variablepath, Entity entity) {
+		BashCMTool.LOGGER.info("Start to create ExtendedVariableFile");
+		VariablesGenerator gen;
+		try {
+			gen = new VariablesGenerator(entity, variablepath.toFile(), new ArrayList<String>());
+			gen.doGenerate(null);
+		} catch (IOException e) {
+			BashCMTool.LOGGER.error("Failed to create variable file using VariablesGenerator!", e);
+		}
+		
+		return Paths.get(variablepath.toString(), EXTEND_VAR_FILE_NAME); 
 	}
 	
 	/**
@@ -381,18 +402,25 @@ public class BashHelper {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	private void transferVarFile(String file) throws InterruptedException, IOException {
-		String command = "scp " + "-i " + keypath + " " + file + " " + user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION;
-		Process process = new ProcessBuilder(command).start();
-		
-		BashCMTool.LOGGER.info("Try to transfer " + file + " to remote Server (" + ipaddress + ")");
-		
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
-					  .lines().collect(Collectors.joining(System.lineSeparator())));
-		
-		process.waitFor();
-		
-		BashCMTool.LOGGER.info("Buffer message of key transfer:\n" + buffer.toString());
+	private void transferVarFile(String file) {
+//		String command = "scp " + "-i " + keypath + " " + file + " " + user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION;
+		Process process;
+		try {
+			process = new ProcessBuilder("scp", "-i", keypath, file, user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION).start();
+			BashCMTool.LOGGER.info("Created process: " + process);
+			BashCMTool.LOGGER.info("Try to transfer " + file + " to remote Server (" + ipaddress + ")");
+			
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
+						  .lines().collect(Collectors.joining(System.lineSeparator())));
+			
+			process.waitFor();
+			
+			BashCMTool.LOGGER.info("Buffer message of key transfer:\n" + buffer.toString());
+		} catch (IOException e) {
+			BashCMTool.LOGGER.error("Fail to transfer variable file!", e);
+		} catch (InterruptedException e) {
+			BashCMTool.LOGGER.error("Fail to wait for process!", e);
+		}
 	}
 }
