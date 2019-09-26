@@ -53,6 +53,14 @@ public class BashCMToolTest {
 		modmacaoComponentMixinBase.setMixin(mixin);
 				
 		component.getParts().add(modmacaoComponentMixinBase);
+		
+		MixinBase modmacaoComponentMixinBase2 = new ModmacaoFactoryImpl().createComponent();
+		Mixin mixin2 = OCCIFactory.eINSTANCE.createMixin();
+		mixin2.setScheme("http://schemas.modmacao.org/modmacao#");
+		mixin2.setName(COMPONENT_NAME);
+		modmacaoComponentMixinBase2.setMixin(mixin2);
+				
+		component.getParts().add(modmacaoComponentMixinBase2);
 
 		
 		// create compute 

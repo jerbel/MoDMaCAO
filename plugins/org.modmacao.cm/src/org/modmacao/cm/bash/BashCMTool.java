@@ -24,70 +24,27 @@ public class BashCMTool implements ConfigurationManagementTool {
 
 	@Override
 	public int deploy(Application app) {
-//		List<String> softwareComponents = getSoftwareComponents(app);
-//		if (softwareComponents.isEmpty())
-//			return 0;
-		
-//		int status = -1;
-//		
-//		try {
-//			status = executeSoftwareComponents(app,DEPLOY_SCRIPT);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}		
-		
-		return 0;
+		return executeSoftwareComponents(app,DEPLOY_SCRIPT);
 	}
 
 	@Override
 	public int configure(Application app) {
-//		int status = -1;
-//		
-//		try {
-//			status = executeSoftwareComponents(app,CONFIGURE_SCRIPT);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}	
-		return 0;
+		return executeSoftwareComponents(app,CONFIGURE_SCRIPT);
 	}
 
 	@Override
 	public int start(Application app) {
-//		int status = -1;
-//		
-//		try {
-//			status = executeSoftwareComponents(app,START_SCRIPT);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}		
-		
-		return 0;
+		return executeSoftwareComponents(app,START_SCRIPT);
 	}
 
 	@Override
 	public int stop(Application app) {
-//		int status = -1;
-//		
-//		try {
-//			status = executeSoftwareComponents(app,STOP_SCRIPT);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}		
-		
-		return 0;
+		return executeSoftwareComponents(app,STOP_SCRIPT);
 	}
 
 	@Override
 	public int undeploy(Application app) {
-//		int status = -1;
-//		
-//		try {
-//			status = executeSoftwareComponents(app,UNDEPLOY_SCRIPT);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}		
-		
-		return 0;
+		return executeSoftwareComponents(app,UNDEPLOY_SCRIPT);
 	}
 
 	@Override

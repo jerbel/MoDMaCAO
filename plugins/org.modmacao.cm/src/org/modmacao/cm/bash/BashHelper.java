@@ -1,6 +1,8 @@
 package org.modmacao.cm.bash;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,8 +43,8 @@ import com.jcraft.jsch.Session;
 
 public class BashHelper {
 	
-	static final String VAR_FILE_NAME = "/home/ubuntu/martserverbashproject/vars.yml";
-	static final String EXTEND_VAR_FILE_NAME = "/home/ubuntu/martserverbashproject/vars2.yml";
+	static final String VAR_FILE_NAME = "vars.yml";
+	static final String EXTEND_VAR_FILE_NAME = "vars2.yaml";
 	static final String REMOTE_SERVER_VAR_FILE_DESTINATION = "";
 	static final String LOCALHOST_IP = "127.0.0.1";
 	
@@ -250,8 +252,30 @@ public class BashHelper {
 				return new BashReturnState(0, message);
 			}
 			
-			createVariableFile(Paths.get(VAR_FILE_NAME), resource);
+			String dataString = "";
+			dataString += createVariableFile(Paths.get(VAR_FILE_NAME), resource) + "\n";
+			/*
+			 * Da der Variablengenerator die Daten direkt in die Datei schreibt, 
+			 * muss diese nachrträglich wieder ausgelesen werden, um die gesamten Daten in eine Datei zu schreiben.
+			 */
 			createExtendedVariableFile(Paths.get("."), resource);
+		    try {
+		    	dataString += FileUtils.readFileToString(new File(EXTEND_VAR_FILE_NAME));
+			} catch (FileNotFoundException e1) {
+				BashCMTool.LOGGER.error("Can't find extended var file!",e1);
+//				e1.printStackTrace();
+			} catch (IOException e1) {
+				BashCMTool.LOGGER.error("Can't read extended var file!",e1);
+//				e1.printStackTrace();
+			}
+		    
+		    BashCMTool.LOGGER.info("Gather data in total:\n" + dataString);
+			
+			try {
+				FileUtils.writeStringToFile(Paths.get(VAR_FILE_NAME).toFile(), dataString, (Charset) null);
+			} catch (IOException e) {
+				BashCMTool.LOGGER.error("Fail to save variables file!", e);
+			}
 				
 			JSch jsch = new JSch();
 			JSch.setConfig("StrictHostKeyChecking", "no");
@@ -259,32 +283,53 @@ public class BashHelper {
 			
 			Session session = jsch.getSession(user, ipaddress);
 			
+			java.util.Properties config = new java.util.Properties(); 
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			
 			session.connect();
 			
 			Channel channel = session.openChannel("exec");
 			
-			String command = getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
+			String command = loadCompleteCommand();
+//			String command = getCommand(softwareComponentPath + "/" + softwareComponents.get(0) + "/" + task);
 			
 			transferVarFile(VAR_FILE_NAME);
-			transferVarFile(EXTEND_VAR_FILE_NAME);
+//			transferVarFile(EXTEND_VAR_FILE_NAME);
 			
 			BashCMTool.LOGGER.info("Command that has to be executed on remote server:\n" + command);
 			((ChannelExec)channel).setCommand(command);
 			channel.connect();
 			
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(channel.getInputStream()));
-			String line;
-			while ((line = bufferedReader.readLine()) != null)
-				message += line + "\n";
+			try {
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(channel.getInputStream()));
+				String line;
+				while ((line = bufferedReader.readLine()) != null)
+					message += line + "\n";
+			} catch (IOException e) {
+				BashCMTool.LOGGER.error("Can't read bufferedReader of ssh connection!",e);
+			}
 		} catch (JSchException e) {
 //			e.printStackTrace();
 			BashCMTool.LOGGER.error("Error when trying to connect to " + user + "@" + ipaddress,e);
 			return new BashReturnState(-1, message);
-		} catch (IOException e) {
-			BashCMTool.LOGGER.error("Can't read bufferedReader of ssh connection!",e);
+		}
+		return new BashReturnState(0, message);
+	}
+	
+	/*
+	 * Loads for every mixin of the resource object the associated bash script and returns these.
+	 */
+	private String loadCompleteCommand() {
+		String command = "";
+		
+		for(String mixin: softwareComponents) {
+			command += "# Code section of mixin " + mixin + "\n";
+			command += getCommand(softwareComponentPath + "/" + mixin + "/" + task);
+			command += "\n";
 		}
 		
-		return new BashReturnState(0, message);
+		return command;
 	}
 	
 	/*
@@ -293,23 +338,32 @@ public class BashHelper {
 	 * @param path Path of the file which content has to be loaded.
 	 * @return Adjusted bash code that can be runned on a shell.
 	 */
-	private static String getCommand(String path) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(path));
+	private static String getCommand(String path) {
 		try {
-		    StringBuilder sb = new StringBuilder();
-		    String line = br.readLine();
+			BufferedReader br = new BufferedReader(new FileReader(path));
+			try {
+			    StringBuilder sb = new StringBuilder();
+			    String line = br.readLine();
 
-		    while (line != null) {
-		    	if(!line.equals("#!/bin/bash") & !line.equals("")) {
-			        sb.append(line);
-			        sb.append(";");
-		    	}
-		        line = br.readLine();
-		    }
-		    return sb.toString();
-		} finally {
-		    br.close();
+			    while (line != null) {
+			    	if(!line.equals("#!/bin/bash") & !line.equals("")) {
+				        sb.append(line);
+				        sb.append(";");
+			    	}
+			        line = br.readLine();
+			    }
+			    return sb.toString();
+			} finally {
+			    br.close();
+			}
+		} catch (FileNotFoundException e) {
+			BashCMTool.LOGGER.error("Can't find bash file!",e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			BashCMTool.LOGGER.error("Can't read bash file!",e);
+			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	/**
@@ -319,8 +373,8 @@ public class BashHelper {
 	 * @return The path where this variable file was created.
 	 * @throws IOException
 	 */
-	public static Path createVariableFile(Path variablefile, Entity entity) {
-		BashCMTool.LOGGER.info("Start to create variableFile");
+	public static String createVariableFile(Path variablefile, Entity entity) {
+		BashCMTool.LOGGER.info("Start to gather normal data");
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder();
 		List<AttributeState> attributes  = new LinkedList<AttributeState>();
@@ -371,28 +425,30 @@ public class BashHelper {
 			sb.append(lb);
 		}
 		
-		BashCMTool.LOGGER.info("Content of the variable file:\n" + sb.toString());
+		BashCMTool.LOGGER.info("Gathered normal data:\n" + sb.toString());
 		
-		try {
-			FileUtils.writeStringToFile(variablefile.toFile(), sb.toString(), (Charset) null);
-		} catch (IOException e) {
-			BashCMTool.LOGGER.error("Fail to save variables file!", e);
-		}
+		return sb.toString();
 		
-		return variablefile;
+//		try {
+//			FileUtils.writeStringToFile(variablefile.toFile(), sb.toString(), (Charset) null);
+//		} catch (IOException e) {
+//			BashCMTool.LOGGER.error("Fail to save variables file!", e);
+//		}
+//		
+//		return variablefile;
 	}
 	
-	public Path createExtendedVariableFile(Path variablepath, Entity entity) {
-		BashCMTool.LOGGER.info("Start to create ExtendedVariableFile");
+	public void createExtendedVariableFile(Path variablepath, Entity entity) {
+		BashCMTool.LOGGER.info("Start to create extended variable file");
 		VariablesGenerator gen;
 		try {
 			gen = new VariablesGenerator(entity, variablepath.toFile(), new ArrayList<String>());
 			gen.doGenerate(null);
 		} catch (IOException e) {
-			BashCMTool.LOGGER.error("Failed to create variable file using VariablesGenerator!", e);
+			BashCMTool.LOGGER.error("Failed to create extended variable file using VariablesGenerator!", e);
 		}
 		
-		return Paths.get(variablepath.toString(), EXTEND_VAR_FILE_NAME); 
+//		return Paths.get(variablepath.toString(), EXTEND_VAR_FILE_NAME);
 	}
 	
 	/**
