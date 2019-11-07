@@ -348,7 +348,7 @@ public class BashHelper {
 			    while (line != null) {
 			    	if(!line.equals("#!/bin/bash") & !line.equals("")) {
 				        sb.append(line);
-				        sb.append(";");
+				        sb.append(";\n");
 			    	}
 			        line = br.readLine();
 			    }
@@ -462,7 +462,7 @@ public class BashHelper {
 //		String command = "scp " + "-i " + keypath + " " + file + " " + user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION;
 		Process process;
 		try {
-			process = new ProcessBuilder("scp", "-i", keypath, file, user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION).start();
+			process = new ProcessBuilder("scp", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null", "-i", keypath, file, user + "@" + ipaddress + ":" + REMOTE_SERVER_VAR_FILE_DESTINATION).start();
 			BashCMTool.LOGGER.info("Created process: " + process);
 			BashCMTool.LOGGER.info("Try to transfer " + file + " to remote Server (" + ipaddress + ")");
 			
