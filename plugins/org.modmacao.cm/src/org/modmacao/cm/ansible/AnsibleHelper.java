@@ -30,6 +30,8 @@ import org.modmacao.occi.platform.Component;
 import org.modmacao.placement.Placementlink;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
 * This class provides utility methods for the configuration management tool Ansible.
@@ -37,6 +39,7 @@ import org.osgi.framework.FrameworkUtil;
 */
 public final class AnsibleHelper {
 	Properties props;
+	static Logger LOGGER = LoggerFactory.getLogger(AnsibleHelper.class);
 	
 	public AnsibleHelper() {
 		loadProperties();
@@ -186,6 +189,8 @@ public final class AnsibleHelper {
 		Process process = null;
 		String message = null;
 		
+		LOGGER.debug("Creating Process with: " + command + " --inventory " + inventory.toString() + " -e task=" + task + playbook.toString());
+		
 		if (options == null) {
 			process = new ProcessBuilder(command, "--inventory", inventory.toString(),
 				"-e", "task=" + task, 
@@ -201,7 +206,14 @@ public final class AnsibleHelper {
 		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
 					  .lines().collect(Collectors.joining(System.lineSeparator())));
 		
+		StringBuffer eBuffer = new StringBuffer();
+		eBuffer.append(new BufferedReader(new InputStreamReader(process.getErrorStream()))
+					  .lines().collect(Collectors.joining(System.lineSeparator())));
+		
+		LOGGER.error(eBuffer.toString());
+		
 		process.waitFor();
+		
 				
 		message = buffer.toString();
 		
