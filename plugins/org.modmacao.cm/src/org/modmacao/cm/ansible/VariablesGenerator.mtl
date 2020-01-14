@@ -1,5 +1,5 @@
 [comment encoding = UTF-8 /]
-[module VariablesGenerator('http://schemas.ogf.org/occi/core/ecore', 'http://schemas.ogf.org/occi/infrastructure/ecore')]
+[module VariablesGenerator('http://schemas.ogf.org/occi/core/ecore', 'http://schemas.ogf.org/occi/infrastructure/ecore', 'http://schemas.modmacao.org/occi/platform/ecore')]
 
 
 [template public generateElement(aResource : occi::Resource)]
@@ -7,7 +7,7 @@
 [file ('vars2.yaml', false, 'UTF-8')]
 id: [aResource.id/]
 kind: [aResource.kind.term/]
-[if (aResource.kind.term.toString() = 'component')]
+[if (aResource.oclIsKindOf(platform::Component))]
   [let host : Resource = aResource.links
      ->select(l : Link | l.kind.term = 'placementlink')
      ->first().target ]
@@ -69,7 +69,7 @@ links:
              [/for]
       [/for]
       [/if]
-      [if (link.target.kind.term.toString() = 'component')]
+      [if (link.target.oclIsKindOf(platform::Component))]
       [let host : Resource = link.target.links
            ->select(l : Link | l.kind.term = 'placementlink')
            ->first().target ]
