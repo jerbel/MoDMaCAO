@@ -291,11 +291,14 @@ public final class AnsibleHelper {
 	 * @throws IOException
 	 */
 	public Path createExtendedVariableFile(Path variablepath, Entity entity) throws IOException{
-		
+		try {
 		VariablesGenerator gen = new VariablesGenerator(entity, 
 				variablepath.toFile(), new ArrayList<String>());
 		gen.doGenerate(null);
-		
+		} catch(Exception e){
+			LOGGER.error("Extended Variable File could not be correctly generated!");
+			LOGGER.error(e.toString());
+		}
 		return Paths.get(variablepath.toString(), "vars2.yaml"); 
 	}
 
