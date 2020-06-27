@@ -42,15 +42,22 @@ public final class OpenStackHelper {
 			Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 			if (bundle != null) {
 				URL url = FrameworkUtil.getBundle(this.getClass()).getResource(filename);
+				System.out.println("Properties werden aus url " + url + " geladen!");
 				input = url.openConnection().getInputStream();
+			} else {
+				System.out.println("Bundle ist null: Properties können nicht geladen werden!");
 			}
 
 			if (input == null) {
 				// try to read properties without BundleLoader
-				input = this.getClass().getClassLoader().getResourceAsStream(filename);	
+				input = this.getClass().getClassLoader().getResourceAsStream(filename);
+				System.out.println("url of openstack.properties: " + this.getClass().getClassLoader().getResource("openstack.properties"));
+				System.out.println("Properties werden aus filename " + filename + " geladen!");
 			}
 
 			props.load(input);
+			
+			System.out.println("Geladene Properties: " + props);
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -86,6 +93,11 @@ public final class OpenStackHelper {
 		String username = this.getProperties().getProperty("openstack_username");
 		String tenant = this.getProperties().getProperty("openstack_tenant");
 		String password = this.getProperties().getProperty("openstack_password");
+		
+		System.out.println("openstack_endpoint: " + endpoint);
+		System.out.println("openstack_username: " + username);
+		System.out.println("openstack_tenant: " + tenant);
+		System.out.println("openstack_password: " + password);
 		
 		os = OSFactory.builderV2()
 				.endpoint(endpoint)

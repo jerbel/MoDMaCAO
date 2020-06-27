@@ -36,7 +36,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      *
      * @generated NOT
      */
-    public static final String MODULE_FILE_NAME = "/bin/org/modmacao/cm/ansible/VariablesGenerator";
+    public static final String MODULE_FILE_NAME = "/home/lennse/git/MoDMaCAO/plugins/org.modmacao.cm/bin/org/modmacao/cm/ansible/VariablesGenerator";
     
     /**
      * The name of the templates that are to be generated.

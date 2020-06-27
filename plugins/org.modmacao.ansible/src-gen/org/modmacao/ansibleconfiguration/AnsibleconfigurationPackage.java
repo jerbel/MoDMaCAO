@@ -17,6 +17,7 @@ import org.eclipse.cmf.occi.core.OCCIPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * <!-- begin-user-doc -->
@@ -142,6 +143,9 @@ public interface AnsibleconfigurationPackage extends EPackage {
 	 */
 	int ANSIBLEENDPOINT_OPERATION_COUNT = OCCIPackage.MIXIN_BASE_OPERATION_COUNT + 0;
 
+	//quick fix, var was missing
+	int ANSIBLECONFIGURATION__ANSIBLE_PRIVATEKEY = 0;
+	int ANSIBLECONFIGURATION__ANSIBLE_REMOTEUSER = 1;
 
 	/**
 	 * Returns the meta object for class '{@link org.modmacao.ansibleconfiguration.Ansibleendpoint <em>Ansibleendpoint</em>}'.
@@ -224,6 +228,10 @@ public interface AnsibleconfigurationPackage extends EPackage {
 		 */
 		EAttribute ANSIBLEENDPOINT__ANSIBLE_PRIVATEKEY = eINSTANCE.getAnsibleendpoint_AnsiblePrivatekey();
 
+		//quick fix, variable was missing
+		EClass ANSIBLECONFIGURATION = null;
+		EStructuralFeature ANSIBLECONFIGURATION__ANSIBLE_PRIVATEKEY = null;
+		EStructuralFeature ANSIBLECONFIGURATION__ANSIBLE_REMOTEUSER = null;
 	}
 
 } //AnsibleconfigurationPackage

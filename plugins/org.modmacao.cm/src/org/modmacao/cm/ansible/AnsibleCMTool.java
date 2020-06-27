@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
+import org.eclipse.cmf.occi.docker.Container;
+import org.eclipse.cmf.occi.docker.Machine;
+import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
 import org.modmacao.cm.ConfigurationManagementTool;
 import org.modmacao.occi.platform.Application;
@@ -209,7 +212,14 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 	
 	private int executeRoles(Resource resource, List<String> roles, String task) throws Exception{
 		AnsibleHelper helper = new AnsibleHelper();
-		String ipaddress = helper.getIPAddress(resource);
+		String ipaddress = "";
+		if(helper.isPlacedOnContainer(resource)) {
+			Container container = (Container)helper.getCompute(resource);
+			ipaddress = container.getName();
+		} else {
+			ipaddress = helper.getIPAddress(resource);
+		}
+		
 		String user = this.getUser();
 		String options = null;
 		String keypath = helper.getProperties().getProperty("private_key_path");
@@ -219,6 +229,8 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		}
 		
 		String basedir = "/tmp/" + helper.getTitle(resource).replace(' ', '_') + "_ansible_" + System.currentTimeMillis();
+		
+		System.out.println("Der Ordner des aktuellen Ansible deploys ist: " + basedir);
 		
 		Ansibleendpoint endpoint = helper.getAnsibleEndboint(resource);
 		
@@ -233,23 +245,39 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 			}
 		}
 		
+		System.out.println("Path to ansible.cfg: " + helper.createConfiguration(Paths.get("ansible.cfg"), 
+				Paths.get(keypath)));
 		
-		helper.createConfiguration(Paths.get("ansible.cfg"), 
-				Paths.get(keypath));
 		List <Path> variablefiles = new ArrayList<Path>();
 		
 		variablefiles.add(helper.createVariableFile(Paths.get(basedir, "vars.yaml"), resource));
-		variablefiles.add(helper.createExtendedVariableFile(Paths.get(basedir), resource));
-			
-		Path playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, 
-				Paths.get(basedir, "playbook.yml"));
+//		variablefiles.add(helper.createExtendedVariableFile(Paths.get(basedir), resource));
+		
+		Path playbook = null;
+		if(helper.isPlacedOnContainer(resource)) {
+			playbook = helper.createPlaybookForContainer(ipaddress, roles, user, variablefiles, 
+					Paths.get(basedir, "playbook.yml"));
+		} else {
+			playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, 
+					Paths.get(basedir, "playbook.yml"));
+		}
 			
 		Path inventory = helper.createInventory(ipaddress, Paths.get(basedir, "inventory"));
 			
 		LOGGER.info("Executing role " + roles + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
 		
-		AnsibleReturnState state = helper.executePlaybook(playbook, task, inventory, options);	
+		AnsibleReturnState state = null;
 		
+		if(helper.isPlacedOnContainer(resource)) {
+			Machine machine = helper.getMachine((Container)helper.getCompute(resource));
+			if(machine == null)
+				throw new Exception("The container has no machine connected to");
+			String machineName = helper.getMachine((Container)helper.getCompute(resource)).getName();
+			state = helper.executePlaybookForContainer(playbook, task, inventory, options,machineName);
+		} else {
+			state = helper.executePlaybook(playbook, task, inventory, options);
+		}
+
 		if (state.getStateMessage() != null) {
 			LOGGER.info("Received state message.");
 			LOGGER.info(state.getStateMessage());

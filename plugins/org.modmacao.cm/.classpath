@@ -8,14 +8,72 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.5.jar"/>
-	<classpathentry kind="lib" path="/org.modmacao.occi.platform/bin"/>
-	<classpathentry kind="lib" path="/org.modmacao.placement/bin"/>
+	<classpathentry kind="lib" path="/home/lennse/git/MartServer-1/plugins/org.modmacao.occi.platform_1.0.0.201804261009.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/MartServer-1/plugins/org.modmacao.placement_1.0.0.201902131354.jar"/>
 	<classpathentry kind="lib" path="/org.modmacao.core/bin"/>
-	<classpathentry kind="lib" path="/org.modmacao.mongodb/bin"/>
+	<classpathentry kind="lib" path="/home/lennse/git/MartServer-1/plugins/org.modmacao.mongodb_1.0.0.201906191146.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsch-0.1.55.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.26.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.2.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.6.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/lennart/git/MoDMaCAO/plugins/org.modmacao.cm/lib/jsch-0.1.55.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.10.0.v20180412-1130.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/Downloads/org.eclipse.cmf.occi.product-linux.gtk.x86_64(1)/plugins/org.eclipse.cmf.occi.core_1.0.0.201912091842.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/Downloads/org.eclipse.cmf.occi.product-linux.gtk.x86_64(1)/plugins/org.eclipse.cmf.occi.infrastructure_1.0.0.201912091842.jar" sourcepath="/home/lennse/git/OCCI-Studio/plugins/org.eclipse.cmf.occi.infrastructure"/>
+	<classpathentry kind="lib" path="/home/lennse/plugins/org.eclipse.cmf.occi.docker.connector_1.0.0.current.jar" sourcepath="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector"/>
+	<classpathentry kind="lib" path="/home/lennse/plugins/org.eclipse.cmf.occi.docker_1.0.0.current.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/aopalliance-repackaged-2.4.0-b34.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/bcpkix-jdk15on-1.54.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/bcprov-jdk15on-1.54.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/commons-compress-1.12.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/commons-io-2.5.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/docker-java-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/docker-java-api-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/docker-java-core-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/docker-java-transport-jersey-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/docker-java-transport-netty-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/hk2-api-2.4.0-b34.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/hk2-locator-2.4.0-b34.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/hk2-utils-2.4.0-b34.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/httpclient-4.5.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/httpcore-4.4.5.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jackson-annotations-2.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jackson-core-2.9.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jackson-databind-2.9.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jackson-jaxrs-base-2.9.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jackson-jaxrs-json-provider-2.9.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jackson-module-jaxb-annotations-2.9.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/javassist-3.18.1-GA.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/javax.annotation-api-1.2.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/javax.inject-2.4.0-b34.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/javax.ws.rs-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jcl-over-slf4j-1.7.21.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jersey-apache-connector-2.23.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jersey-client-2.23.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jersey-common-2.23.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jersey-guava-2.23.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/jsch-0.1.54.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/junixsocket-common-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/junixsocket-native-common-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/native-lib-loader-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-buffer-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-codec-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-codec-http-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-codec-socks-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-common-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-handler-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-handler-proxy-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-resolver-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-transport-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-transport-native-epoll-4.1.11.Final-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-transport-native-kqueue-4.1.11.Final-osx-x86_64.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/netty-transport-native-unix-common-4.1.11.Final.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/osgi-resource-locator-1.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/slf4j-api-1.7.21.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/slf4j-simple-1.7.25.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/DockerStudio/plugins/org.eclipse.emf.transaction_1.9.0.201706061339.jar"/>
+	<classpathentry kind="lib" path="/MartServer-1/plugins/org.eclipse.cmf.occi.infrastructure_1.0.0.201712071437.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

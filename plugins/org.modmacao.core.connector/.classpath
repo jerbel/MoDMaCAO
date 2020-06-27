@@ -4,10 +4,10 @@
 	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="/org.modmacao.occi.platform/bin"/>
+	<classpathentry kind="lib" path="/home/lennse/git/MartServer-1/plugins/org.modmacao.occi.platform_1.0.0.201804261009.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modmacao.core"/>
 	<classpathentry kind="lib" path="/org.modmacao.core/bin"/>
-	<classpathentry kind="lib" path="/org.modmacao.placement/bin"/>
-	<classpathentry kind="lib" path="/org.modmacao.mongodb/bin"/>
+	<classpathentry kind="lib" path="/home/lennse/git/MartServer-1/plugins/org.modmacao.placement_1.0.0.201902131354.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/git/MartServer-1/plugins/org.modmacao.mongodb_1.0.0.201906191146.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

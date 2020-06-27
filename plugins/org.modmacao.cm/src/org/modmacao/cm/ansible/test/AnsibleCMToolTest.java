@@ -36,7 +36,6 @@ public class AnsibleCMToolTest {
 	Component cut;
 	Application aut;
 	
-	
 	@Before
 	public void setUP() {
 		setupExtensions();
@@ -66,8 +65,8 @@ public class AnsibleCMToolTest {
 		AttributeState ipaddress = OCCIFactory.eINSTANCE.createAttributeState();
 		ipaddress.setName("occi.networkinterface.address");
 		// we set ip both as AttributeState and member variable, since otherwise we might encounter inconsistencies
-		ipaddress.setValue("localhost");
-		ipNetworkMixinBase.setOcciNetworkinterfaceAddress("localhost");
+		ipaddress.setValue("127.0.0.1");
+		ipNetworkMixinBase.setOcciNetworkinterfaceAddress("127.0.0.1");
 		ipNetworkMixinBase.getAttributes().add(ipaddress);
 		nic.getParts().add(ipNetworkMixinBase);
 		nic.getParts().add(ansibleendpoint);
