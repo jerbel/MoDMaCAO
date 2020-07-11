@@ -271,9 +271,9 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		if(helper.isPlacedOnContainer(resource)) {
 			Machine machine = helper.getMachine((Container)helper.getCompute(resource));
 			if(machine == null)
-				throw new Exception("The container has no machine connected to");
+				throw new Exception("The container has no machine connected to it");
 			String machineName = helper.getMachine((Container)helper.getCompute(resource)).getName();
-			state = helper.executePlaybookForContainer(playbook, task, inventory, options,machineName);
+			state = helper.executePlaybookForContainer(playbook, task, inventory, options, machineName);
 		} else {
 			state = helper.executePlaybook(playbook, task, inventory, options);
 		}

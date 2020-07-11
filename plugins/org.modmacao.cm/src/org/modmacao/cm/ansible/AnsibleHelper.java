@@ -499,6 +499,8 @@ public final class AnsibleHelper {
 				"eval $(" + dockerPath + " env " + dockerHost + ") && " +
 				dockerPath + " ls && ";
 		
+		System.out.println("dockerEnvCommand: " + dockerEnvCommand);
+		
 		String ansiblePath = this.getProperties().getProperty("ansible_bin");
 		
 		String ansiblePlaybookCommand = ansiblePath + " -c docker " + " --inventory " + inventory.toString() +
@@ -506,6 +508,8 @@ public final class AnsibleHelper {
 		
 		if(options != null)
 			ansiblePlaybookCommand = " " + options;
+		
+		System.out.println("ansiblePlaybookCommand: " + ansiblePlaybookCommand);
 		
 		String[] fullCommand = {"bash","-c", dockerEnvCommand + ansiblePlaybookCommand };
 		
