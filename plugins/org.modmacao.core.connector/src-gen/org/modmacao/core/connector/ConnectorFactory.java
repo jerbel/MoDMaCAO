@@ -14,6 +14,14 @@
  */
 package org.modmacao.core.connector;
 
+import org.modmacao.occi.platform.App_tpl;
+import org.modmacao.occi.platform.Application;
+import org.modmacao.occi.platform.Component;
+import org.modmacao.occi.platform.Componentlink;
+import org.modmacao.occi.platform.Database;
+import org.modmacao.occi.platform.Databaselink;
+import org.modmacao.occi.platform.Res_tpl;
+
 /**
  * Connector EFactory for the OCCI extension:
  * - name: platform
@@ -29,7 +37,7 @@ public class ConnectorFactory extends org.modmacao.occi.platform.impl.PlatformFa
 	 */
 	@Override
 	public org.modmacao.occi.platform.Application createApplication() {
-		return new ApplicationConnector();
+		return (Application) new ApplicationConnector();
 	}
 
 	/**
@@ -40,7 +48,7 @@ public class ConnectorFactory extends org.modmacao.occi.platform.impl.PlatformFa
 	 */
 	@Override
 	public org.modmacao.occi.platform.Component createComponent() {
-		return new ComponentConnector();
+		return (Component) new ComponentConnector();
 	}
 
 	/**
@@ -51,7 +59,7 @@ public class ConnectorFactory extends org.modmacao.occi.platform.impl.PlatformFa
 	 */
 	@Override
 	public org.modmacao.occi.platform.Componentlink createComponentlink() {
-		return new ComponentlinkConnector();
+		return (Componentlink) new ComponentlinkConnector();
 	}
 
 	/**
@@ -62,7 +70,7 @@ public class ConnectorFactory extends org.modmacao.occi.platform.impl.PlatformFa
 	 */
 	@Override
 	public org.modmacao.occi.platform.App_tpl createApp_tpl() {
-		return new App_tplConnector();
+		return (App_tpl) new App_tplConnector();
 	}
 
 	/**
@@ -73,7 +81,7 @@ public class ConnectorFactory extends org.modmacao.occi.platform.impl.PlatformFa
 	 */
 	@Override
 	public org.modmacao.occi.platform.Res_tpl createRes_tpl() {
-		return new Res_tplConnector();
+		return (Res_tpl) new Res_tplConnector();
 	}
 
 	/**
@@ -84,7 +92,7 @@ public class ConnectorFactory extends org.modmacao.occi.platform.impl.PlatformFa
 	 */
 	@Override
 	public org.modmacao.occi.platform.Database createDatabase() {
-		return new DatabaseConnector();
+		return (Database) new DatabaseConnector();
 	}
 
 	/**
@@ -95,7 +103,7 @@ public class ConnectorFactory extends org.modmacao.occi.platform.impl.PlatformFa
 	 */
 	@Override
 	public org.modmacao.occi.platform.Databaselink createDatabaselink() {
-		return new DatabaselinkConnector();
+		return (Databaselink) new DatabaselinkConnector();
 	}
 
 }
