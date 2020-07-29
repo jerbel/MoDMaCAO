@@ -1,0 +1,39 @@
+- block:
+  - name: Get memory usage
+    shell: echo $(awk '{ total += $1; count++ } END { print total/count }' /home/{{username}}/countoutput.log)
+    register: average_memory
+  - name: Show memory usage
+    debug:
+      msg: "Avg Memory usage is {{average_memory.stdout}}"
+  - name: store final timestamp to variable
+    shell: date +%s
+    register: finalTimestamp
+  - name: Calculate Installation Time
+    shell: expr {{finalTimestamp.stdout}} + 1 - {{ initialTime }}
+    register: resultTimestamp
+  - local_action: 
+      module: copy 
+      content: "{{ average_memory.stdout }}, {{resultTimestamp.stdout}}"
+      dest: /home/ubuntu/{{metric_file}}
+  when: installed == true
+- block:
+  - name: Download get_memory.sh script to Remote Server
+    get_url:
+      url: https://gist.githubusercontent.com/rzaevnicat/5febd6c6e0331c6b7b94bb5bf4db84b4/raw/bc786d3eff048b83c785933d1883a637ab06479b/get_memory.sh
+      dest: /home/{{username}}/
+      mode: 0777
+    register: createdFile
+  - name: Run get_memory.sh script in background   
+    command: nohup bash /home/{{username}}/get_memory.sh {{ username }} &
+    async: 45
+    poll: 0
+  - name: store initial timestamp to variable
+    shell: date +%s
+    register: initialTimestamp
+  - name: register initial time
+    set_fact:
+      initialTime: "{{initialTimestamp.stdout}}"
+  - name: Set installed To True
+    set_fact:
+      installed: true
+  when: installed == false

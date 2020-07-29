@@ -229,37 +229,39 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 				user = remoteuser;
 			}
 			if (privatekey != null && !privatekey.equals("")) {
-					keypath = privatekey;
+				keypath = privatekey;
 			}
 		}
-		
-		
-		helper.createConfiguration(Paths.get("ansible.cfg"), 
-				Paths.get(keypath));
-		List <Path> variablefiles = new ArrayList<Path>();
-		
+
+		helper.createConfiguration(Paths.get("ansible.cfg"), Paths.get(keypath));
+		List<Path> variablefiles = new ArrayList<Path>();
+
 		variablefiles.add(helper.createVariableFile(Paths.get(basedir, "vars.yaml"), resource));
 		variablefiles.add(helper.createExtendedVariableFile(Paths.get(basedir), resource));
-			
-		Path playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, 
+
+		helper.createMetricsPlaybook(Paths.get(basedir, "metrics.yml"));
+
+		String fileNameId = resource.getId();
+
+		Path playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, fileNameId,
 				Paths.get(basedir, "playbook.yml"));
-			
+
 		Path inventory = helper.createInventory(ipaddress, Paths.get(basedir, "inventory"));
-			
-		LOGGER.info("Executing role " + roles + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
-		
-		AnsibleReturnState state = helper.executePlaybook(playbook, task, inventory, options);	
-		
+
+		LOGGER.info("Executing role " + roles + " with task " + task + " on host " + ipaddress + " with user " + user
+				+ ".");
+
+		AnsibleReturnState state = helper.executePlaybook(playbook, task, inventory, options);
 		if (state.getStateMessage() != null) {
 			LOGGER.info("Received state message.");
 			LOGGER.info(state.getStateMessage());
 			if (resource instanceof Component) {
 				((Component) resource).setOcciComponentStateMessage(state.getStateMessage());
 			} else if (resource instanceof Application) {
-				((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
+				((Application) resource).setOcciAppStateMessage(state.getStateMessage());
 			}
 		}
-		
+
 		return state.getExitValue();
 	}
 

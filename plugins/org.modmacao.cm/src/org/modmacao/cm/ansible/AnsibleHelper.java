@@ -1,9 +1,13 @@
 package org.modmacao.cm.ansible;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -118,7 +122,7 @@ public final class AnsibleHelper {
 	 * @return The path where this playbook was created.
 	 * @throws IOException
 	 */
-	public Path createPlaybook(String ipaddress, List<String> roles, String user, List<Path> variables,
+	public Path createPlaybook(String ipaddress, List<String> roles, String user, List<Path> variables, String timestamp,
 			Path path) throws IOException {
 		String lb = System.getProperty("line.separator");
 		String offset = "  ";
@@ -131,11 +135,29 @@ public final class AnsibleHelper {
 		for (Path variablepath: variables) {
 			sb.append(offset).append(offset).append("- ").append(variablepath.toAbsolutePath().toString()).append(lb);
 		}
+		
+		sb.append(offset).append("vars: ").append(lb);
+		sb.append(offset).append(offset).append("- ").append("installed: false").append(lb);
+		sb.append(offset).append(offset).append("- ").append("username: "+user).append(lb);
+		sb.append(offset).append(offset).append("- ").append("metric_file: "+timestamp+".log").append(lb);
+		sb.append(offset).append(offset).append("- ").append("initialTime: 0").append(lb);
+		sb.append(offset).append(offset).append("- ").append("installationTime: 0").append(lb);
+		sb.append(offset).append("pre_tasks:").append(lb);
+		sb.append(offset).append(offset).append("- name: Copy metrics sh to server").append(lb);
+		sb.append(offset).append(offset).append("  import_tasks: metrics.yml").append(lb);
+		
+		
+		
 		sb.append(offset).append("roles:").append(lb);
 		
 		for (String role: roles) {
 			sb.append(offset).append(offset).append("- ").append(role).append(lb);
 		}
+		
+		
+		sb.append(offset).append("post_tasks:").append(lb);
+		sb.append(offset).append(offset).append("- name: To get information from server").append(lb);
+		sb.append(offset).append(offset).append("  import_tasks: metrics.yml").append(lb);
 		
 		FileUtils.writeStringToFile(path.toFile(), sb.toString(), (Charset) null);
 		return path;
@@ -427,4 +449,31 @@ public final class AnsibleHelper {
 	
 			return ipaddress;
 		}
+	
+	public void createMetricsPlaybook(Path path) throws Exception{
+		final String filename = "metrics.yml";
+      
+        
+        InputStream stream = null;
+        OutputStream resStreamOut = null;
+        try {
+            stream = this.getClass().getResourceAsStream(filename);//note that each / is a directory down in the "jar tree" been the jar the root of the tree
+            if(stream == null) {
+                throw new Exception("Cannot get resource \"" + filename + "\" from Jar file.");
+            }
+
+            int readBytes;
+            byte[] buffer = new byte[4096];
+            resStreamOut = new FileOutputStream(path.toString());
+            while ((readBytes = stream.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            stream.close();
+            resStreamOut.close();
+        }
+		
+	}
 }
