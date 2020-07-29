@@ -61,7 +61,7 @@ public class AnsibleHelperTest {
 			List<Path> variablefiles = new ArrayList<Path>();
 			variablefiles.add(Paths.get("testdata/variable.yaml"));
 			helper.createPlaybook("127.0.0.1", roles,
-					"testuser", variablefiles, Paths.get("testdata/playbook.yml"));
+					"testuser", variablefiles, "timestamp", Paths.get("testdata/playbook.yml"));
 		} catch(IOException e) {
 			fail("Should not throw exception.");
 		}
@@ -102,7 +102,7 @@ public class AnsibleHelperTest {
 			variablefiles.add(Paths.get("testdata/variable.yaml"));
 			
 			Path playbook = helper.createPlaybook("127.0.0.1", roles, 
-					"ubuntu", variablefiles, Paths.get("testdata/playbook.yml"));
+					"ubuntu", variablefiles,"timestamp", Paths.get("testdata/playbook.yml"));
 			
 			Path inventory = helper.createInventory("127.0.0.1", 
 					Paths.get("testdata/inventory"));
