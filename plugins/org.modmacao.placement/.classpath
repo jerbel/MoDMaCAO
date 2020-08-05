@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="/home/lennse/Downloads/org.eclipse.cmf.occi.product-linux.gtk.x86_64(1)/plugins/org.eclipse.cmf.occi.core_1.0.0.201912091842.jar"/>
-	<classpathentry kind="lib" path="/home/lennse/Downloads/org.eclipse.cmf.occi.product-linux.gtk.x86_64(1)/plugins/org.eclipse.cmf.occi.infrastructure_1.0.0.201912091842.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/DockerStudio/plugins/org.eclipse.cmf.occi.core_1.0.0.201802221456.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/DockerStudio/plugins/org.eclipse.cmf.occi.infrastructure_1.0.0.201802221456.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

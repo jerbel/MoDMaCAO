@@ -16,8 +16,7 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.26.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.10.0.v20180412-1130.jar"/>
-	<classpathentry kind="lib" path="/home/lennse/Downloads/org.eclipse.cmf.occi.product-linux.gtk.x86_64(1)/plugins/org.eclipse.cmf.occi.core_1.0.0.201912091842.jar"/>
-	<classpathentry kind="lib" path="/home/lennse/Downloads/org.eclipse.cmf.occi.product-linux.gtk.x86_64(1)/plugins/org.eclipse.cmf.occi.infrastructure_1.0.0.201912091842.jar" sourcepath="/home/lennse/git/OCCI-Studio/plugins/org.eclipse.cmf.occi.infrastructure"/>
+	<classpathentry kind="lib" path="/home/lennse/DockerStudio/plugins/org.eclipse.cmf.occi.core_1.0.0.201802221456.jar"/>
 	<classpathentry kind="lib" path="/home/lennse/plugins/org.eclipse.cmf.occi.docker.connector_1.0.0.current.jar" sourcepath="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector"/>
 	<classpathentry kind="lib" path="/home/lennse/plugins/org.eclipse.cmf.occi.docker_1.0.0.current.jar"/>
 	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/aopalliance-repackaged-2.4.0-b34.jar"/>
@@ -74,6 +73,6 @@
 	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/slf4j-api-1.7.21.jar"/>
 	<classpathentry kind="lib" path="/home/lennse/git/Docker-Studio/plugins/org.eclipse.cmf.occi.docker.connector/lib/slf4j-simple-1.7.25.jar"/>
 	<classpathentry kind="lib" path="/home/lennse/DockerStudio/plugins/org.eclipse.emf.transaction_1.9.0.201706061339.jar"/>
-	<classpathentry kind="lib" path="/MartServer-1/plugins/org.eclipse.cmf.occi.infrastructure_1.0.0.201712071437.jar"/>
+	<classpathentry kind="lib" path="/home/lennse/DockerStudio/plugins/org.eclipse.cmf.occi.infrastructure_1.0.0.201802221456.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
