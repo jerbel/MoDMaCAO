@@ -230,6 +230,12 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 						FloatingIP fip = os.compute().floatingIps().allocateIP(pool);
 						LOGGER.debug("Allocated new floating ip " + fip.getFloatingIpAddress());
 						os.compute().floatingIps().addFloatingIP(server, fip.getFloatingIpAddress());
+						((Floatingip) mixin).setOpenstackFloatingipAddress(fip.getFloatingIpAddress());
+						for(AttributeState attr: mixin.getAttributes()) {
+							if(attr.getName().equals("openstack.floatingip.address")) {
+								attr.setValue(fip.getFloatingIpAddress());
+							}
+						}
 					}				
 				}
 			}
