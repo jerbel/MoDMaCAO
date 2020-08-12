@@ -274,7 +274,10 @@ public final class AnsibleHelper {
 			String name = attribute.getName().replace('.', '_');
 			sb.append(name);
 			sb.append(": ");
+			//Add quotes aroudn attribute to support whitespaces in attribute values
+			sb.append('"');
 			sb.append(attribute.getValue());
+			sb.append('"');
 			sb.append(lb);
 		}
 		
