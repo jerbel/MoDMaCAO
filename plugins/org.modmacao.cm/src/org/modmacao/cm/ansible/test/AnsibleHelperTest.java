@@ -13,19 +13,51 @@ import java.util.Properties;
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Entity;
 import org.eclipse.cmf.occi.core.OCCIFactory;
+import org.eclipse.cmf.occi.core.util.OcciRegistry;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.InfrastructureFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.modmacao.cm.ansible.AnsibleHelper;
 
 
 public class AnsibleHelperTest {
+	
+	@Before
+	public void setUp() {
+		OcciRegistry.getInstance().registerExtension("http://schemas.modmacao.org/modmacao#",Paths.get("testextensions/modmacao.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.modmacao.org/occi/platform#",Paths.get("testextensions/platform.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.ogf.org/occi/infrastructure#",Paths.get("testextensions/Infrastructure.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.ogf.org/occi/core#",Paths.get("testextensions/Core.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://schemas.modmacao.org/occi/ansible#",Paths.get("testextensions/ansibleconfiguration.occie").toString());
+		OcciRegistry.getInstance().registerExtension("http://occiware.org/occi/docker#",Paths.get("/org.eclipse.cmf.occi.docker/model/docker.occie").toString());
+	}
 	@Test
 	public void testCreateInventory() {
 		AnsibleHelper helper = new AnsibleHelper();
 		try {
 			helper.createInventory("127.0.0.1", Paths.get("testdata/inventory"));
 			
+		} catch(IOException e) {
+			fail("Should not throw exception.");
+		}
+	}
+	
+	@Test
+	public void testCreateExtVariableFile() {
+		AnsibleHelper helper = new AnsibleHelper();
+		try {
+			Compute vm = InfrastructureFactory.eINSTANCE.createCompute();
+			AttributeState state1 = OCCIFactory.eINSTANCE.createAttributeState();
+			state1.setName("occi.core.id");
+			state1.setValue("12345");
+			AttributeState state2 = OCCIFactory.eINSTANCE.createAttributeState();
+			state2.setName("occi.core.title");
+			state2.setValue("title");
+			vm.getAttributes().add(state1);
+			vm.getAttributes().add(state2);
+			
+			helper.createExtendedVariableFile(Paths.get("testdata/"), vm);
 		} catch(IOException e) {
 			fail("Should not throw exception.");
 		}

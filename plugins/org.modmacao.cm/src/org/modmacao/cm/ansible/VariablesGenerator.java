@@ -37,6 +37,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      * @generated NOT
      */
     public static final String MODULE_FILE_NAME = "/bin/org/modmacao/cm/ansible/VariablesGenerator";
+//    public static final String MODULE_FILE_NAME = "VariablesGenerator";
     
     /**
      * The name of the templates that are to be generated.
@@ -341,11 +342,12 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
     @Override
     public void registerPackages(ResourceSet resourceSet) {
         super.registerPackages(resourceSet);
-        if (!isInWorkspace(org.eclipse.cmf.occi.core.OCCIPackage.class)) {
-            resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE);
-        }
         if (!isInWorkspace(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.class)) {
             resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE);
+        }
+        
+        if(!isInWorkspace(org.modmacao.placement.PlacementPackage.class)) {
+            resourceSet.getPackageRegistry().put(org.modmacao.placement.PlacementPackage.eINSTANCE.getNsURI(), org.modmacao.placement.PlacementPackage.eINSTANCE);
         }
         
         /*

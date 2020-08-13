@@ -21,6 +21,9 @@ import org.eclipse.cmf.occi.core.Link;
 import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.core.Resource;
+import org.eclipse.cmf.occi.docker.Container;
+import org.eclipse.cmf.occi.docker.Contains;
+import org.eclipse.cmf.occi.docker.Machine;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
@@ -102,6 +105,8 @@ public final class AnsibleHelper {
 	 * @throws IOException
 	 */
 	public Path createInventory(String ipaddress, Path path) throws IOException {
+		if(ipaddress == "localhost" || ipaddress == "127.0.0.1")
+			ipaddress = "";
 		FileUtils.writeStringToFile(path.toFile(), ipaddress, (Charset) null);
 		return path;
 	}
@@ -126,6 +131,59 @@ public final class AnsibleHelper {
 		sb.append(lb);
 		sb.append("- hosts: ").append(ipaddress).append(lb);
 		sb.append(offset).append("remote_user: ").append(user).append(lb);
+		sb.append(offset).append("become: yes").append(lb);
+		sb.append(offset).append("vars_files: ").append(lb);
+		for (Path variablepath: variables) {
+			sb.append(offset).append(offset).append("- ").append(variablepath.toAbsolutePath().toString()).append(lb);
+		}
+		sb.append(offset).append("roles:").append(lb);
+		
+		for (String role: roles) {
+			sb.append(offset).append(offset).append("- ").append(role).append(lb);
+		}
+		
+		FileUtils.writeStringToFile(path.toFile(), sb.toString(), (Charset) null);
+		return path;
+	}
+	
+	/**
+	 * This method creates a playbook suited to be executed on containers. It adds a additional play at the beginning of the playbook
+	 * in which the existence of python is checked and installed if necessary. The use of certain ansible modules require an python interpreter
+	 * on the target machine containers build from images like ubuntu doesn't ship with one.
+	 * @param ipaddress
+	 * @param roles
+	 * @param user
+	 * @param variables
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
+	public Path createPlaybookForContainer(String ipaddress, List<String> roles, String user, List<Path> variables,
+			Path path) throws IOException {
+		String lb = System.getProperty("line.separator");
+		String offset = "  ";
+		StringBuilder sb = new StringBuilder("---");
+		sb.append(lb);
+		sb.append("- hosts: ").append(ipaddress).append(lb);
+		sb.append(offset).append("gather_facts: false").append(lb);
+		sb.append(offset).append("roles:").append(lb);
+		//play in which the existence of python is checked and installed if necessary
+		sb.append(offset).append(offset).append("- ").append("pythonpreinstaller").append(lb);
+		//play to install sudo function
+		sb.append(offset).append(offset).append("- ").append("sudopreinstaller").append(lb);
+		
+		//play to add ubuntu user
+		sb.append(offset).append(offset).append("- ").append("ubuntuuserinstall").append(lb);
+		//install iproute2 to be able to access ansible_default_ipv4 variable
+		sb.append(offset).append(offset).append("- ").append("iproute2installer").append(lb);
+		
+		//install curl 
+		sb.append(offset).append(offset).append("- ").append("curlinstaller").append(lb);
+		
+		//second play adding the designated roles
+		sb.append(lb);
+		sb.append("- hosts: ").append(ipaddress).append(lb);
+		sb.append(offset).append("remote_user: ubuntu").append(lb);
 		sb.append(offset).append("become: yes").append(lb);
 		sb.append(offset).append("vars_files: ").append(lb);
 		for (Path variablepath: variables) {
@@ -189,7 +247,8 @@ public final class AnsibleHelper {
 		Process process = null;
 		String message = null;
 		
-		LOGGER.debug("Creating Process with: " + command + " --inventory " + inventory.toString() + " -e task=" + task + playbook.toString());
+		System.out.println("Command zum starten des Playbooks: ");
+		System.out.println(command + " --inventory " + inventory.toString() + " -e " + " task=" + task + " " + playbook.toString() + " " + options);
 		
 		if (options == null) {
 			process = new ProcessBuilder(command, "--inventory", inventory.toString(),
@@ -293,14 +352,12 @@ public final class AnsibleHelper {
 	 * @return The path where this variable file was created.
 	 * @throws IOException
 	 */
-	public Path createExtendedVariableFile(Path variablepath, Entity entity) throws IOException{
+	public Path createExtendedVariableFile(Path variablepath, Entity entity) throws IOException {
 		try {
-		VariablesGenerator gen = new VariablesGenerator(entity, 
-				variablepath.toFile(), new ArrayList<String>());
-		gen.doGenerate(null);
+			VariablesGenerator gen = new VariablesGenerator(entity, variablepath.toFile(), new ArrayList<String>());
+			gen.doGenerate(null);
 		} catch(Exception e){
-			LOGGER.error("Extended Variable File could not be correctly generated!");
-			LOGGER.error(e.toString());
+			LOGGER.error("Extended Variable File could not be correctly generated!",e);
 		}
 		return Paths.get(variablepath.toString(), "vars2.yaml"); 
 	}
@@ -317,6 +374,27 @@ public final class AnsibleHelper {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Search for a compute instanz that is connected through a placementlink with the given resource.
+	 * @param resource
+	 * @return
+	 */
+	public Compute getCompute(Resource resource) {
+		Compute compute = null;
+		for(Link link: resource.getLinks()) {
+			if(link instanceof Placementlink) {
+				Resource target = link.getTarget();
+				if(target instanceof Compute)
+					compute = (Compute) target;
+			}
+		}
+		return compute;
+	}
+	
+	public boolean isPlacedOnContainer(Resource resource) {
+		return getCompute(resource) instanceof Container;
 	}
 	
 	public Ansibleendpoint getAnsibleEndboint(Resource resource) {
@@ -407,7 +485,7 @@ public final class AnsibleHelper {
 					AnsibleCMTool.LOGGER.error("No network interface found for " + target);	
 				} else {
 					// Retrieving object to ensure ip address is correct
-					networklink.occiRetrieve();
+//					networklink.occiRetrieve();
 					List<AttributeState> attributes  = new LinkedList<AttributeState>();
 					attributes.addAll(networklink.getAttributes());
 					for (MixinBase base: networklink.getParts()) {
@@ -430,4 +508,67 @@ public final class AnsibleHelper {
 	
 			return ipaddress;
 		}
+
+	/**
+	 * In addition to the functionality of executePlaybook() this method sets the environment variables for the
+	 * docker-machine tool to the dedicated host.
+	 * The ansible-playbook command is then executed with docker as connection plugin (-c flag)
+	 * which leads to the use of docker cli tool rather than ssh to run the ansible configurations on the target node (the container).
+	 * With the docker environemt variables the docker cli tool knows to which docker host it has to connect to.
+	 * @param playbook
+	 * @param task
+	 * @param inventory
+	 * @param options
+	 * @param dockerHost
+	 * @return
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
+	public AnsibleReturnState executePlaybookForContainer(Path playbook, String task, Path inventory, String options, String dockerHost) throws InterruptedException, IOException {
+		String dockerPath = this.getProperties().getProperty("docker_machine_bin");
+		
+		String dockerEnvCommand = dockerPath + " ls && " +
+				dockerPath + " env " + dockerHost + " && " +
+				"eval $(" + dockerPath + " env " + dockerHost + ") && " +
+				dockerPath + " ls && ";
+		
+		System.out.println("dockerEnvCommand: " + dockerEnvCommand);
+		
+		String ansiblePath = this.getProperties().getProperty("ansible_bin");
+		
+		String ansiblePlaybookCommand = ansiblePath + " -c docker " + " --inventory " + inventory.toString() +
+		" -e task=" + task + " " + playbook.toString();
+		
+		if(options != null)
+			ansiblePlaybookCommand = " " + options;
+		
+		System.out.println("ansiblePlaybookCommand: " + ansiblePlaybookCommand);
+		
+		String[] fullCommand = {"bash","-c", dockerEnvCommand + ansiblePlaybookCommand };
+		
+		Process process = new ProcessBuilder(fullCommand).start();
+		
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
+					  .lines().collect(Collectors.joining(System.lineSeparator())));
+		
+		process.waitFor();
+				
+		String message = buffer.toString();
+		
+		return new AnsibleReturnState(process.exitValue(), message);
+	}
+	
+	public Machine getMachine(Container container) {		
+		for(Link link: container.getRlinks()) {
+			if(link instanceof Contains) {
+				Resource target = link.getSource();
+				if(target instanceof Machine) {
+					return (Machine)target;
+				}
+			}
+		}
+		
+		return null;
+	}
 }
