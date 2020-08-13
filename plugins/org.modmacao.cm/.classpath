@@ -4,9 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.5.jar"/>
-	<classpathentry kind="lib" path="/org.modmacao.occi.platform/bin"/>
-	<classpathentry kind="lib" path="/org.modmacao.placement/bin"/>
-	<classpathentry kind="lib" path="/org.modmacao.core/bin"/>
-	<classpathentry kind="lib" path="/org.modmacao.mongodb/bin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.cmf.occi.docker"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.cmf.occi.docker.connector"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
