@@ -1,7 +1,5 @@
 package org.modmacao.cm.ansible.test;
 
-import static org.junit.Assert.*;
-
 import java.nio.file.Paths;
 import java.util.Random;
 
@@ -12,7 +10,6 @@ import org.eclipse.cmf.occi.core.util.OcciRegistry;
 import org.eclipse.cmf.occi.docker.Container;
 import org.eclipse.cmf.occi.docker.Contains;
 import org.eclipse.cmf.occi.docker.Machinevirtualbox;
-import org.eclipse.cmf.occi.docker.connector.ContainsConnector;
 import org.eclipse.cmf.occi.infrastructure.InfrastructureFactory;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
 import org.junit.Before;
@@ -95,6 +92,8 @@ public class AnsibleCMToolDockerTest {
 		container.occiCreate();
 		container.run();
 		cmTool.deploy(component);
+		container.stop();
+		container.occiDelete();
 	}
 
 }

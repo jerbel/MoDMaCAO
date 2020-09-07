@@ -169,16 +169,21 @@ public final class AnsibleHelper {
 		sb.append(offset).append("roles:").append(lb);
 		//play in which the existence of python is checked and installed if necessary
 		sb.append(offset).append(offset).append("- ").append("pythonpreinstaller").append(lb);
+		
 		//play to install sudo function
 		sb.append(offset).append(offset).append("- ").append("sudopreinstaller").append(lb);
 		
 		//play to add ubuntu user
 		sb.append(offset).append(offset).append("- ").append("ubuntuuserinstall").append(lb);
+		
 		//install iproute2 to be able to access ansible_default_ipv4 variable
 		sb.append(offset).append(offset).append("- ").append("iproute2installer").append(lb);
 		
 		//install curl 
 		sb.append(offset).append(offset).append("- ").append("curlinstaller").append(lb);
+		
+		//install wget 
+		sb.append(offset).append(offset).append("- ").append("wgetinstaller").append(lb);
 		
 		//second play adding the designated roles
 		sb.append(lb);
@@ -544,9 +549,19 @@ public final class AnsibleHelper {
 		
 		System.out.println("ansiblePlaybookCommand: " + ansiblePlaybookCommand);
 		
-		String[] fullCommand = {"bash","-c", dockerEnvCommand + ansiblePlaybookCommand };
+		String fullCommand = ansiblePlaybookCommand;
+		if(checkDockerHost(dockerHost)) {
+			fullCommand = dockerEnvCommand + fullCommand;
+		} else {
+			LOGGER.warn("The docker host " + dockerHost + " is not available from the docker-machine tool!");
+			LOGGER.warn("Continue with the local docker host!");
+		}
 		
-		Process process = new ProcessBuilder(fullCommand).start();
+		System.out.println("fullCommand: " + fullCommand);
+		
+		String[] fullCommandArray = {"bash","-c", fullCommand };
+		
+		Process process = new ProcessBuilder(fullCommandArray).start();
 		
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
@@ -570,5 +585,21 @@ public final class AnsibleHelper {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Checks if the dockerHost with the given name is available over the docker-machine tool.
+	 * @param dockerHostName
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static boolean checkDockerHost(String dockerHostName) throws IOException, InterruptedException {
+		String[] envCommand = {"bash","-c", "/usr/local/bin/docker-machine env " + dockerHostName};
+		
+		Process process = new ProcessBuilder(envCommand).start();
+		process.waitFor();
+		process.destroy();
+		return process.exitValue() == 0;
 	}
 }
