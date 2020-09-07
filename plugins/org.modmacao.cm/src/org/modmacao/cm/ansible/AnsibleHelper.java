@@ -168,22 +168,22 @@ public final class AnsibleHelper {
 		sb.append(offset).append("gather_facts: false").append(lb);
 		sb.append(offset).append("roles:").append(lb);
 		//play in which the existence of python is checked and installed if necessary
-		sb.append(offset).append(offset).append("- ").append("pythonpreinstaller").append(lb);
+//		sb.append(offset).append(offset).append("- ").append("pythonpreinstaller").append(lb);
 		
 		//play to install sudo function
-		sb.append(offset).append(offset).append("- ").append("sudopreinstaller").append(lb);
+//		sb.append(offset).append(offset).append("- ").append("sudopreinstaller").append(lb);
 		
 		//play to add ubuntu user
-		sb.append(offset).append(offset).append("- ").append("ubuntuuserinstall").append(lb);
+//		sb.append(offset).append(offset).append("- ").append("ubuntuuserinstall").append(lb);
 		
 		//install iproute2 to be able to access ansible_default_ipv4 variable
-		sb.append(offset).append(offset).append("- ").append("iproute2installer").append(lb);
+//		sb.append(offset).append(offset).append("- ").append("iproute2installer").append(lb);
 		
 		//install curl 
-		sb.append(offset).append(offset).append("- ").append("curlinstaller").append(lb);
+//		sb.append(offset).append(offset).append("- ").append("curlinstaller").append(lb);
 		
 		//install wget 
-		sb.append(offset).append(offset).append("- ").append("wgetinstaller").append(lb);
+//		sb.append(offset).append(offset).append("- ").append("wgetinstaller").append(lb);
 		
 		//second play adding the designated roles
 		sb.append(lb);

@@ -215,7 +215,8 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		String ipaddress = "";
 		if(helper.isPlacedOnContainer(resource)) {
 			Container container = (Container)helper.getCompute(resource);
-			ipaddress = container.getName();
+//			ipaddress = container.getName();
+			ipaddress = container.getIpaddress();
 		} else {
 			ipaddress = helper.getIPAddress(resource);
 		}
@@ -254,13 +255,13 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		variablefiles.add(helper.createExtendedVariableFile(Paths.get(basedir), resource));
 			
 		Path playbook = null;
-		if(helper.isPlacedOnContainer(resource)) {
-			playbook = helper.createPlaybookForContainer(ipaddress, roles, user, variablefiles, 
-					Paths.get(basedir, "playbook.yml"));
-		} else {
+//		if(helper.isPlacedOnContainer(resource)) {
+//			playbook = helper.createPlaybookForContainer(ipaddress, roles, user, variablefiles, 
+//					Paths.get(basedir, "playbook.yml"));
+//		} else {
 			playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, 
 					Paths.get(basedir, "playbook.yml"));
-		}
+//		}
 			
 		Path inventory = helper.createInventory(ipaddress, Paths.get(basedir, "inventory"));
 			
@@ -268,15 +269,15 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		
 		AnsibleReturnState state = null;
 		
-		if(helper.isPlacedOnContainer(resource)) {
-			Machine machine = helper.getMachine((Container)helper.getCompute(resource));
-			if(machine == null)
-				throw new Exception("The container has no machine connected to it");
-			String machineName = helper.getMachine((Container)helper.getCompute(resource)).getName();
-			state = helper.executePlaybookForContainer(playbook, task, inventory, options, machineName);
-		} else {
+//		if(helper.isPlacedOnContainer(resource)) {
+//			Machine machine = helper.getMachine((Container)helper.getCompute(resource));
+//			if(machine == null)
+//				throw new Exception("The container has no machine connected to it");
+//			String machineName = helper.getMachine((Container)helper.getCompute(resource)).getName();
+//			state = helper.executePlaybookForContainer(playbook, task, inventory, options, machineName);
+//		} else {
 			state = helper.executePlaybook(playbook, task, inventory, options);
-		}
+//		}
 		
 		if (state.getStateMessage() != null) {
 			LOGGER.info("Received state message.");
