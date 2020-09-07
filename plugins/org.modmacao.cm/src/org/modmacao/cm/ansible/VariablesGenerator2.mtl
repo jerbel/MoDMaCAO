@@ -1,5 +1,5 @@
 [comment encoding = UTF-8 /]
-[module VariablesGenerator('http://schemas.ogf.org/occi/core/ecore', 'http://schemas.ogf.org/occi/infrastructure/ecore', 'http://schemas.modmacao.org/occi/platform/ecore', 'http://occiware.org/occi/docker/ecore')]
+[module VariablesGenerator2('http://schemas.ogf.org/occi/core/ecore', 'http://schemas.ogf.org/occi/infrastructure/ecore', 'http://schemas.modmacao.org/occi/platform/ecore', 'http://occiware.org/occi/docker/ecore')]
 
 
 [template public generateElement(aResource : occi::Resource)]
@@ -7,25 +7,15 @@
 [file ('vars2.yaml', false, 'UTF-8')]
 id: [aResource.id/]
 kind: [aResource.kind.term/]
+
 [if (aResource.oclIsKindOf(platform::Component))]
-  [let host : Resource = aResource.links
-     ->select(l : Link | l.kind.term = 'placementlink')
+  [let container : Container = aResource.links
      ->first().target ]
-  [let ipaddresses : Sequence(String) = host.links->select(l: Link | l.oclIsKindOf(infrastructure::Networkinterface))
-	 ->collect(parts)->filter(infrastructure::Ipnetworkinterface)->collect(occiNetworkinterfaceAddress)
-  ]
-ipaddresses: 
-  [for (ip : String | ipaddresses) ]
- - [ip/]
-  [/for]
-  [if (host.kind.term = 'container')]
-    [let container : Container = host]
+ipaddresses:
  - [container.ipaddress/]
-    [/let]
-  [/if]
-  [/let]
   [/let]
 [/if]
+
 [if (aResource.parts->size() > 0)]
 mixins:
 [for (part : MixinBase | aResource.parts)]
@@ -85,11 +75,6 @@ links:
       [for (ip : String | ipaddresses) ]
         - [ip/]
       [/for]
-      [if (host.kind.term = 'container')]
-        [let container : Container = host]
-        - [container.ipaddress/]
-        [/let]
-      [/if]
       [/let]
       [/let]
       [/if]

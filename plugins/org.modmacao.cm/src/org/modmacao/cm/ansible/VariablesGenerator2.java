@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.acceleo.engine.event.IAcceleoTextGenerationListener;
 import org.eclipse.acceleo.engine.generation.strategy.IAcceleoGenerationStrategy;
 import org.eclipse.acceleo.engine.service.AbstractAcceleoGenerator;
-import org.eclipse.cmf.occi.core.util.OCCIResourceFactoryImpl;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
@@ -26,18 +25,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
- * Entry point of the 'Generate' generation module.
+ * Entry point of the 'VariablesGenerator2' generation module.
  *
  * @generated
  */
-public class VariablesGenerator extends AbstractAcceleoGenerator {
+public class VariablesGenerator2 extends AbstractAcceleoGenerator {
     /**
      * The name of the module.
      *
-     * @generated NOT
+     * @generated
      */
-    public static final String MODULE_FILE_NAME = "/bin/org/modmacao/cm/ansible/VariablesGenerator";
-//    public static final String MODULE_FILE_NAME = "VariablesGenerator";
+    public static final String MODULE_FILE_NAME = "/org/modmacao/cm/ansible/VariablesGenerator2";
     
     /**
      * The name of the templates that are to be generated.
@@ -67,7 +65,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      *
      * @generated
      */
-    public VariablesGenerator() {
+    public VariablesGenerator2() {
         // Empty implementation
     }
 
@@ -87,7 +85,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      *             the model cannot be loaded.
      * @generated
      */
-    public VariablesGenerator(URI modelURI, File targetFolder,
+    public VariablesGenerator2(URI modelURI, File targetFolder,
             List<? extends Object> arguments) throws IOException {
         initialize(modelURI, targetFolder, arguments);
     }
@@ -108,9 +106,8 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      *             This can be thrown in two scenarios : the module cannot be found, or it cannot be loaded.
      * @generated
      */
-    public VariablesGenerator(EObject model, File targetFolder,
+    public VariablesGenerator2(EObject model, File targetFolder,
             List<? extends Object> arguments) throws IOException {
-    	model.toString();
         initialize(model, targetFolder, arguments);
     }
     
@@ -144,7 +141,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
                  * add in "arguments" this "String" attribute.
                  */
                 
-                VariablesGenerator generator = new VariablesGenerator(modelURI, folder, arguments);
+                VariablesGenerator2 generator = new VariablesGenerator2(modelURI, folder, arguments);
                 
                 /*
                  * Add the properties from the launch arguments.
@@ -343,13 +340,6 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
     @Override
     public void registerPackages(ResourceSet resourceSet) {
         super.registerPackages(resourceSet);
-        if (!isInWorkspace(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.class)) {
-            resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE);
-        }
-        
-        if(!isInWorkspace(org.modmacao.placement.PlacementPackage.class)) {
-            resourceSet.getPackageRegistry().put(org.modmacao.placement.PlacementPackage.eINSTANCE.getNsURI(), org.modmacao.placement.PlacementPackage.eINSTANCE);
-        }
         
         /*
          * If you want to change the content of this method, do NOT forget to change the "@generated"
@@ -389,7 +379,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      * 
      * @param resourceSet
      *            The resource set which registry has to be updated.
-     * @generated NOT
+     * @generated
      */
     @Override
     public void registerResourceFactories(ResourceSet resourceSet) {
@@ -403,14 +393,20 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
         
         /*
          * TODO If you need additional resource factories registrations, you can register them here. the following line
-         * (in comment) is an example of the resource factory registration for UML.
+         * (in comment) is an example of the resource factory registration.
          *
          * If you want to use the generator in stand alone, the resource factory registration will be required.
          *  
          * To learn more about the registration of Resource Factories, have a look at the Acceleo documentation (Help -> Help Contents). 
          */ 
         
-        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("occic", new OCCIResourceFactoryImpl());
+        // resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(XyzResource.FILE_EXTENSION, XyzResource.Factory.INSTANCE);
+        
+        /*
+         * Some metamodels require a very complex setup for standalone usage. For example, if you want to use a generator
+         * targetting UML models in standalone, you NEED to use the following:
+         */ 
+        // UMLResourcesUtil.init(resourceSet)
     }
     
 }

@@ -1,0 +1,16 @@
+id: urn:uuid:4f3d50b4-7740-4795-9c4b-e789b3f7a5ae
+kind: invalid
+
+ipaddresses:
+ - 172.17.0.2
+
+mixins:
+ - name: testrole
+   attributes:
+
+links:
+  - id: urn:uuid:7f969a9e-3814-4ee4-9512-deadeef13a13
+    kind: invalid
+    target: 
+      id: urn:uuid:eb5fdbdc-ce4b-4208-a661-1324dd9f237b
+      kind: invalid

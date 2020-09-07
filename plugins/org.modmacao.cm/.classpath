@@ -6,5 +6,10 @@
 	<classpathentry kind="lib" path="lib/commons-io-2.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.cmf.occi.docker"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.cmf.occi.docker.connector"/>
+	<classpathentry kind="lib" path="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-3.2.1.jar" sourcepath="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-3.2.1"/>
+	<classpathentry kind="lib" path="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-api-3.2.1.jar" sourcepath="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-3.2.1"/>
+	<classpathentry kind="lib" path="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-core-3.2.1.jar" sourcepath="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-3.2.1"/>
+	<classpathentry kind="lib" path="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-transport-jersey-3.2.1.jar" sourcepath="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-3.2.1"/>
+	<classpathentry kind="lib" path="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-transport-netty-3.2.1.jar" sourcepath="/org.eclipse.cmf.occi.docker.connector/lib/docker-java-3.2.1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
