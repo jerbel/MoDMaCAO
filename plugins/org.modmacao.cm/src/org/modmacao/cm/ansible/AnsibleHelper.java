@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.acceleo.engine.AcceleoEvaluationException;
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Entity;
 import org.eclipse.cmf.occi.core.Link;
@@ -294,19 +295,22 @@ public final class AnsibleHelper {
 	 * @throws IOException
 	 */
 	public Path createExtendedVariableFile(Path variablepath, Entity entity) throws IOException{
-		try {
 		VariablesGenerator gen = new VariablesGenerator(entity, 
 				variablepath.toFile(), new ArrayList<String>());
-		gen.doGenerate(null);
+		try {
+			gen.doGenerate(null);
+		} catch(AcceleoEvaluationException e) {
+			LOGGER.error("Error in compiled .emtl detected!"
+					+ "Please ensure that the metamodel is correctly created during the compilation of the plugin!"
+					+ "The .emtl is located at: " + gen.getModuleName()
+					+ "Each OCCI extension should loaded in the following manner within the .emtl file: http://schemas.ogf.org/occi/core/ecore#");
 		} catch(Exception e){
 			LOGGER.error("Extended Variable File could not be correctly generated!");
 			LOGGER.error(e.toString());
 		}
 		return Paths.get(variablepath.toString(), "vars2.yaml"); 
 	}
-
-
-
+	
 	public String getTitle(Resource resource) {
 		if (resource.getTitle() != null)
 			return resource.getTitle();
