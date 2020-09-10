@@ -172,7 +172,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      *            This will be used to display progress information to the user.
      * @throws IOException
      *             This will be thrown if any of the output files cannot be saved to disk.
-     * @generated
+     * @generated NOT
      */
     @Override
     public void doGenerate(Monitor monitor) throws IOException {
@@ -186,7 +186,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
          * note that those instructions may have a significant impact on the performances.
          */
 
-        //org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
+        org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
 
         /*
          * If you want to check for potential errors in your models before the launch of the generation, you
@@ -336,16 +336,23 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      * 
      * @param resourceSet
      *            The resource set which registry has to be updated.
-     * @generated
+     * @generated NOT
      */
     @Override
     public void registerPackages(ResourceSet resourceSet) {
         super.registerPackages(resourceSet);
-        if (!isInWorkspace(org.eclipse.cmf.occi.core.OCCIPackage.class)) {
-            resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE);
-        }
         if (!isInWorkspace(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.class)) {
             resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE);
+        }
+        if (!isInWorkspace(org.modmacao.occi.platform.PlatformPackage.class)) {
+            resourceSet.getPackageRegistry().put(org.modmacao.occi.platform.PlatformPackage.eINSTANCE.getNsURI(), org.modmacao.occi.platform.PlatformPackage.eINSTANCE);
+        }
+        resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE);
+        
+        
+        System.out.println("ResourceSet");
+        for(String res: resourceSet.getPackageRegistry().keySet()) {
+        	System.out.println(res);
         }
         
         /*
