@@ -9,6 +9,7 @@ import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.docker.Container;
 import org.eclipse.cmf.occi.docker.Machine;
+import org.eclipse.cmf.occi.docker.connector.manager.DockerClientManager;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
 import org.modmacao.cm.ConfigurationManagementTool;
@@ -263,7 +264,15 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 					Paths.get(basedir, "playbook.yml"));
 //		}
 			
-		Path inventory = helper.createInventory(ipaddress, Paths.get(basedir, "inventory"));
+		//if certain ssh port configurations for the container are matched, the ssh port is added to the inventory
+		String inventoryEntry = ipaddress;
+		if(helper.isPlacedOnContainer(resource)) {
+			Container container = (Container) helper.getCompute(resource);
+			if(DockerClientManager.checkSshPortKonfiguration(container)) {
+				inventoryEntry = ipaddress + " ansible_port=" + DockerClientManager.getSshPort(container);
+			}
+		}
+		Path inventory = helper.createInventory(inventoryEntry, Paths.get(basedir, "inventory"));
 			
 		LOGGER.info("Executing role " + roles + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
 		
