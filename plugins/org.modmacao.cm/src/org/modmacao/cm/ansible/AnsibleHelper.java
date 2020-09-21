@@ -103,7 +103,9 @@ public final class AnsibleHelper {
 	 * @throws IOException
 	 */
 	public Path createInventory(String ipaddress, Path path) throws IOException {
+		AnsibleCMTool.LOGGER.info("Start: Create Inv");
 		FileUtils.writeStringToFile(path.toFile(), ipaddress, (Charset) null);
+		AnsibleCMTool.LOGGER.info("End: Create Config");
 		return path;
 	}
 	
@@ -121,6 +123,7 @@ public final class AnsibleHelper {
 	 */
 	public Path createPlaybook(String ipaddress, List<String> roles, String user, List<Path> variables,
 			Path path) throws IOException {
+		AnsibleCMTool.LOGGER.info("Start: Create Playbook");
 		String lb = System.getProperty("line.separator");
 		String offset = "  ";
 		StringBuilder sb = new StringBuilder("---");
@@ -139,6 +142,7 @@ public final class AnsibleHelper {
 		}
 		
 		FileUtils.writeStringToFile(path.toFile(), sb.toString(), (Charset) null);
+		AnsibleCMTool.LOGGER.info("End: Create Playbook");
 		return path;
 	}
 	
@@ -150,6 +154,7 @@ public final class AnsibleHelper {
 	 * @throws IOException
 	 */
 	public Path createConfiguration(Path configuration, Path keyPath) throws IOException{
+		AnsibleCMTool.LOGGER.info("Start: Create Config");
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder("[defaults]").append(lb);
 		sb.append("timeout = ").append(this.getProperties().getProperty("ssh_timeout")).append(lb);
@@ -162,6 +167,7 @@ public final class AnsibleHelper {
 		String sshArgs = this.getProperties().getProperty("ssh_args");
 		sb.append("ssh_args = ").append(removeQuotes(sshArgs)).append(lb);
 		FileUtils.writeStringToFile(configuration.toFile(), sb.toString(), (Charset) null);
+		AnsibleCMTool.LOGGER.info("End: Create Config");
 		return configuration;
 	}
 	
@@ -228,7 +234,8 @@ public final class AnsibleHelper {
 	 * @return The path where this variable file was created.
 	 * @throws IOException
 	 */
-	public Path createVariableFile(Path variablefile, Entity entity) throws IOException{		
+	public Path createVariableFile(Path variablefile, Entity entity) throws IOException{
+		AnsibleCMTool.LOGGER.info("Start: Create Var File");
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder();
 		List<AttributeState> attributes  = new LinkedList<AttributeState>();
@@ -283,7 +290,7 @@ public final class AnsibleHelper {
 		}
 		
 		FileUtils.writeStringToFile(variablefile.toFile(), sb.toString(), (Charset) null);
-		
+		AnsibleCMTool.LOGGER.info("End: Create Var File");
 		return variablefile;
 	}
 	
@@ -295,6 +302,7 @@ public final class AnsibleHelper {
 	 * @throws IOException
 	 */
 	public Path createExtendedVariableFile(Path variablepath, Entity entity) throws IOException{
+		AnsibleCMTool.LOGGER.info("Start: Create Extended Var File");
 		VariablesGenerator gen = new VariablesGenerator(entity, 
 				variablepath.toFile(), new ArrayList<String>());
 		try {
@@ -308,6 +316,7 @@ public final class AnsibleHelper {
 			LOGGER.error("Extended Variable File could not be correctly generated!");
 			LOGGER.error(e.toString());
 		}
+		AnsibleCMTool.LOGGER.info("End: Create Extended Var File");
 		return Paths.get(variablepath.toString(), "vars2.yaml"); 
 	}
 	
@@ -411,7 +420,9 @@ public final class AnsibleHelper {
 					AnsibleCMTool.LOGGER.error("No network interface found for " + target);	
 				} else {
 					// Retrieving object to ensure ip address is correct
-					networklink.occiRetrieve();
+					AnsibleCMTool.LOGGER.info("Start: Retrieve");	
+					//networklink.occiRetrieve();
+					AnsibleCMTool.LOGGER.info("End: Retrieve");
 					List<AttributeState> attributes  = new LinkedList<AttributeState>();
 					attributes.addAll(networklink.getAttributes());
 					for (MixinBase base: networklink.getParts()) {
