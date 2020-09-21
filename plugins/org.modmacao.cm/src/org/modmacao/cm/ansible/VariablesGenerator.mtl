@@ -136,5 +136,14 @@ rlinks:
   [/if]
 [/for]
 [/if]
+#This part is for downwards compability and may be removed in future releases
+[for (as : AttributeState | aResource.attributes)]
+[as.name.replaceAll('\\.', '_')/]: "[as.value/]"
+[/for]
+[for (part : MixinBase | aResource.parts)]
+[for (as : AttributeState | part.attributes)]
+[as.name.replaceAll('\\.', '_')/]: "[as.value/]"
+[/for]
+[/for]
 [/file]
 [/template]

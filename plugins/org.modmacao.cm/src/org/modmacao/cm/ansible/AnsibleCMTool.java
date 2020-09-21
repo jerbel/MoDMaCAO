@@ -208,7 +208,9 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 	}
 	
 	private int executeRoles(Resource resource, List<String> roles, String task) throws Exception{
+		AnsibleCMTool.LOGGER.info("Start: Create Helper");
 		AnsibleHelper helper = new AnsibleHelper();
+		AnsibleCMTool.LOGGER.info("End: Create Config");
 		String ipaddress = helper.getIPAddress(resource);
 		String user = this.getUser();
 		String options = null;
@@ -238,7 +240,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 				Paths.get(keypath));
 		List <Path> variablefiles = new ArrayList<Path>();
 		
-		variablefiles.add(helper.createVariableFile(Paths.get(basedir, "vars.yaml"), resource));
+		//variablefiles.add(helper.createVariableFile(Paths.get(basedir, "vars.yaml"), resource));
 		variablefiles.add(helper.createExtendedVariableFile(Paths.get(basedir), resource));
 			
 		Path playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, 
