@@ -162,6 +162,8 @@ public final class AnsibleHelper {
 		sb.append("gathering = ").append(this.getProperties().getProperty("gathering")).append(lb);
 		sb.append("roles_path = ").append(this.getProperties().getProperty("ansible_rolespath")).append(lb);
 		sb.append("private_key_file = ").append(keyPath.toString()).append(lb);
+		sb.append("host_key_checking = False").append(lb);
+		sb.append("internal_poll_interval = ").append(this.getProperties().getProperty("internal_poll_interval")).append(lb);
 		sb.append("[ssh_connection]").append(lb);
 		sb.append("pipelining = ").append(this.getProperties().getProperty("pipelining")).append(lb);
 		String sshArgs = this.getProperties().getProperty("ssh_args");
