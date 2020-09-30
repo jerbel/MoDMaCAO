@@ -76,6 +76,11 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 	ComputeConnector()
 	{
 		LOGGER.debug("Constructor called on " + this);
+		if(PostConstructor.running == false) {
+			PostConstructor pc = new PostConstructor();
+			Thread thread = new Thread(pc);
+			thread.start();
+		}
 	}
 	// End of user code
 	//
