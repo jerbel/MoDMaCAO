@@ -21,6 +21,15 @@ package org.modmacao.openstack.connector;
  */
 public class ConnectorFactory extends org.eclipse.cmf.occi.infrastructure.impl.InfrastructureFactoryImpl
 {
+	
+	public ConnectorFactory(){
+		if(PostConstructor.running == false) {
+			PostConstructor pc = new PostConstructor();
+			Thread thread = new Thread(pc);
+			thread.start();
+		}
+	}
+	
 	/**
 	 * EFactory method for OCCI kind:
 	 * - scheme: http://schemas.ogf.org/occi/infrastructure#
