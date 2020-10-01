@@ -201,12 +201,23 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 			LOGGER.debug("Mixin has schema: " + mixin.getMixin().getScheme());
 			if (mixin.getMixin().getScheme().matches(".*(schemas\\.modmacao\\.org).*") || mixin instanceof modmacao.Component){
 				LOGGER.info("Found mixin " + mixin.getMixin().getName());
-				roles.add(mixin.getMixin().getName().toLowerCase());
+				String rolepath = getRolePath(mixin);
+				//roles.add(mixin.getMixin().getName().toLowerCase());
+				roles.add(rolepath);
 			}
 		}
 		return roles;
 	}
 	
+	private String getRolePath(MixinBase mixin) {
+		String rolepath = mixin.getMixin().getScheme();
+		rolepath = rolepath.replaceAll("http://", "");
+		rolepath = rolepath.replaceAll("\\.", "_");
+		rolepath = rolepath.replaceAll("#", "");
+		rolepath = rolepath + "/" + mixin.getMixin().getName();
+		return rolepath;
+	}
+
 	private int executeRoles(Resource resource, List<String> roles, String task) throws Exception{
 		AnsibleCMTool.LOGGER.info("Start: Create Helper");
 		AnsibleHelper helper = new AnsibleHelper();
