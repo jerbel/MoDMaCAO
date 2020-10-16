@@ -65,11 +65,14 @@ public class SyncConnector implements Runnable {
 					NetworkSync nsync = new NetworkSync(os);
 					nsync.sync();
 					
-					NWISync nwisync = NWISync(os);
+					NWISync nwisync = new NWISync(os);
 					nwisync.sync();
 					
 					StorageSync ssync = new StorageSync(os);
 					ssync.sync();
+					
+					StorageLinkSync slsync = new StorageLinkSync(os);
+					slsync.sync();
 					
 				} catch(Exception e) {
 					LOGGER.error("Something went wrong on synchronization process");
