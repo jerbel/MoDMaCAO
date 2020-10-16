@@ -32,9 +32,10 @@ import org.eclipse.cmf.occi.infrastructure.Ssh_key;
 import org.eclipse.cmf.occi.infrastructure.StopMethod;
 import org.eclipse.cmf.occi.infrastructure.SuspendMethod;
 import org.eclipse.cmf.occi.infrastructure.User_data;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV2;
-import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.FloatingIP;
 import org.openstack4j.model.compute.RebootType;
@@ -89,6 +90,8 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 	@Override
 	public void occiCreate()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiCreate() called on " + this);
 		List<String> networkList = new ArrayList<String>();
 		List<Port> portList = new ArrayList<Port>();
@@ -255,6 +258,8 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 			LOGGER.debug("Problem while creating VM: " + e.getMessage());
 			os.compute().keypairs().delete(this.getTitle() + "_keypair");
 		}
+		
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -337,6 +342,8 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 	@Override
 	public void occiDelete()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiDelete() called on " + this);
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -362,6 +369,7 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 		
 		this.setOcciComputeState(ComputeStatus.INACTIVE);
 		this.setOcciComputeStateMessage("DELETED");
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 

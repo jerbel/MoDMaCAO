@@ -15,16 +15,24 @@
  */
 package org.modmacao.openstack.connector;
 
+import java.util.List;
+
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.MixinBase;
+import org.eclipse.cmf.occi.infrastructure.Allocation;
 import org.eclipse.cmf.occi.infrastructure.Ipnetwork;
 import org.eclipse.cmf.occi.infrastructure.NetworkStatus;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.model.network.IPVersionType;
 import org.openstack4j.model.network.Network;
+import org.openstack4j.model.network.Port;
+import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.NetworkBuilder;
 import org.openstack4j.model.network.builder.SubnetBuilder;
+import org.openstack4j.model.network.options.PortListOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +75,8 @@ public class NetworkConnector extends org.eclipse.cmf.occi.infrastructure.impl.N
 	@Override
 	public void occiCreate()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiCreate() called on " + this);
 		
 		os = OpenStackHelper.getInstance().getOSClient();
@@ -95,33 +105,47 @@ public class NetworkConnector extends org.eclipse.cmf.occi.infrastructure.impl.N
 					if (attribute.getName().equals("occi.core.title"))
 						this.setTitle(attribute.getValue());
 				}	
-			} else {
-				builder.name(this.getTitle());
-			}	
+			} 
+			builder.name(this.getTitle());
+			
+			
 			
 			try {
+				LOGGER.info("Building network");
 				network = os.networking().network().create(builder.build());
 
 				for (MixinBase mixin: this.getParts()) {
+					LOGGER.info("Building sub-network");
 					if (mixin instanceof Ipnetwork) {
+						Ipnetwork ipn = (Ipnetwork) mixin;
 						SubnetBuilder snbuilder = Builders.subnet();
 						snbuilder.name(this.getTitle() + "-subnet");
-						snbuilder.cidr(((Ipnetwork) mixin).getOcciNetworkAddress());
+						snbuilder.cidr(ipn.getOcciNetworkAddress());
 						snbuilder.ipVersion(IPVersionType.V4);
 						snbuilder.networkId(network.getId());
 						snbuilder.enableDHCP(true);
+						if(ipn.getOcciNetworkGateway() != null 
+								&& ipn.getOcciNetworkGateway().equals("") == false) {
+							LOGGER.info("Gateway: " + ipn.getOcciNetworkGateway());
+							snbuilder.gateway(ipn.getOcciNetworkGateway());
+						}
+						//Currently only dynamic is supported to ensure compatibility with test models
+						ipn.setOcciNetworkAllocation(Allocation.DYNAMIC);
 						os.networking().subnet().create(snbuilder.build());
 					}
 				}
+					
 				Runtimeid runtimeMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
 				runtimeMixin.setOpenstackRuntimeId(network.getId());
 
 				this.getParts().add(runtimeMixin);
 			} catch (Exception e) {
 				LOGGER.debug("Problems creating network: " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		this.occiRetrieve();
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -168,6 +192,8 @@ public class NetworkConnector extends org.eclipse.cmf.occi.infrastructure.impl.N
 	@Override
 	public void occiDelete()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiDelete() called on " + this);
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -176,12 +202,35 @@ public class NetworkConnector extends org.eclipse.cmf.occi.infrastructure.impl.N
 			LOGGER.error("Runtime object for network " + this.getTitle() + " not found!");
 		}
 		else {
+			LOGGER.info("Deleting network: " + network.getName() + "(" + network.getId() +")");
+			
+			
+			PortListOptions opt = PortListOptions.create();
+			opt = opt.networkId(network.getId());
+			List<? extends Port> nwPorts = os.networking().port().list(opt);
+			LOGGER.info("Found ports: " + nwPorts);
+			
+			for(Port p: nwPorts) {
+				os.networking().port().delete(p.getId());
+			}
+			
+			
+			for(Subnet sn: network.getNeutronSubnets()) {
+				opt = opt.networkId(sn.getId());
+				List<? extends Port> snwPorts = os.networking().port().list(opt);
+				LOGGER.info("Found subnetwork ports: " + snwPorts);
+				for(Port p: snwPorts) {
+					os.networking().port().delete(p.getId());
+				}
+			}
+
 			os.networking().network().delete(network.getId());
 		}
 		OpenStackHelper.getInstance().removeRuntimeID(this);
 		
 		this.setOcciNetworkState(NetworkStatus.INACTIVE);
 		this.setOcciNetworkStateMessage("DELETED");
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 

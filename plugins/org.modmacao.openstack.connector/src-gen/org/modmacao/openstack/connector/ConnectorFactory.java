@@ -14,6 +14,8 @@
  */
 package org.modmacao.openstack.connector;
 
+import org.modmacao.openstack.sync.SyncConnector;
+
 /**
  * Connector EFactory for the OCCI extension:
  * - name: infrastructure
@@ -23,8 +25,8 @@ public class ConnectorFactory extends org.eclipse.cmf.occi.infrastructure.impl.I
 {
 	
 	public ConnectorFactory(){
-		if(PostConstructor.running == false) {
-			PostConstructor pc = new PostConstructor();
+		if(SyncConnector.running == false) {
+			SyncConnector pc = new SyncConnector();
 			Thread thread = new Thread(pc);
 			thread.start();
 		}
