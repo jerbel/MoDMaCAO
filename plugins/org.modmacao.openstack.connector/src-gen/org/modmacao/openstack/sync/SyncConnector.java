@@ -65,8 +65,12 @@ public class SyncConnector implements Runnable {
 					NetworkSync nsync = new NetworkSync(os);
 					nsync.sync();
 					
-					//NWInterfaceSync nwisync = new NWInterfaceSync(os);
-					//nwisync.sync();
+					NWISync nwisync = NWISync(os);
+					nwisync.sync();
+					
+					//StorageSync ssync = new StorageSync(os);
+					//ssync.sync();
+					
 				} catch(Exception e) {
 					LOGGER.error("Something went wrong on synchronization process");
 					e.printStackTrace();
@@ -74,5 +78,10 @@ public class SyncConnector implements Runnable {
 			}
 		}
 		running = false;
+	}
+
+	private NWISync NWISync(OSClientV2 os) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -20,6 +20,8 @@ import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.NetworkInterfaceStatus;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.model.network.IP;
@@ -69,6 +71,8 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 	public void occiCreate()
 	{
 		LOGGER.debug("occiCreate() called on " + this);
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -166,6 +170,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 			}
 		}
 		this.occiRetrieve();
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -239,6 +244,8 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 	@Override
 	public void occiDelete()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiDelete() called on " + this);
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -252,6 +259,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 		
 		this.setOcciNetworkinterfaceState(NetworkInterfaceStatus.INACTIVE);
 		this.setOcciNetworkinterfaceStateMessage("DELETED");
+		AbsSync.removeBlock(b);
 	}
 	
 	protected Port getRuntimeObject() {

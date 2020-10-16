@@ -10,12 +10,16 @@ import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Configuration;
 import org.eclipse.cmf.occi.core.Entity;
 import org.eclipse.cmf.occi.core.Kind;
+import org.eclipse.cmf.occi.core.Link;
 import org.eclipse.cmf.occi.core.Mixin;
 import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.InfrastructureFactory;
+import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
+import org.eclipse.cmf.occi.infrastructure.Networkinterface;
+import org.eclipse.cmf.occi.infrastructure.Storage;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -45,8 +49,9 @@ public abstract class AbsSync {
 		}
 		Configuration config = ConfigurationManager.getConfigurationForOwner("anonymous");
 		for(Resource res: config.getResources()) {
-			if(res instanceof Compute ||
-					res instanceof org.eclipse.cmf.occi.infrastructure.Network) {
+			if(res instanceof Compute 
+					|| res instanceof org.eclipse.cmf.occi.infrastructure.Network
+					|| res instanceof Storage) {
 				for(MixinBase mixB: res.getParts()) {
 					if(mixB instanceof Runtimeid) {
 						Runtimeid rid = (Runtimeid) mixB;
@@ -55,9 +60,43 @@ public abstract class AbsSync {
 						}
 					}
 				}
+				
+				for(Link l: res.getLinks()) {
+					if(l instanceof Networkinterface) {
+						for(MixinBase mixB: res.getParts()) {
+							if(mixB instanceof Runtimeid) {
+								Runtimeid rid = (Runtimeid) mixB;
+								if(rid.getOpenstackRuntimeId().equals(id)) {
+									return true;
+								}
+							}
+						}
+					}
+				}
+				
+				
 			}
 		}
 		return false;
+	}
+	
+	protected Resource getResourceModelRepresentation(String id) {
+		Configuration config = ConfigurationManager.getConfigurationForOwner("anonymous");
+		for(Resource res: config.getResources()) {
+			if(res instanceof Compute 
+					|| res instanceof org.eclipse.cmf.occi.infrastructure.Network
+					|| res instanceof Storage) {
+				for(MixinBase mixB: res.getParts()) {
+					if(mixB instanceof Runtimeid) {
+						Runtimeid rid = (Runtimeid) mixB;
+						if(rid.getOpenstackRuntimeId().equals(id)) {
+							return res;
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	private boolean isBlacklisted(String id) {
@@ -127,7 +166,12 @@ public abstract class AbsSync {
 			LOGGER.info("Block: " + blocked.size());
 			if(blocked.isEmpty()) {
 				LOGGER.info("Adding entity to runtime model: "+ ent);
-				EntityManager.addResourceToConfiguration(adjustedUUID, title, summary, kind, mixins, attributes, location, owner);
+				if(ent instanceof Resource) {
+					EntityManager.addResourceToConfiguration(adjustedUUID, title, summary, kind, mixins, attributes, location, owner);
+				} else if (ent instanceof Link) {
+					Link l = (Link) ent;
+					EntityManager.addLinkToConfiguration(adjustedUUID, title, kind, mixins, l.getSource().getLocation(), l.getTarget().getLocation(), attributes, location, owner);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

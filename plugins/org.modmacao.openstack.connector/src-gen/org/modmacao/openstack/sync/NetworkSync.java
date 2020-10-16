@@ -9,27 +9,32 @@ import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.infrastructure.Allocation;
 import org.eclipse.cmf.occi.infrastructure.Ipnetwork;
+import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
+import org.eclipse.cmf.occi.infrastructure.NetworkInterfaceStatus;
 import org.eclipse.cmf.occi.infrastructure.NetworkStatus;
+import org.eclipse.cmf.occi.infrastructure.Networkinterface;
 import org.occiware.mart.server.exception.ConfigurationException;
 import org.occiware.mart.server.model.ConfigurationManager;
 import org.occiware.mart.server.model.EntityManager;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient;
+import org.openstack4j.model.network.IP;
 import org.openstack4j.model.network.IPVersionType;
 import org.openstack4j.model.network.Network;
+import org.openstack4j.model.network.Port;
+import org.openstack4j.model.network.State;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.SubnetBuilder;
 
 import openstackruntime.Runtimeid;
 
 public class NetworkSync extends AbsSync {
-
+	
 	public NetworkSync(OSClient<?> os) {
 		this.os = os;
 	}
 
 	public void sync() {
-		//Map<String, String> filter = new HashMap<String, String>();
 		List<? extends Network> nList = filterTenant(os.networking().network().list(), TENANTID);
 		addMissingNetworks(nList);
 		removeNonExistentNetworkNodes(nList);
@@ -71,7 +76,6 @@ public class NetworkSync extends AbsSync {
 				addNetworkToRuntimeModel(n);
 			}
 		}
-		
 	}
 
 	private void addNetworkToRuntimeModel(Network n) {
@@ -85,7 +89,7 @@ public class NetworkSync extends AbsSync {
 			addEntityToRuntimeModel(nw);
 		}
 	}
-	
+
 	private void addIPMixin(org.eclipse.cmf.occi.infrastructure.Network nw, Network n) {
 		for(Subnet snw: n.getNeutronSubnets()) {
 			Ipnetwork ipn = ifac.createIpnetwork();
