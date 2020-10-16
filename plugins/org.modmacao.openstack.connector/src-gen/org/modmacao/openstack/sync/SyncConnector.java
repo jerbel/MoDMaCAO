@@ -68,8 +68,8 @@ public class SyncConnector implements Runnable {
 					NWISync nwisync = NWISync(os);
 					nwisync.sync();
 					
-					//StorageSync ssync = new StorageSync(os);
-					//ssync.sync();
+					StorageSync ssync = new StorageSync(os);
+					ssync.sync();
 					
 				} catch(Exception e) {
 					LOGGER.error("Something went wrong on synchronization process");
