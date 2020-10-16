@@ -15,7 +15,9 @@
  */
 package org.modmacao.openstack.connector;
 
+import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.MixinBase;
+import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.NetworkInterfaceStatus;
 import org.openstack4j.api.Builders;
@@ -140,9 +142,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 						port.getId());
 			}
 			
-			Runtimeid runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
-			runtimeIDMixin.setOpenstackRuntimeId(port.getId());
-			this.getParts().add(runtimeIDMixin);
+			updateRuntimeId(port.getId());
 		}
 		else {
 			LOGGER.debug("No port found with matching properties, creating new port.");
@@ -157,9 +157,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 		
 			port = os.networking().port().create(builder.build());
 			
-			Runtimeid runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
-			runtimeIDMixin.setOpenstackRuntimeId(port.getId());
-			this.getParts().add(runtimeIDMixin);
+			updateRuntimeId(port.getId());
 			
 			if (serverID != null) {
 				os.compute().servers().interfaces().create(
@@ -263,6 +261,37 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 		}
 		port = os.networking().port().get(runtimeid);
 		return port;
+	}
+	
+	private void updateRuntimeId(String id) {
+		Runtimeid runtimeIDMixin = getRuntimeMixin();
+		if(runtimeIDMixin == null) {
+			LOGGER.info("Creating Runtime ID");
+			runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
+			runtimeIDMixin.setOpenstackRuntimeId(id);
+			AttributeState as = OCCIFactory.eINSTANCE.createAttributeState();
+			as.setName("openstack.runtime.id");
+			as.setValue(id);
+			runtimeIDMixin.getAttributes().add(as);
+			this.getParts().add(runtimeIDMixin);
+		} else {
+			LOGGER.info("Updating Runtime ID");
+			runtimeIDMixin.setOpenstackRuntimeId(id);
+			for(AttributeState as: runtimeIDMixin.getAttributes()) {
+				if(as.getName().equals("openstack.runtime.id")) {
+					as.setValue(id);
+				}
+			}
+		}
+	}
+
+	private Runtimeid getRuntimeMixin() {
+		for(MixinBase mixB: this.getParts()) {
+			if(mixB instanceof Runtimeid) {
+				return (Runtimeid) mixB;
+			}
+		}
+		return null;
 	}
 	
 	// End of user code
