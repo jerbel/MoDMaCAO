@@ -16,10 +16,6 @@ import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.modmacao.openstack.connector.ComputeConnector;
 import org.modmacao.openstack.connector.OpenStackHelper;
 
@@ -35,23 +31,10 @@ public class SyncConnector implements Runnable {
 	public static Boolean running = false;
 	private int sleep;
 	private boolean activation;
-	private List<String> blacklist;
 
 	public SyncConnector() {
 		sleep = getSleepValue();
 		activation = getActivationValue();
-		blacklist = getBlacklist();
-		AbsSync.BLACKLIST = blacklist;
-		
-	}
-
-	private List<String> getBlacklist() {
-		String blString = helper.getProperties().getProperty("openstack_sync_blacklist");
-		List<String> bl = new ArrayList<String>(Arrays.asList(blString.split("\\s*,\\s*")));
-		for(String str: bl) {
-			LOGGER.info("	- Ignoring Id on Sync: " + str);
-		}
-		return bl;
 	}
 
 	private boolean getActivationValue() {
@@ -83,6 +66,8 @@ public class SyncConnector implements Runnable {
 			String username = helper.getProperties().getProperty("openstack_username");
 			String tenant = helper.getProperties().getProperty("openstack_tenant");
 			String password = helper.getProperties().getProperty("openstack_password");
+			
+			
 			if(running == false) {
 				running = true;
 				while(true){

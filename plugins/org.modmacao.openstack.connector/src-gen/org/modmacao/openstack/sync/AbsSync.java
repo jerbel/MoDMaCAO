@@ -1,6 +1,7 @@
 package org.modmacao.openstack.sync;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import org.eclipse.cmf.occi.infrastructure.Storage;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.modmacao.openstack.connector.OpenStackHelper;
 import org.occiware.mart.server.exception.ConfigurationException;
 import org.occiware.mart.server.model.ConfigurationManager;
 import org.occiware.mart.server.model.EntityManager;
@@ -38,10 +40,10 @@ public abstract class AbsSync {
 	protected final OpenstackruntimeFactory oFac = OpenstackruntimeFactory.eINSTANCE;
 	protected static Logger LOGGER = LoggerFactory.getLogger(SyncConnector.class);
 	protected OSClient<?> os;
-	//TODO: AUtomatic detection of TENANTID!
-	protected static final String TENANTID = "7ee7b6a14eb54f5b9b75cc2ea87786df";
+	private static OpenStackHelper helper = OpenStackHelper.getInstance();
+	protected static final String TENANTID = helper.getProperties().getProperty("openstack_tenant_id");
 	private static List<Block> blocked = new ArrayList<>();
-	public static List<String> BLACKLIST;
+	public static List<String> BLACKLIST = getBlacklist();
 
 	protected String getRuntimeId(Entity ent) {
 		for(MixinBase mixB: ent.getParts()) {
@@ -52,6 +54,14 @@ public abstract class AbsSync {
 		return "";
 	}
 	
+	private static List<String> getBlacklist() {
+		String blString = helper.getProperties().getProperty("openstack_sync_blacklist");
+		List<String> bl = new ArrayList<String>(Arrays.asList(blString.split("\\s*,\\s*")));
+		for(String str: bl) {
+			LOGGER.info("Infra Sync - Ignoring Id on Sync: " + str);
+		}
+		return bl;
+	}
 	
 	protected boolean isInRuntimeModel(String id) {
 		if(isBlacklisted(id)) {
