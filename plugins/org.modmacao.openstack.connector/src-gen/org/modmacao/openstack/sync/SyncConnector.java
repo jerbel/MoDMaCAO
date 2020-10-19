@@ -68,7 +68,12 @@ public class SyncConnector implements Runnable {
 	private int getSleepValue() {
 		String sleep = helper.getProperties().getProperty("openstack_sync_cycle");
 		LOGGER.info("	- Infra Sync Sleep set to: " + sleep);
-		return Integer.parseInt(sleep);
+		if(sleep.matches("(0|[1-9]\\d*)")) {
+			return Integer.parseInt(sleep);
+		} else {
+			return 60000;
+		}
+			
 	}
 
 	@Override
