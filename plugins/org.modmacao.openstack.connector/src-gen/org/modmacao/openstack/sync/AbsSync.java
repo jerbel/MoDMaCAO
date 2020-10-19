@@ -43,6 +43,16 @@ public abstract class AbsSync {
 	protected static final String TENANTID = "7ee7b6a14eb54f5b9b75cc2ea87786df";
 	private static List<Block> blocked = new ArrayList<>();
 
+	protected String getRuntimeId(Entity ent) {
+		for(MixinBase mixB: ent.getParts()) {
+			if(mixB instanceof Runtimeid) {
+				return ((Runtimeid) mixB).getOpenstackRuntimeId();
+			}
+		}
+		return "";
+	}
+	
+	
 	protected boolean isInRuntimeModel(String id) {
 		if(isBlacklisted(id)) {
 			return true;
@@ -104,7 +114,8 @@ public abstract class AbsSync {
 				|| id.equals("4d74302f-5cef-4bcd-ab12-5ac2455a68ab")
 				|| id.equals("75a4639e-9ce7-4058-b859-8a711b0e2e7b")
 				|| id.equals("82ef5768-0cac-4f77-920e-c871fbfd7f3f")
-				|| id.equals("7603cefe-affb-4765-8a81-be74d9f7aebe")) {
+				|| id.equals("7603cefe-affb-4765-8a81-be74d9f7aebe")
+				|| id.equals("eedb4ba3-e4d5-489b-bd8b-b915d3a73b58")) {
 				return true;
 		} else {
 			return false;
@@ -149,7 +160,7 @@ public abstract class AbsSync {
 		String title = ent.getTitle();
 		String uuid = ent.getId();
 		String kind = ent.getKind().getScheme() + ent.getKind().getTerm();
-		String summary = "Created by Sync Connector!";
+		String summary = getSummary(ent);
 		
 		List<String> mixins = getMixinNames(ent);
 		Map<String, String> attributes = getAttributeMap(ent);
@@ -176,6 +187,18 @@ public abstract class AbsSync {
 	}
 	
 	
+	private String getSummary(Entity ent) {
+		for(AttributeState as: ent.getAttributes()) {
+			if(as.getName().equals("occi.core.summary")) {
+				if(as.getValue().equals("") == false) {
+					return as.getValue();
+				}
+				break;
+			}
+		}
+		return "Created by Sync Connector!";
+	}
+
 	protected void addLinkToRuntimeModel(Entity ent, String srcLocation, String tarLocation) {
 		String title = ent.getTitle();
 		String uuid = ent.getId();
