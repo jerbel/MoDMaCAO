@@ -18,6 +18,8 @@ import org.openstack4j.model.network.IP;
 import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.Port;
 import org.openstack4j.model.storage.block.Volume;
+import org.openstack4j.model.storage.block.VolumeAttachment;
+import org.openstack4j.openstack.storage.block.domain.AttachAction;
 
 import openstackruntime.Runtimeid;
 
@@ -27,27 +29,22 @@ public class StorageLinkSync extends AbsSync {
 	}
 
 	public void sync() {
-		List<? extends Volume> vList = filterTenant(os.blockStorage().volumes().list(), TENANTID);
+		List<? extends Volume> vList = filterTenantAndBlacklisted(os.blockStorage().volumes().list(), TENANTID);
 		for(Volume v: vList) {
 			addMissingStorageLinks(v);
-			removeNonExistentStorageLinks(v);
 		}
+		removeNonExistentStorageLinks();
 	}
 
-	private void removeNonExistentStorageLinks(Volume v) {
+	private void removeNonExistentStorageLinks() {
 			List<String> toRemove = new ArrayList<String>();
 			Configuration config = ConfigurationManager.getConfigurationForOwner("anonymous");
 			for(Resource res: config.getResources()) {
 				if(res instanceof org.eclipse.cmf.occi.infrastructure.Compute) {
 					for(Link l: res.getLinks()) {
 						if(l instanceof Storagelink) {
-							for(MixinBase mixB: l.getParts()) {
-								if(mixB instanceof Runtimeid) {
-									Runtimeid rid = (Runtimeid) mixB;
-									if(os.networking().port().get(rid.getOpenstackRuntimeId()) == null) {
-										toRemove.add(l.getLocation());
-									}
-								}
+							if(connectionExistsInCloud(res, l.getTarget()) == false) {
+								toRemove.add(l.getLocation());
 							}
 						}
 					}
@@ -56,87 +53,93 @@ public class StorageLinkSync extends AbsSync {
 		removeFromRuntimeModel(toRemove);	
 	}
 
-	private void addMissingStorageLinks(Volume v) {
-		//atachaments
-		/*
-		for(Port p: getNetworkPorts(n)) {
-			if(isInRuntimeModel(p.getId()) == false){
-				if(isInRuntimeModel(p.getDeviceId())
-						&& isInRuntimeModel(p.getNetworkId())){
-						addNWIToRuntimeModel(p);
-				}
+	private boolean connectionExistsInCloud(Resource res, Resource target) {
+		String serverID = getRuntimeId(res);
+		String volumeID = getRuntimeId(target);
+		
+		Volume v = os.blockStorage().volumes().get(volumeID);
+		for(VolumeAttachment a: v.getAttachments()) {
+			if(a.getServerId().equals(serverID)) {
+				return true;
 			}
 		}
-		*/
+		return false;
 	}
 
-	private List<? extends Volume> filterTenant(List<? extends Volume> list, String tenantid) {
+	private void addMissingStorageLinks(Volume v) {
+		for(VolumeAttachment a: v.getAttachments()) {
+			if(isInRuntimeModel(a) == false) {
+				addStorageLinkToRuntimeModel(a);
+			}
+		}
+	}
+
+	private void addStorageLinkToRuntimeModel(VolumeAttachment a) {
+		Storagelink stl = ifac.createStoragelink();
+		adjustStlState(stl, a);
+		addDeviceId(stl, a);
+		addMountpoint(stl, a);
+		
+		String srcLocation = getResourceModelRepresentation(a.getServerId()).getLocation();
+		String tarLocation = getResourceModelRepresentation(a.getVolumeId()).getLocation();
+		
+		addLinkToRuntimeModel(stl, srcLocation, tarLocation);		
+	}
+
+	private boolean isInRuntimeModel(VolumeAttachment a) {
+		String serverID = a.getServerId();
+		String volID = a.getVolumeId();
+		if(isBlacklisted(serverID) || isBlacklisted(volID)) {
+			return true;
+		}
+		
+		Resource comp = getResourceModelRepresentation(serverID);
+		Resource storage = getResourceModelRepresentation(volID);
+		
+		if(comp == null || storage == null) {
+			return true;
+		}
+		
+		return connectionExists(comp, storage);
+	}
+
+	private boolean connectionExists(Resource comp, Resource storage) {
+		for(Link l: comp.getLinks()) {
+			if(l.getTarget().getId().equals(storage.getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private List<? extends Volume> filterTenantAndBlacklisted(List<? extends Volume> list, String tenantid) {
 		List<Volume> vList = new ArrayList<>();
 		for(Volume v : list) {
-			if(v.getTenantId().equals(tenantid)) {
+			if(isBlacklisted(v.getId()) == false && v.getTenantId().equals(tenantid)) {
 				vList.add(v);
 			}
 		}
 		return vList;
 	}
-	
-	private List<Port> getNetworkPorts(Network n) {
-		List<Port> pList = new ArrayList<>();
-		for(Port p: os.networking().port().list()) {
-			if(p.getNetworkId().equals(n.getId())) {
-				pList.add(p);
-			}
-		}
-		return pList;
-	}
-	
-	private void addNWIToRuntimeModel(Port p) {
-		org.eclipse.cmf.occi.infrastructure.Networkinterface nwi = ifac.createNetworkinterface();
-		nwi.setTitle(p.getName());
-		adjustInterfaceState(nwi, p);
-		appendRid(nwi, p.getId());
-		addIPInterfaceMixin(nwi, p);
-		nwi.setOcciNetworkinterfaceMac(p.getMacAddress());
-		
-		nwi.setSource(getResourceModelRepresentation(p.getDeviceId()));
-		nwi.setTarget(getResourceModelRepresentation(p.getNetworkId()));
-		
-		if(os.networking().port().get(p.getId()) != null) {
-			addEntityToRuntimeModel(nwi);
-		}
-	}
-	
-	private void addIPInterfaceMixin(Networkinterface nwi, Port p) {
-		Ipnetworkinterface ipn = ifac.createIpnetworkinterface();
-		for (IP ip: p.getFixedIps()) {
-			ipn.setOcciNetworkinterfaceAddress(ip.getIpAddress());
-		}
-		nwi.getParts().add(ipn);
-	}
 
-	private void adjustInterfaceState(Networkinterface nwi, Port p) {
+	private void adjustStlState(Storagelink stl, VolumeAttachment a) {
 		AttributeState state = cfac.createAttributeState();
-		state.setName("occi.networkinterface.state");
-		switch (p.getState()) {
-		case ERROR:
-			nwi.setOcciNetworkinterfaceState(NetworkInterfaceStatus.ERROR);
-			state.setValue("error");
-			break;
-		case ACTIVE:
-			nwi.setOcciNetworkinterfaceState(NetworkInterfaceStatus.ACTIVE);
-			state.setValue("active");
-			break;
-		case BUILD:
-		case DOWN:
-		case PENDING_CREATE:
-		case PENDING_DELETE:
-		case PENDING_UPDATE:
-		case UNRECOGNIZED:
-		default:
-			nwi.setOcciNetworkinterfaceState(NetworkInterfaceStatus.INACTIVE);
-			state.setValue("inactive");
-			break;	
-		}
-		nwi.getAttributes().add(state);
+		state.setName("occi.storagelink.state");
+		state.setValue("active");
+		stl.getAttributes().add(state);
+	}
+	
+	private void addDeviceId(Storagelink stl, VolumeAttachment a) {
+		AttributeState state = cfac.createAttributeState();
+		state.setName("occi.storagelink.deviceid");
+		state.setValue(a.getServerId());
+		stl.getAttributes().add(state);
+	}
+	
+	private void addMountpoint(Storagelink stl, VolumeAttachment a) {
+		AttributeState state = cfac.createAttributeState();
+		state.setName("occi.storagelink.mountpoint");
+		state.setValue(a.getDevice());
+		stl.getAttributes().add(state);
 	}
 }

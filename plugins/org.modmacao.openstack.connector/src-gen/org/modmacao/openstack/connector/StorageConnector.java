@@ -21,8 +21,12 @@ import openstackruntime.OpenstackruntimeFactory;
 import openstackruntime.Runtimeid;
 
 import org.eclipse.cmf.occi.core.AttributeState;
+import org.eclipse.cmf.occi.core.MixinBase;
+import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.infrastructure.ComputeStatus;
 import org.eclipse.cmf.occi.infrastructure.StorageStatus;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.model.storage.block.Volume.Status;
@@ -68,6 +72,8 @@ public class StorageConnector extends org.eclipse.cmf.occi.infrastructure.impl.S
 	public void occiCreate()
 	{
 		LOGGER.debug("occiCreate() called on " + this);
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		VolumeBuilder builder = Builders.storage().volume();
 		
 		os = OpenStackHelper.getInstance().getOSClient();
@@ -106,11 +112,8 @@ public class StorageConnector extends org.eclipse.cmf.occi.infrastructure.impl.S
 		
 		volume = os.blockStorage().volumes().create(builder.build());
 		
-		Runtimeid runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
-		OpenStackHelper.getInstance().setAttributeState(runtimeIDMixin, "openstack.runtime.id", 
-				volume.getId());
-		
-		this.getParts().add(runtimeIDMixin);
+		updateRuntimeId(volume.getId());
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -161,6 +164,9 @@ public class StorageConnector extends org.eclipse.cmf.occi.infrastructure.impl.S
 	public void occiDelete()
 	{
 		LOGGER.debug("occiDelete() called on " + this);
+		Block b = new Block();
+		AbsSync.addBlock(b);
+		
 		os = OpenStackHelper.getInstance().getOSClient();
 		
 		volume = getRuntimeObject();
@@ -172,6 +178,7 @@ public class StorageConnector extends org.eclipse.cmf.occi.infrastructure.impl.S
 		OpenStackHelper.getInstance().removeRuntimeID(this);
 		
 		this.setOcciStorageState(StorageStatus.OFFLINE);
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -254,5 +261,35 @@ public class StorageConnector extends org.eclipse.cmf.occi.infrastructure.impl.S
 	// End of user code
 		
 
+	private void updateRuntimeId(String id) {
+		Runtimeid runtimeIDMixin = getRuntimeMixin();
+		if(runtimeIDMixin == null) {
+			LOGGER.info("Creating Runtime ID");
+			runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
+			runtimeIDMixin.setOpenstackRuntimeId(id);
+			AttributeState as = OCCIFactory.eINSTANCE.createAttributeState();
+			as.setName("openstack.runtime.id");
+			as.setValue(id);
+			runtimeIDMixin.getAttributes().add(as);
+			this.getParts().add(runtimeIDMixin);
+		} else {
+			LOGGER.info("Updating Runtime ID");
+			runtimeIDMixin.setOpenstackRuntimeId(id);
+			for(AttributeState as: runtimeIDMixin.getAttributes()) {
+				if(as.getName().equals("openstack.runtime.id")) {
+					as.setValue(id);
+				}
+			}
+		}
+	}
+	
+	private Runtimeid getRuntimeMixin() {
+		for(MixinBase mixB: this.getParts()) {
+			if(mixB instanceof Runtimeid) {
+				return (Runtimeid) mixB;
+			}
+		}
+		return null;
+	}
 
 }	

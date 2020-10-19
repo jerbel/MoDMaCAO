@@ -15,6 +15,8 @@
 package org.modmacao.openstack.connector;
 
 import org.eclipse.cmf.occi.infrastructure.StorageLinkStatus;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.VolumeAttachment;
@@ -60,7 +62,10 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 	public void occiCreate()
 	{
 		LOGGER.debug("occiCreate() called on " + this);
-				
+		Block b = new Block();
+		AbsSync.addBlock(b);	
+		
+		
 		os = OpenStackHelper.getInstance().getOSClient();
 		
 		String serverID = OpenStackHelper.getInstance().getRuntimeID(this.getSource());
@@ -92,13 +97,14 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 		
 		if (volume.getStatus() == Status.AVAILABLE) {
 			VolumeAttachment attachment = os.compute().servers().attachVolume(serverID, volumeID, null);
-		
+			
 			if (attachment == null) {
 				LOGGER.error("Error attaching volume.");
 				this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 				this.setOcciStoragelinkStateMessage("Error attaching volume.");
 				return;	
 			}
+			this.setOcciStoragelinkMountpoint(attachment.getDevice());
 		}
 		else {
 			LOGGER.info("Volume is currently not available. Try again later.");
@@ -106,6 +112,10 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			this.setOcciStoragelinkStateMessage("Volume was not available during attachment. Try again later.");	
 			return;
 		}
+		
+		
+	
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -141,6 +151,8 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 	public void occiDelete()
 	{
 		LOGGER.debug("occiDelete() called on " + this);
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -172,6 +184,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 		}
 		
 		os.compute().servers().detachVolume(serverID, volumeID);
+		AbsSync.removeBlock(b);
 		
 	}
 	// End of user code

@@ -41,7 +41,7 @@ public class StorageSync extends AbsSync {
 	
 	private List<? extends Volume> filterTenant(List<? extends Volume> list, String tenantid) {
 		List<Volume> vList = new ArrayList<>();
-		for(Volume v : vList) {
+		for(Volume v : list) {
 			if(v.getTenantId().equals(tenantid)) {
 				vList.add(v);
 			}
@@ -80,12 +80,48 @@ public class StorageSync extends AbsSync {
 
 	private void addVolumeToRuntimeModel(Volume v) {
 		org.eclipse.cmf.occi.infrastructure.Storage st = ifac.createStorage();
-		st.setTitle(v.getName());
+		setName(st,v);
+		setSize(st,v);
 		adjustState(st, v);
+		adjustSummary(st, v);
 		appendRid(st, v.getId());
 		
 		if(os.blockStorage().volumes().get(v.getId()) != null) {
 			addEntityToRuntimeModel(st);
+		}
+	}
+
+	private void adjustSummary(Storage st, Volume v) {
+		for(AttributeState as: st.getAttributes()) {
+			if(as.getName().equals("occi.core.summary")) {
+				as.setValue(v.getDescription());
+			}
+		}
+	}
+
+	private void setName(Storage st, Volume v) {
+		@SuppressWarnings("deprecation")
+		String name = v.getDisplayName();
+		
+		if(name == null || name.isEmpty()) {
+			name = Float.toString(v.getSize());
+		}
+		
+		st.setTitle(name);
+		for(AttributeState as: st.getAttributes()) {
+			if(as.getName().equals("occi.core.title")) {
+				as.setValue(name);
+			}
+		}
+	}
+	
+	private void setSize(Storage st, Volume v) {
+		float size = v.getSize();
+		st.setOcciStorageSize(size);
+		for(AttributeState as: st.getAttributes()) {
+			if(as.getName().equals("occi.storage.size")) {
+				as.setValue(Float.toString(size));
+			}
 		}
 	}
 
@@ -108,15 +144,6 @@ public class StorageSync extends AbsSync {
 				break;	
 		}
 		st.getAttributes().add(state);
-	}
-
-	private boolean networkidExistsInCloud(Runtimeid rid, List<? extends Network> nList) {
-		for(Network n: nList) {
-			if(rid.getOpenstackRuntimeId().equals(n.getId())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private boolean idExistsInCloud(Runtimeid rid, List<? extends Volume> vList) {

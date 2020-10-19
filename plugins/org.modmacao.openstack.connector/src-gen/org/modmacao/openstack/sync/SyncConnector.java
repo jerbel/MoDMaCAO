@@ -51,7 +51,7 @@ public class SyncConnector implements Runnable {
 			            .tenantName(tenant)
 			            .authenticate();
 				
-				LOGGER.info("Compute Node Synchronization");
+				LOGGER.info("Start Synchronization");
 				try {
 					ComputeSync csync = new ComputeSync(os);
 					csync.sync();
@@ -62,16 +62,17 @@ public class SyncConnector implements Runnable {
 					NWISync nwisync = new NWISync(os);
 					nwisync.sync();
 					
-					//StorageSync ssync = new StorageSync(os);
-					//ssync.sync();
+					StorageSync ssync = new StorageSync(os);
+					ssync.sync();
 					
-					//StorageLinkSync slsync = new StorageLinkSync(os);
-					//slsync.sync();
+					StorageLinkSync slsync = new StorageLinkSync(os);
+					slsync.sync();
 					
 				} catch(Exception e) {
 					LOGGER.error("Something went wrong on synchronization process");
 					e.printStackTrace();
 				}
+				LOGGER.info("Finished Synchronization. Sleeping for: " + FIVE_SECONDS);
 				
 				try {
 					Thread.sleep(FIVE_SECONDS);
