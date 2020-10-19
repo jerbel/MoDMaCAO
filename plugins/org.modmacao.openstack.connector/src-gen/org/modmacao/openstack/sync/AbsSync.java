@@ -63,7 +63,7 @@ public abstract class AbsSync {
 				
 				for(Link l: res.getLinks()) {
 					if(l instanceof Networkinterface) {
-						for(MixinBase mixB: res.getParts()) {
+						for(MixinBase mixB: l.getParts()) {
 							if(mixB instanceof Runtimeid) {
 								Runtimeid rid = (Runtimeid) mixB;
 								if(rid.getOpenstackRuntimeId().equals(id)) {
@@ -99,7 +99,7 @@ public abstract class AbsSync {
 		return null;
 	}
 	
-	private boolean isBlacklisted(String id) {
+	protected boolean isBlacklisted(String id) {
 		if(id.equals("5a3ba352-9341-4d52-b7f0-96c75f9ceffa")
 				|| id.equals("4d74302f-5cef-4bcd-ab12-5ac2455a68ab")
 				|| id.equals("75a4639e-9ce7-4058-b859-8a711b0e2e7b")
@@ -149,7 +149,7 @@ public abstract class AbsSync {
 		String title = ent.getTitle();
 		String uuid = ent.getId();
 		String kind = ent.getKind().getScheme() + ent.getKind().getTerm();
-		String summary = "Created by postconstructor!";
+		String summary = "Created by Sync Connector!";
 		
 		List<String> mixins = getMixinNames(ent);
 		Map<String, String> attributes = getAttributeMap(ent);
@@ -168,9 +168,35 @@ public abstract class AbsSync {
 				LOGGER.info("Adding entity to runtime model: "+ ent);
 				if(ent instanceof Resource) {
 					EntityManager.addResourceToConfiguration(adjustedUUID, title, summary, kind, mixins, attributes, location, owner);
-				} else if (ent instanceof Link) {
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	protected void addLinkToRuntimeModel(Entity ent, String srcLocation, String tarLocation) {
+		String title = ent.getTitle();
+		String uuid = ent.getId();
+		String kind = ent.getKind().getScheme() + ent.getKind().getTerm();
+		
+		List<String> mixins = getMixinNames(ent);
+		Map<String, String> attributes = getAttributeMap(ent);
+		
+		
+		String location = "/" + ent.getKind().getTerm() + "/" + uuid + "/";
+		String owner = "anonymous";
+		
+		//Remove urn:uuid as it is added by the martserver
+		String adjustedUUID = uuid.substring(9 ,uuid.length());
+
+		try {
+			if(blocked.isEmpty()) {
+				LOGGER.info("Adding entity to runtime model: "+ ent);
+				if (ent instanceof Link) {
 					Link l = (Link) ent;
-					EntityManager.addLinkToConfiguration(adjustedUUID, title, kind, mixins, l.getSource().getLocation(), l.getTarget().getLocation(), attributes, location, owner);
+					EntityManager.addLinkToConfiguration(adjustedUUID, title, kind, mixins, srcLocation, tarLocation, attributes, location, owner);
 				}
 			}
 		} catch (Exception e) {

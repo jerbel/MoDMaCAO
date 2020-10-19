@@ -11,6 +11,7 @@ import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.NetworkInterfaceStatus;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
+import org.eclipse.emf.codegen.merge.java.facade.FacadeFlags;
 import org.occiware.mart.server.model.ConfigurationManager;
 import org.openstack4j.api.OSClient;
 import org.openstack4j.model.network.IP;
@@ -25,7 +26,7 @@ public class NWISync extends AbsSync {
 	}
 
 	public void sync() {
-		List<? extends Network> nList = filterTenant(os.networking().network().list(), TENANTID);
+		List<? extends Network> nList = filterTenantAndBlacklisted(os.networking().network().list(), TENANTID);
 		for(Network n: nList) {
 			addMissingInterfaces(n);
 			removeNonExistentInterfaces(n);
@@ -57,18 +58,21 @@ public class NWISync extends AbsSync {
 	private void addMissingInterfaces(Network n) {
 		for(Port p: getNetworkPorts(n)) {
 			if(isInRuntimeModel(p.getId()) == false){
-				if(isInRuntimeModel(p.getDeviceId())
-						&& isInRuntimeModel(p.getNetworkId())){
-						addNWIToRuntimeModel(p);
+				if((isBlacklisted(p.getDeviceId()) 
+					|| isBlacklisted(p.getNetworkId())) == false) {
+						if(isInRuntimeModel(p.getDeviceId())
+							&& isInRuntimeModel(p.getNetworkId())){
+								addNWIToRuntimeModel(p);
+						}
 				}
 			}
 		}
 	}
 
-	private List<? extends Network> filterTenant(List<? extends Network> list, String tenantid) {
+	private List<? extends Network> filterTenantAndBlacklisted(List<? extends Network> list, String tenantid) {
 		List<Network> nList = new ArrayList<>();
 		for(Network n : list) {
-			if(n.getTenantId().equals(tenantid)) {
+			if(isBlacklisted(n.getId()) == false && n.getTenantId().equals(tenantid)) {
 				nList.add(n);
 			}
 		}
@@ -93,11 +97,13 @@ public class NWISync extends AbsSync {
 		addIPInterfaceMixin(nwi, p);
 		nwi.setOcciNetworkinterfaceMac(p.getMacAddress());
 		
-		nwi.setSource(getResourceModelRepresentation(p.getDeviceId()));
-		nwi.setTarget(getResourceModelRepresentation(p.getNetworkId()));
+		//nwi.setSource(getResourceModelRepresentation(p.getDeviceId()));
+		//nwi.setTarget(getResourceModelRepresentation(p.getNetworkId()));
+		String srcLocation = getResourceModelRepresentation(p.getDeviceId()).getLocation();
+		String tarLocation = getResourceModelRepresentation(p.getNetworkId()).getLocation();
 		
 		if(os.networking().port().get(p.getId()) != null) {
-			addEntityToRuntimeModel(nwi);
+			addLinkToRuntimeModel(nwi, srcLocation, tarLocation);
 		}
 	}
 	

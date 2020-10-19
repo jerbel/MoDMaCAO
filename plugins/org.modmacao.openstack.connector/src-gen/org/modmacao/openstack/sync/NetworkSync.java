@@ -94,7 +94,6 @@ public class NetworkSync extends AbsSync {
 		for(Subnet snw: n.getNeutronSubnets()) {
 			Ipnetwork ipn = ifac.createIpnetwork();
 			ipn.setOcciNetworkAddress(snw.getCidr());
-			LOGGER.info("CIDR: " + snw.getCidr());
 			if(snw.isDHCPEnabled()) {
 				ipn.setOcciNetworkAllocation(Allocation.DYNAMIC);
 			} else {

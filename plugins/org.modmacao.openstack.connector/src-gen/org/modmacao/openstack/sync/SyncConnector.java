@@ -26,7 +26,7 @@ import org.modmacao.openstack.connector.OpenStackHelper;
  *
  */
 public class SyncConnector implements Runnable {
-	private static final long FIVE_SECONDS = 205000;
+	private static final long FIVE_SECONDS = 5000;
 	static Logger LOGGER = LoggerFactory.getLogger(ComputeConnector.class);
 	private OpenStackHelper helper = OpenStackHelper.getInstance();
 	public static Boolean running = false;
@@ -53,12 +53,6 @@ public class SyncConnector implements Runnable {
 				
 				LOGGER.info("Compute Node Synchronization");
 				try {
-					Thread.sleep(FIVE_SECONDS);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				try {
 					ComputeSync csync = new ComputeSync(os);
 					csync.sync();
 					
@@ -68,14 +62,20 @@ public class SyncConnector implements Runnable {
 					NWISync nwisync = new NWISync(os);
 					nwisync.sync();
 					
-					StorageSync ssync = new StorageSync(os);
-					ssync.sync();
+					//StorageSync ssync = new StorageSync(os);
+					//ssync.sync();
 					
-					StorageLinkSync slsync = new StorageLinkSync(os);
-					slsync.sync();
+					//StorageLinkSync slsync = new StorageLinkSync(os);
+					//slsync.sync();
 					
 				} catch(Exception e) {
 					LOGGER.error("Something went wrong on synchronization process");
+					e.printStackTrace();
+				}
+				
+				try {
+					Thread.sleep(FIVE_SECONDS);
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
