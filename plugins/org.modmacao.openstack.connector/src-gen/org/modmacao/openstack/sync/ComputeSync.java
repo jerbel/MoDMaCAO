@@ -9,10 +9,12 @@ import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.ComputeStatus;
+import org.modmacao.openstack.connector.OpenStackHelper;
 import org.occiware.mart.server.exception.ConfigurationException;
 import org.occiware.mart.server.model.ConfigurationManager;
 import org.occiware.mart.server.model.EntityManager;
 import org.openstack4j.api.OSClient;
+import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.Server.Status;
 
@@ -79,10 +81,14 @@ public class ComputeSync extends AbsSync {
 	}
 	
 	private  void addServerToRuntimeModel(Server s) {
+		Flavor flav = s.getFlavor();
 		Compute comp = ifac.createCompute();
 		comp.setTitle(s.getName());
 		adjustState(comp, s);
 		appendRid(comp, s.getId());
+		comp.setOcciComputeCores(flav.getVcpus());
+		comp.setOcciComputeHostname(s.getName());
+		comp.setOcciComputeMemory((float) flav.getRam());
 		
 		if(os.compute().servers().get(s.getId()) != null) {
 			addEntityToRuntimeModel(comp);
