@@ -17,7 +17,6 @@ import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.InfrastructureFactory;
-import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
 import org.eclipse.cmf.occi.infrastructure.Storage;
 import org.eclipse.emf.common.util.BasicEList;
@@ -42,6 +41,7 @@ public abstract class AbsSync {
 	//TODO: AUtomatic detection of TENANTID!
 	protected static final String TENANTID = "7ee7b6a14eb54f5b9b75cc2ea87786df";
 	private static List<Block> blocked = new ArrayList<>();
+	public static List<String> BLACKLIST;
 
 	protected String getRuntimeId(Entity ent) {
 		for(MixinBase mixB: ent.getParts()) {
@@ -110,12 +110,7 @@ public abstract class AbsSync {
 	}
 	
 	protected boolean isBlacklisted(String id) {
-		if(id.equals("5a3ba352-9341-4d52-b7f0-96c75f9ceffa")
-				|| id.equals("4d74302f-5cef-4bcd-ab12-5ac2455a68ab")
-				|| id.equals("75a4639e-9ce7-4058-b859-8a711b0e2e7b")
-				|| id.equals("82ef5768-0cac-4f77-920e-c871fbfd7f3f")
-				|| id.equals("7603cefe-affb-4765-8a81-be74d9f7aebe")
-				|| id.equals("eedb4ba3-e4d5-489b-bd8b-b915d3a73b58")) {
+		if(BLACKLIST.contains(id)) {
 				return true;
 		} else {
 			return false;
@@ -173,8 +168,6 @@ public abstract class AbsSync {
 		String adjustedUUID = uuid.substring(9 ,uuid.length());
 
 		try {
-			LOGGER.info("Block: " + blocked);
-			LOGGER.info("Block: " + blocked.size());
 			if(blocked.isEmpty()) {
 				LOGGER.info("Adding entity to runtime model: "+ ent);
 				if(ent instanceof Resource) {
@@ -216,9 +209,8 @@ public abstract class AbsSync {
 
 		try {
 			if(blocked.isEmpty()) {
-				LOGGER.info("Adding entity to runtime model: "+ ent);
+				LOGGER.info("SYNC: Adding Infra entity to runtime model: "+ ent);
 				if (ent instanceof Link) {
-					Link l = (Link) ent;
 					EntityManager.addLinkToConfiguration(adjustedUUID, title, kind, mixins, srcLocation, tarLocation, attributes, location, owner);
 				}
 			}
@@ -230,10 +222,8 @@ public abstract class AbsSync {
 	protected void removeFromRuntimeModel(List<String> toRemove) {
 		for(String str: toRemove) {
 			try {
-				LOGGER.info("Block: " + blocked);
-				LOGGER.info("Block: " + blocked.size());
 				if(blocked.isEmpty()) {
-					LOGGER.info("Removing: " + str);
+					LOGGER.info("SYNC: Removing Infra entity from runtime model: " + str);
 					EntityManager.removeOrDissociateFromConfiguration(str, "anonymous");
 				}
 			} catch (ConfigurationException e) {

@@ -6,22 +6,12 @@ import java.util.List;
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Configuration;
 import org.eclipse.cmf.occi.core.Link;
-import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
-import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
-import org.eclipse.cmf.occi.infrastructure.NetworkInterfaceStatus;
-import org.eclipse.cmf.occi.infrastructure.Networkinterface;
 import org.eclipse.cmf.occi.infrastructure.Storagelink;
 import org.occiware.mart.server.model.ConfigurationManager;
 import org.openstack4j.api.OSClient;
-import org.openstack4j.model.network.IP;
-import org.openstack4j.model.network.Network;
-import org.openstack4j.model.network.Port;
 import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.block.VolumeAttachment;
-import org.openstack4j.openstack.storage.block.domain.AttachAction;
-
-import openstackruntime.Runtimeid;
 
 public class StorageLinkSync extends AbsSync {
 	public StorageLinkSync(OSClient<?> os) {

@@ -11,7 +11,6 @@ import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.NetworkInterfaceStatus;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
-import org.eclipse.emf.codegen.merge.java.facade.FacadeFlags;
 import org.occiware.mart.server.model.ConfigurationManager;
 import org.openstack4j.api.OSClient;
 import org.openstack4j.model.network.IP;
