@@ -214,7 +214,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		rolepath = rolepath.replaceAll("http://", "");
 		rolepath = rolepath.replaceAll("\\.", "_");
 		rolepath = rolepath.replaceAll("#", "");
-		rolepath = rolepath + "/" + mixin.getMixin().getName();
+		rolepath = rolepath + "/" + mixin.getMixin().getName().toLowerCase();
 		return rolepath;
 	}
 
