@@ -57,8 +57,8 @@ public class NWISync extends AbsSync {
 	private void addMissingInterfaces(Network n) {
 		for(Port p: getNetworkPorts(n)) {
 			if(isInRuntimeModel(p.getId()) == false){
-				if((isBlacklisted(p.getDeviceId()) 
-					|| isBlacklisted(p.getNetworkId())) == false) {
+				if(isBlacklisted(p.getDeviceId()) == false
+					&& isBlacklisted(p.getNetworkId()) == false) {
 						if(isInRuntimeModel(p.getDeviceId())
 							&& isInRuntimeModel(p.getNetworkId())){
 								addNWIToRuntimeModel(p);
