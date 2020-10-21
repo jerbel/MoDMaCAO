@@ -199,7 +199,7 @@ public class NetworkConnector extends org.eclipse.cmf.occi.infrastructure.impl.N
 		
 		network = getRuntimeObject();
 		if(network.getId().equals(OpenStackHelper.getInstance().getDefaultNetwork())) {
-			LOGGER.warn("DELETE Request for default network detected! Can not delete network!");
+			LOGGER.warn("DELETE Request for default network detected! Remove network only from model!");
 			return;
 		}
 		if (network == null) {
