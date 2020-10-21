@@ -91,6 +91,7 @@ public class NetworkConnector extends org.eclipse.cmf.occi.infrastructure.impl.N
 			} else {
 				setNetworkStatus();
 			}
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -200,6 +201,7 @@ public class NetworkConnector extends org.eclipse.cmf.occi.infrastructure.impl.N
 		network = getRuntimeObject();
 		if(network.getId().equals(OpenStackHelper.getInstance().getDefaultNetwork())) {
 			LOGGER.warn("DELETE Request for default network detected! Remove network only from model!");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		if (network == null) {

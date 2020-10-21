@@ -112,6 +112,7 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 				this.setOcciComputeState(ComputeStatus.ERROR);
 				this.setOcciComputeStateMessage("Runtime id set, but unable to connect to runtime object.");	
 			}
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -257,9 +258,10 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 			e.printStackTrace();
 			LOGGER.debug("Problem while creating VM: " + e.getMessage());
 			os.compute().keypairs().delete(this.getTitle() + "_keypair");
+		} finally {
+			AbsSync.removeBlock(b);
 		}
 		
-		AbsSync.removeBlock(b);
 	}
 	// End of user code
 

@@ -83,6 +83,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 			LOGGER.error("Target network not found.");
 			this.setOcciNetworkinterfaceState(NetworkInterfaceStatus.ERROR);
 			this.setOcciNetworkinterfaceStateMessage("Target network not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -93,6 +94,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 			LOGGER.error("Target network contains no subnets");
 			this.setOcciNetworkinterfaceState(NetworkInterfaceStatus.ERROR);
 			this.setOcciNetworkinterfaceStateMessage("Target network contains no subnets.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		String subnetID = network.getSubnets().get(0);
@@ -106,6 +108,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 				this.setOcciNetworkinterfaceStateMessage("Runtime id set, but unable to connect to runtime object.");
 			}
 			this.occiRetrieve();
+			AbsSync.removeBlock(b);
 			return;
 		}
 		

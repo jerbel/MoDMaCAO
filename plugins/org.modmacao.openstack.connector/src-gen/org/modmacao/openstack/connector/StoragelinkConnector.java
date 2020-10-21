@@ -73,6 +73,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Unable to retrieve server id.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Unale to retrieve server id.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -82,6 +83,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Source server not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Source server not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -92,6 +94,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Target volume not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Target volume not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -102,6 +105,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 				LOGGER.error("Error attaching volume.");
 				this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 				this.setOcciStoragelinkStateMessage("Error attaching volume.");
+				AbsSync.removeBlock(b);
 				return;	
 			}
 			this.setOcciStoragelinkMountpoint(attachment.getDevice());
@@ -110,6 +114,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.info("Volume is currently not available. Try again later.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Volume was not available during attachment. Try again later.");	
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -161,6 +166,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Server runtime id is not set.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Server runtime id not set.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -170,6 +176,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Source server not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Source server not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -180,6 +187,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Target volume not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Target volume not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		

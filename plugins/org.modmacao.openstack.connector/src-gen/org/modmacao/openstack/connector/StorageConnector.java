@@ -87,6 +87,7 @@ public class StorageConnector extends org.eclipse.cmf.occi.infrastructure.impl.S
 				this.setOcciStorageState(StorageStatus.ERROR);
 				this.setOcciStorageStateMessage("Runtime id set, but unable to connect to runtime object.");	
 			}
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
