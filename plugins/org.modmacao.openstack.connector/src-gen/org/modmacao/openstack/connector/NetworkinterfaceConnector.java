@@ -15,9 +15,13 @@
  */
 package org.modmacao.openstack.connector;
 
+import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.MixinBase;
+import org.eclipse.cmf.occi.core.OCCIFactory;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.NetworkInterfaceStatus;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.model.network.IP;
@@ -67,6 +71,8 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 	public void occiCreate()
 	{
 		LOGGER.debug("occiCreate() called on " + this);
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -77,6 +83,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 			LOGGER.error("Target network not found.");
 			this.setOcciNetworkinterfaceState(NetworkInterfaceStatus.ERROR);
 			this.setOcciNetworkinterfaceStateMessage("Target network not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -87,6 +94,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 			LOGGER.error("Target network contains no subnets");
 			this.setOcciNetworkinterfaceState(NetworkInterfaceStatus.ERROR);
 			this.setOcciNetworkinterfaceStateMessage("Target network contains no subnets.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		String subnetID = network.getSubnets().get(0);
@@ -100,6 +108,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 				this.setOcciNetworkinterfaceStateMessage("Runtime id set, but unable to connect to runtime object.");
 			}
 			this.occiRetrieve();
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -140,9 +149,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 						port.getId());
 			}
 			
-			Runtimeid runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
-			runtimeIDMixin.setOpenstackRuntimeId(port.getId());
-			this.getParts().add(runtimeIDMixin);
+			updateRuntimeId(port.getId());
 		}
 		else {
 			LOGGER.debug("No port found with matching properties, creating new port.");
@@ -157,9 +164,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 		
 			port = os.networking().port().create(builder.build());
 			
-			Runtimeid runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
-			runtimeIDMixin.setOpenstackRuntimeId(port.getId());
-			this.getParts().add(runtimeIDMixin);
+			updateRuntimeId(port.getId());
 			
 			if (serverID != null) {
 				os.compute().servers().interfaces().create(
@@ -168,6 +173,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 			}
 		}
 		this.occiRetrieve();
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -241,6 +247,8 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 	@Override
 	public void occiDelete()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiDelete() called on " + this);
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -254,6 +262,7 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 		
 		this.setOcciNetworkinterfaceState(NetworkInterfaceStatus.INACTIVE);
 		this.setOcciNetworkinterfaceStateMessage("DELETED");
+		AbsSync.removeBlock(b);
 	}
 	
 	protected Port getRuntimeObject() {
@@ -263,6 +272,37 @@ public class NetworkinterfaceConnector extends org.eclipse.cmf.occi.infrastructu
 		}
 		port = os.networking().port().get(runtimeid);
 		return port;
+	}
+	
+	private void updateRuntimeId(String id) {
+		Runtimeid runtimeIDMixin = getRuntimeMixin();
+		if(runtimeIDMixin == null) {
+			LOGGER.info("Creating Runtime ID");
+			runtimeIDMixin = OpenstackruntimeFactory.eINSTANCE.createRuntimeid();
+			runtimeIDMixin.setOpenstackRuntimeId(id);
+			AttributeState as = OCCIFactory.eINSTANCE.createAttributeState();
+			as.setName("openstack.runtime.id");
+			as.setValue(id);
+			runtimeIDMixin.getAttributes().add(as);
+			this.getParts().add(runtimeIDMixin);
+		} else {
+			LOGGER.info("Updating Runtime ID");
+			runtimeIDMixin.setOpenstackRuntimeId(id);
+			for(AttributeState as: runtimeIDMixin.getAttributes()) {
+				if(as.getName().equals("openstack.runtime.id")) {
+					as.setValue(id);
+				}
+			}
+		}
+	}
+
+	private Runtimeid getRuntimeMixin() {
+		for(MixinBase mixB: this.getParts()) {
+			if(mixB instanceof Runtimeid) {
+				return (Runtimeid) mixB;
+			}
+		}
+		return null;
 	}
 	
 	// End of user code
