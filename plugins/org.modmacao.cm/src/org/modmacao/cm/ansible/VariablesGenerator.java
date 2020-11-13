@@ -37,6 +37,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      * @generated NOT
      */
     public static final String MODULE_FILE_NAME = "/bin/org/modmacao/cm/ansible/VariablesGenerator";
+//    public static final String MODULE_FILE_NAME = "VariablesGenerator";
     
     /**
      * The name of the templates that are to be generated.
@@ -109,6 +110,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      */
     public VariablesGenerator(EObject model, File targetFolder,
             List<? extends Object> arguments) throws IOException {
+    	model.toString();
         initialize(model, targetFolder, arguments);
     }
     
@@ -353,6 +355,10 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
         System.out.println("ResourceSet");
         for(String res: resourceSet.getPackageRegistry().keySet()) {
         	System.out.println(res);
+        }
+        
+        if(!isInWorkspace(org.modmacao.placement.PlacementPackage.class)) {
+            resourceSet.getPackageRegistry().put(org.modmacao.placement.PlacementPackage.eINSTANCE.getNsURI(), org.modmacao.placement.PlacementPackage.eINSTANCE);
         }
         
         /*

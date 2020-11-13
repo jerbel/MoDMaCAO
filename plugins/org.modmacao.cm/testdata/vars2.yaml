@@ -1,0 +1,6 @@
+id: urn:uuid:fbe3eb1f-6a1b-428a-82b9-8aa4c95513d3
+kind: invalid
+attributes:
+  occi_core_id: 12345
+  occi_core_title: title
+
