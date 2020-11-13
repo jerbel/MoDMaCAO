@@ -15,6 +15,8 @@
 package org.modmacao.openstack.connector;
 
 import org.eclipse.cmf.occi.infrastructure.StorageLinkStatus;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.VolumeAttachment;
@@ -60,7 +62,10 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 	public void occiCreate()
 	{
 		LOGGER.debug("occiCreate() called on " + this);
-				
+		Block b = new Block();
+		AbsSync.addBlock(b);	
+		
+		
 		os = OpenStackHelper.getInstance().getOSClient();
 		
 		String serverID = OpenStackHelper.getInstance().getRuntimeID(this.getSource());
@@ -68,6 +73,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Unable to retrieve server id.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Unale to retrieve server id.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -77,6 +83,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Source server not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Source server not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -87,25 +94,33 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Target volume not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Target volume not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
 		if (volume.getStatus() == Status.AVAILABLE) {
 			VolumeAttachment attachment = os.compute().servers().attachVolume(serverID, volumeID, null);
-		
+			
 			if (attachment == null) {
 				LOGGER.error("Error attaching volume.");
 				this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 				this.setOcciStoragelinkStateMessage("Error attaching volume.");
+				AbsSync.removeBlock(b);
 				return;	
 			}
+			this.setOcciStoragelinkMountpoint(attachment.getDevice());
 		}
 		else {
 			LOGGER.info("Volume is currently not available. Try again later.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Volume was not available during attachment. Try again later.");	
+			AbsSync.removeBlock(b);
 			return;
 		}
+		
+		
+	
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
@@ -141,6 +156,8 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 	public void occiDelete()
 	{
 		LOGGER.debug("occiDelete() called on " + this);
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		
 		os = OpenStackHelper.getInstance().getOSClient();
 		
@@ -149,6 +166,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Server runtime id is not set.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Server runtime id not set.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -158,6 +176,7 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Source server not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Source server not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -168,10 +187,12 @@ public class StoragelinkConnector extends org.eclipse.cmf.occi.infrastructure.im
 			LOGGER.error("Target volume not found.");
 			this.setOcciStoragelinkState(StorageLinkStatus.ERROR);
 			this.setOcciStoragelinkStateMessage("Target volume not found.");
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
 		os.compute().servers().detachVolume(serverID, volumeID);
+		AbsSync.removeBlock(b);
 		
 	}
 	// End of user code

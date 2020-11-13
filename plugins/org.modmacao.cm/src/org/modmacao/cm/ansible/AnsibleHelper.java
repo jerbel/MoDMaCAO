@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.acceleo.engine.AcceleoEvaluationException;
 import org.eclipse.cmf.occi.core.AttributeState;
 import org.eclipse.cmf.occi.core.Entity;
 import org.eclipse.cmf.occi.core.Link;
@@ -125,6 +126,7 @@ public final class AnsibleHelper {
 	 */
 	public Path createPlaybook(String ipaddress, List<String> roles, String user, List<Path> variables,
 			Path path) throws IOException {
+		AnsibleCMTool.LOGGER.info("Start: Create Playbook");
 		String lb = System.getProperty("line.separator");
 		String offset = "  ";
 		StringBuilder sb = new StringBuilder("---");
@@ -143,6 +145,7 @@ public final class AnsibleHelper {
 		}
 		
 		FileUtils.writeStringToFile(path.toFile(), sb.toString(), (Charset) null);
+		AnsibleCMTool.LOGGER.info("End: Create Playbook");
 		return path;
 	}
 	
@@ -212,6 +215,7 @@ public final class AnsibleHelper {
 	 * @throws IOException
 	 */
 	public Path createConfiguration(Path configuration, Path keyPath) throws IOException{
+		AnsibleCMTool.LOGGER.info("Start: Create Config");
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder("[defaults]").append(lb);
 		sb.append("timeout = ").append(this.getProperties().getProperty("ssh_timeout")).append(lb);
@@ -219,11 +223,14 @@ public final class AnsibleHelper {
 		sb.append("gathering = ").append(this.getProperties().getProperty("gathering")).append(lb);
 		sb.append("roles_path = ").append(this.getProperties().getProperty("ansible_rolespath")).append(lb);
 		sb.append("private_key_file = ").append(keyPath.toString()).append(lb);
+		sb.append("host_key_checking = False").append(lb);
+		sb.append("internal_poll_interval = ").append(this.getProperties().getProperty("internal_poll_interval")).append(lb);
 		sb.append("[ssh_connection]").append(lb);
 		sb.append("pipelining = ").append(this.getProperties().getProperty("pipelining")).append(lb);
 		String sshArgs = this.getProperties().getProperty("ssh_args");
 		sb.append("ssh_args = ").append(removeQuotes(sshArgs)).append(lb);
 		FileUtils.writeStringToFile(configuration.toFile(), sb.toString(), (Charset) null);
+		AnsibleCMTool.LOGGER.info("End: Create Config");
 		return configuration;
 	}
 	
@@ -291,7 +298,8 @@ public final class AnsibleHelper {
 	 * @return The path where this variable file was created.
 	 * @throws IOException
 	 */
-	public Path createVariableFile(Path variablefile, Entity entity) throws IOException{		
+	public Path createVariableFile(Path variablefile, Entity entity) throws IOException{
+		AnsibleCMTool.LOGGER.info("Start: Create Var File");
 		String lb = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder();
 		List<AttributeState> attributes  = new LinkedList<AttributeState>();
@@ -346,7 +354,7 @@ public final class AnsibleHelper {
 		}
 		
 		FileUtils.writeStringToFile(variablefile.toFile(), sb.toString(), (Charset) null);
-		
+		AnsibleCMTool.LOGGER.info("End: Create Var File");
 		return variablefile;
 	}
 	
@@ -357,18 +365,24 @@ public final class AnsibleHelper {
 	 * @return The path where this variable file was created.
 	 * @throws IOException
 	 */
-	public Path createExtendedVariableFile(Path variablepath, Entity entity) throws IOException {
+	public Path createExtendedVariableFile(Path variablepath, Entity entity) throws IOException{
+		AnsibleCMTool.LOGGER.info("Start: Create Extended Var File");
+		VariablesGenerator gen = new VariablesGenerator(entity, 
+				variablepath.toFile(), new ArrayList<String>());
 		try {
-			VariablesGenerator gen = new VariablesGenerator(entity, variablepath.toFile(), new ArrayList<String>());
 			gen.doGenerate(null);
+		} catch(AcceleoEvaluationException e) {
+			LOGGER.error("Error in compiled .emtl detected!"
+					+ "Please ensure that the metamodel is correctly created during the compilation of the plugin!"
+					+ "The .emtl is located at: " + gen.getModuleName()
+					+ "Each OCCI extension should loaded in the following manner within the .emtl file: http://schemas.ogf.org/occi/core/ecore#");
 		} catch(Exception e){
 			LOGGER.error("Extended Variable File could not be correctly generated!",e);
 		}
+		AnsibleCMTool.LOGGER.info("End: Create Extended Var File");
 		return Paths.get(variablepath.toString(), "vars2.yaml"); 
 	}
-
-
-
+	
 	public String getTitle(Resource resource) {
 		if (resource.getTitle() != null)
 			return resource.getTitle();
@@ -489,8 +503,6 @@ public final class AnsibleHelper {
 				if (networklink == null) {
 					AnsibleCMTool.LOGGER.error("No network interface found for " + target);	
 				} else {
-					// Retrieving object to ensure ip address is correct
-//					networklink.occiRetrieve();
 					List<AttributeState> attributes  = new LinkedList<AttributeState>();
 					attributes.addAll(networklink.getAttributes());
 					for (MixinBase base: networklink.getParts()) {

@@ -90,11 +90,70 @@ links:
         - [container.ipaddress/]
         [/let]
       [/if]
+      hostname: [host.title/]
       [/let]
       [/let]
       [/if]
   [/if]
 [/for]
 [/if]
+[if (aResource.rlinks->size() > 0)]
+rlinks:
+[for (rlink : Link | aResource.rlinks)]
+  - id: [rlink.id/]
+    kind: [rlink.kind.term/]
+  [if (rlink.title <> null)]
+    title: [rlink.title/]
+  [/if]
+  [if (rlink.parts->size() > 0)]
+    mixins:
+    [for (part : MixinBase | rlink.parts)]
+      - [part.mixin.name/]
+    [/for]
+  [/if]
+  [if (rlink.source <> null)]
+    source: 
+      id: [rlink.source.id/]
+      kind: [rlink.source.kind.term/]
+      [if (rlink.source.title <> null)]
+      title: [rlink.source.title/]
+      [/if]
+      [if (rlink.source.parts->size() > 0)]
+      mixins:
+      [for (part : MixinBase | rlink.source.parts)]
+        - name: [part.mixin.name/]
+          attributes:
+             [for (as : AttributeState | part.attributes)]
+             [as.name.replaceAll('\\.', '_')/]: "[as.value/]"
+             [/for]
+      [/for]
+      [/if]
+      [if (rlink.source.oclIsKindOf(platform::Component))]
+      [let host : Resource = rlink.source.links
+           ->select(l : Link | l.kind.term = 'placementlink')
+           ->first().target ]
+      [let ipaddresses : Sequence(String) = host.links->select(l: Link | l.oclIsKindOf(infrastructure::Networkinterface))
+	       ->collect(parts)->filter(infrastructure::Ipnetworkinterface)->collect(occiNetworkinterfaceAddress)
+      ]
+      ipaddresses: 
+      [for (ip : String | ipaddresses) ]
+        - [ip/]
+      [/for]
+      hostname: [host.title/]
+      [/let]
+      [/let]
+      [/if]
+  [/if]
+[/for]
+[/if]
+#This part is for downwards compability and may be removed in future releases
+[for (as : AttributeState | aResource.attributes)]
+[as.name.replaceAll('\\.', '_')/]: "[as.value/]"
+[/for]
+[for (part : MixinBase | aResource.parts)]
+[for (as : AttributeState | part.attributes)]
+[as.name.replaceAll('\\.', '_')/]: "[as.value/]"
+[/for]
+[/for]
 [/file]
 [/template]

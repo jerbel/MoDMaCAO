@@ -204,14 +204,27 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 			LOGGER.debug("Mixin has schema: " + mixin.getMixin().getScheme());
 			if (mixin.getMixin().getScheme().matches(".*(schemas\\.modmacao\\.org).*") || mixin instanceof modmacao.Component){
 				LOGGER.info("Found mixin " + mixin.getMixin().getName());
-				roles.add(mixin.getMixin().getName().toLowerCase());
+				String rolepath = getRolePath(mixin);
+				//roles.add(mixin.getMixin().getName().toLowerCase());
+				roles.add(rolepath);
 			}
 		}
 		return roles;
 	}
 	
+	private String getRolePath(MixinBase mixin) {
+		String rolepath = mixin.getMixin().getScheme();
+		rolepath = rolepath.replaceAll("http://", "");
+		rolepath = rolepath.replaceAll("\\.", "_");
+		rolepath = rolepath.replaceAll("#", "");
+		rolepath = rolepath + "/" + mixin.getMixin().getName().toLowerCase();
+		return rolepath;
+	}
+
 	private int executeRoles(Resource resource, List<String> roles, String task) throws Exception{
+		AnsibleCMTool.LOGGER.info("Start: Create Helper");
 		AnsibleHelper helper = new AnsibleHelper();
+
 		String ipaddress = "";
 		if(helper.isPlacedOnContainer(resource)) {
 			Container container = (Container)helper.getCompute(resource);
@@ -219,7 +232,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		} else {
 			ipaddress = helper.getIPAddress(resource);
 		}
-		
+    
 		String user = this.getUser();
 		String options = null;
 		String keypath = helper.getProperties().getProperty("private_key_path");
@@ -250,7 +263,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 				Paths.get(keypath));
 		List <Path> variablefiles = new ArrayList<Path>();
 		
-		variablefiles.add(helper.createVariableFile(Paths.get(basedir, "vars.yaml"), resource));
+		//variablefiles.add(helper.createVariableFile(Paths.get(basedir, "vars.yaml"), resource));
 		variablefiles.add(helper.createExtendedVariableFile(Paths.get(basedir), resource));
 			
 		Path playbook = null;

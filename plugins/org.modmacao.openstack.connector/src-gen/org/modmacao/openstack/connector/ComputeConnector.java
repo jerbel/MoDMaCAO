@@ -32,6 +32,8 @@ import org.eclipse.cmf.occi.infrastructure.Ssh_key;
 import org.eclipse.cmf.occi.infrastructure.StopMethod;
 import org.eclipse.cmf.occi.infrastructure.SuspendMethod;
 import org.eclipse.cmf.occi.infrastructure.User_data;
+import org.modmacao.openstack.sync.AbsSync;
+import org.modmacao.openstack.sync.Block;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.model.compute.Action;
@@ -61,6 +63,7 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 {
 	private OSClientV2 os = null;
 	private Server server = null;
+	private FloatingIP fip = null;
 
 	/**
 	 * Initialize the logger.
@@ -87,6 +90,8 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 	@Override
 	public void occiCreate()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiCreate() called on " + this);
 		List<String> networkList = new ArrayList<String>();
 		List<Port> portList = new ArrayList<Port>();
@@ -107,6 +112,7 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 				this.setOcciComputeState(ComputeStatus.ERROR);
 				this.setOcciComputeStateMessage("Runtime id set, but unable to connect to runtime object.");	
 			}
+			AbsSync.removeBlock(b);
 			return;
 		}
 		
@@ -225,10 +231,11 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 					String pool = ((Floatingip) mixin).getOpenstackFloatingipPool();
 					String address = ((Floatingip) mixin).getOpenstackFloatingipAddress();
 					if (address != null) {
-						//TODO: Implement
+						LOGGER.info("Prescribed float address assignment is not implemented yet!");
 					} else {
 						FloatingIP fip = os.compute().floatingIps().allocateIP(pool);
-						LOGGER.debug("Allocated new floating ip " + fip.getFloatingIpAddress());
+						this.fip = fip;
+						LOGGER.info("Allocated new floating ip " + fip.getFloatingIpAddress());
 						os.compute().floatingIps().addFloatingIP(server, fip.getFloatingIpAddress());
 						((Floatingip) mixin).setOpenstackFloatingipAddress(fip.getFloatingIpAddress());
 						for(AttributeState attr: mixin.getAttributes()) {
@@ -248,9 +255,13 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 			this.occiRetrieve();
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.debug("Problem while creating VM: " + e.getMessage());
 			os.compute().keypairs().delete(this.getTitle() + "_keypair");
+		} finally {
+			AbsSync.removeBlock(b);
 		}
+		
 	}
 	// End of user code
 
@@ -333,10 +344,19 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 	@Override
 	public void occiDelete()
 	{
+		Block b = new Block();
+		AbsSync.addBlock(b);
 		LOGGER.debug("occiDelete() called on " + this);
 		os = OpenStackHelper.getInstance().getOSClient();
 		
 		server = getRuntimeObject();
+		if(fip != null) {
+			for(FloatingIP floatIp : os.compute().floatingIps().list()) {
+				  if(floatIp.getFloatingIpAddress().equals(fip.getFloatingIpAddress())) {
+				    os.compute().floatingIps().deallocateIP(floatIp.getId());
+				  }
+			}
+		}
 		
 		if (server != null) {
 			os.compute().servers().delete(server.getId());
@@ -351,6 +371,7 @@ public class ComputeConnector extends org.eclipse.cmf.occi.infrastructure.impl.C
 		
 		this.setOcciComputeState(ComputeStatus.INACTIVE);
 		this.setOcciComputeStateMessage("DELETED");
+		AbsSync.removeBlock(b);
 	}
 	// End of user code
 
