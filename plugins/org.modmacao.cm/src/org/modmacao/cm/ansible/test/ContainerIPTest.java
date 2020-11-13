@@ -267,18 +267,6 @@ public class ContainerIPTest {
 		}
 
 		@Override
-		public String getDescription() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void setDescription(String value) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
 		public boolean AttributesNameUnique(DiagnosticChain diagnostics, Map<Object, Object> context) {
 			// TODO Auto-generated method stub
 			return false;
