@@ -49,7 +49,6 @@ import org.modmacao.ansibleconfiguration.AnsibleconfigurationFactory;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
 import org.modmacao.cm.ansible.AnsibleCMTool;
 import org.modmacao.cm.ansible.VariablesGenerator;
-import org.modmacao.cm.ansible.VariablesGenerator2;
 import org.modmacao.occi.platform.Component;
 import org.modmacao.occi.platform.impl.PlatformFactoryImpl;
 import org.modmacao.placement.PlacementFactory;
@@ -101,7 +100,7 @@ public class ContainerIPTest {
 		
 		dockerClientManager.startContainer(machinevirtualbox, container, new StatsCallBack(container));
 		
-		dockerClientManager.getContainerIP(container);
+		//dockerClientManager.getContainerIP(container);
 		
 		dockerClientManager.stopContainer(machinevirtualbox, container);
 		dockerClientManager.removeContainer(machinevirtualbox, container);
@@ -125,7 +124,7 @@ public class ContainerIPTest {
 		container.occiCreate();
 		container.run();
 		
-		container.getIpaddress();
+		//container.getIpaddress();
 	
 		container.stop();
 		container.occiDelete();
@@ -172,7 +171,7 @@ public class ContainerIPTest {
 		container.occiCreate();
 		container.run();
 		
-		VariablesGenerator2 gen = new VariablesGenerator2(component, new File("ipTestExtVarsFile"), new ArrayList<String>());
+		VariablesGenerator gen = new VariablesGenerator(component, new File("ipTestExtVarsFile"), new ArrayList<String>());
 		gen.doGenerate(null);
 		
 		container.stop();
