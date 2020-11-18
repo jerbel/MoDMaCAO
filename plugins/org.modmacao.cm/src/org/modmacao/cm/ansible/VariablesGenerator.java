@@ -110,7 +110,6 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      */
     public VariablesGenerator(EObject model, File targetFolder,
             List<? extends Object> arguments) throws IOException {
-    	model.toString();
         initialize(model, targetFolder, arguments);
     }
     
@@ -338,27 +337,16 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      * 
      * @param resourceSet
      *            The resource set which registry has to be updated.
-     * @generated NOT
+     * @generated
      */
     @Override
     public void registerPackages(ResourceSet resourceSet) {
         super.registerPackages(resourceSet);
+        if (!isInWorkspace(org.eclipse.cmf.occi.core.OCCIPackage.class)) {
+            resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE);
+        }
         if (!isInWorkspace(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.class)) {
             resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.infrastructure.InfrastructurePackage.eINSTANCE);
-        }
-        if (!isInWorkspace(org.modmacao.occi.platform.PlatformPackage.class)) {
-            resourceSet.getPackageRegistry().put(org.modmacao.occi.platform.PlatformPackage.eINSTANCE.getNsURI(), org.modmacao.occi.platform.PlatformPackage.eINSTANCE);
-        }
-        resourceSet.getPackageRegistry().put(org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE.getNsURI(), org.eclipse.cmf.occi.core.OCCIPackage.eINSTANCE);
-        
-        
-        System.out.println("ResourceSet");
-        for(String res: resourceSet.getPackageRegistry().keySet()) {
-        	System.out.println(res);
-        }
-        
-        if(!isInWorkspace(org.modmacao.placement.PlacementPackage.class)) {
-            resourceSet.getPackageRegistry().put(org.modmacao.placement.PlacementPackage.eINSTANCE.getNsURI(), org.modmacao.placement.PlacementPackage.eINSTANCE);
         }
         
         /*
@@ -399,7 +387,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
      * 
      * @param resourceSet
      *            The resource set which registry has to be updated.
-     * @generated NOT
+     * @generated
      */
     @Override
     public void registerResourceFactories(ResourceSet resourceSet) {
@@ -420,7 +408,7 @@ public class VariablesGenerator extends AbstractAcceleoGenerator {
          * To learn more about the registration of Resource Factories, have a look at the Acceleo documentation (Help -> Help Contents). 
          */ 
         
-        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("occic", new OCCIResourceFactoryImpl());
+        // resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION, UMLResource.Factory.INSTANCE);
     }
     
 }
