@@ -18,6 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AnsibleCMTool implements ConfigurationManagementTool {
+	private int notReachableRetries = 0;
+	private static final int MAXREACHEABLERETRIES = 2;
+	private static final int RETRYSLEEP = 10000;
 	static Logger LOGGER = LoggerFactory.getLogger(AnsibleCMTool.class);
 
 	@Override
@@ -301,6 +304,18 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 			}
 		}
 		
+		if(state.getStateMessage().toLowerCase().contains("not reachable")) {
+			LOGGER.info("Host is not Reachable");
+			if(notReachableRetries <= MAXREACHEABLERETRIES) {
+				LOGGER.info("Retrying Connection after: " + RETRYSLEEP);
+				Thread.sleep(RETRYSLEEP);
+				executeRoles(resource, roles, task);
+			} else {
+				LOGGER.info("Connection could not be established after  " + MAXREACHEABLERETRIES + " tries!");
+				return state.getExitValue();
+			}
+		}
+		notReachableRetries = 0;
 		return state.getExitValue();
 	}
 
