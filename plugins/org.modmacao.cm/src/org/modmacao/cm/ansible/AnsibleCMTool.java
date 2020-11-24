@@ -9,6 +9,8 @@ import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.docker.Container;
 import org.eclipse.cmf.occi.docker.Machine;
+import org.eclipse.cmf.occi.docker.connector.helpers.DockerMachineHelper;
+import org.eclipse.cmf.occi.docker.connector.manager.DockerClientManager;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
 import org.modmacao.cm.ConfigurationManagementTool;
@@ -225,13 +227,15 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 	}
 
 	private int executeRoles(Resource resource, List<String> roles, String task) throws Exception{
-		AnsibleCMTool.LOGGER.info("Start: Create Helper");
 		AnsibleHelper helper = new AnsibleHelper();
 
 		String ipaddress = "";
 		if(helper.isPlacedOnContainer(resource)) {
 			Container container = (Container)helper.getCompute(resource);
 			ipaddress = container.getName();
+			if(DockerClientManager.checkSshPortKonfiguration(container)) {
+				ipaddress = container.getIpaddress();
+			}
 		} else {
 			ipaddress = helper.getIPAddress(resource);
 		}
@@ -266,25 +270,32 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 				Paths.get(keypath));
 		List <Path> variablefiles = new ArrayList<Path>();
 		
-		//variablefiles.add(helper.createVariableFile(Paths.get(basedir, "vars.yaml"), resource));
 		variablefiles.add(helper.createExtendedVariableFile(Paths.get(basedir), resource));
 			
 		Path playbook = null;
+		playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, 
+				Paths.get(basedir, "playbook.yml"));
+		
+		//if certain ssh port configurations for the container are matched, the ssh port is added to the inventory
+		String inventoryEntry = ipaddress;
+		
 		if(helper.isPlacedOnContainer(resource)) {
-			playbook = helper.createPlaybookForContainer(ipaddress, roles, user, variablefiles, 
-					Paths.get(basedir, "playbook.yml"));
-		} else {
-			playbook = helper.createPlaybook(ipaddress, roles, user, variablefiles, 
-					Paths.get(basedir, "playbook.yml"));
+			Container container = (Container) helper.getCompute(resource);
+			if(DockerClientManager.checkSshPortKonfiguration(container)) {
+				inventoryEntry = ipaddress + " ansible_port=" + DockerClientManager.getSshPort(container);
+			} else {
+				inventoryEntry = container.getName();
+			}
 		}
-			
-		Path inventory = helper.createInventory(ipaddress, Paths.get(basedir, "inventory"));
+		Path inventory = helper.createInventory(inventoryEntry, Paths.get(basedir, "inventory"));
 			
 		LOGGER.info("Executing role " + roles + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
 		
 		AnsibleReturnState state = null;
 		
-		if(helper.isPlacedOnContainer(resource)) {
+			 
+		if(helper.isPlacedOnContainer(resource) 
+				&& DockerClientManager.checkSshPortKonfiguration((Container)helper.getCompute(resource)) == false) {
 			Machine machine = helper.getMachine((Container)helper.getCompute(resource));
 			if(machine == null)
 				throw new Exception("The container has no machine connected to it");
@@ -304,11 +315,12 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 			}
 		}
 		
-		if(state.getStateMessage().toLowerCase().contains("not reachable")) {
-			LOGGER.info("Host is not Reachable");
+		if(state.getStateMessage().contains("UNREACHABLE!")) {
 			if(notReachableRetries <= MAXREACHEABLERETRIES) {
-				LOGGER.info("Retrying Connection after: " + RETRYSLEEP);
+				LOGGER.info("Host is not Reachable (" + notReachableRetries+"/"+MAXREACHEABLERETRIES+") | "
+						+ "Retrying Connection after: " + RETRYSLEEP);
 				Thread.sleep(RETRYSLEEP);
+				notReachableRetries++;
 				executeRoles(resource, roles, task);
 			} else {
 				LOGGER.info("Connection could not be established after  " + MAXREACHEABLERETRIES + " tries!");

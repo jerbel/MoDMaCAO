@@ -28,6 +28,7 @@ import org.eclipse.cmf.occi.docker.Machine;
 import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.eclipse.cmf.occi.infrastructure.Ipnetworkinterface;
 import org.eclipse.cmf.occi.infrastructure.Networkinterface;
+import org.eclipse.cmf.occi.infrastructure.Ssh_key;
 import org.eclipse.emf.common.util.EList;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
 import org.modmacao.occi.platform.Component;
@@ -146,64 +147,7 @@ public final class AnsibleHelper {
 		FileUtils.writeStringToFile(path.toFile(), sb.toString(), (Charset) null);
 		return path;
 	}
-	
-	/**
-	 * This method creates a playbook suited to be executed on containers. It adds a additional play at the beginning of the playbook
-	 * in which the existence of python is checked and installed if necessary. The use of certain ansible modules require an python interpreter
-	 * on the target machine containers build from images like ubuntu doesn't ship with one.
-	 * @param ipaddress
-	 * @param roles
-	 * @param user
-	 * @param variables
-	 * @param path
-	 * @return
-	 * @throws IOException
-	 */
-	public Path createPlaybookForContainer(String ipaddress, List<String> roles, String user, List<Path> variables,
-			Path path) throws IOException {
-		String lb = System.getProperty("line.separator");
-		String offset = "  ";
-		StringBuilder sb = new StringBuilder("---");
-		sb.append(lb);
-		sb.append("- hosts: ").append(ipaddress).append(lb);
-		sb.append(offset).append("gather_facts: false").append(lb);
-		sb.append(offset).append("roles:").append(lb);
-		//play in which the existence of python is checked and installed if necessary
-		sb.append(offset).append(offset).append("- ").append("pythonpreinstaller").append(lb);
-		
-		//play to install sudo function
-		sb.append(offset).append(offset).append("- ").append("sudopreinstaller").append(lb);
-		
-		//play to add ubuntu user
-		sb.append(offset).append(offset).append("- ").append("ubuntuuserinstall").append(lb);
-		
-		//install iproute2 to be able to access ansible_default_ipv4 variable
-		sb.append(offset).append(offset).append("- ").append("iproute2installer").append(lb);
-		
-		//install curl 
-		sb.append(offset).append(offset).append("- ").append("curlinstaller").append(lb);
-		
-		//install wget 
-		sb.append(offset).append(offset).append("- ").append("wgetinstaller").append(lb);
-		
-		//second play adding the designated roles
-		sb.append(lb);
-		sb.append("- hosts: ").append(ipaddress).append(lb);
-		sb.append(offset).append("remote_user: ubuntu").append(lb);
-		sb.append(offset).append("become: yes").append(lb);
-		sb.append(offset).append("vars_files: ").append(lb);
-		for (Path variablepath: variables) {
-			sb.append(offset).append(offset).append("- ").append(variablepath.toAbsolutePath().toString()).append(lb);
-		}
-		sb.append(offset).append("roles:").append(lb);
-		
-		for (String role: roles) {
-			sb.append(offset).append(offset).append("- ").append(role).append(lb);
-		}
-		
-		FileUtils.writeStringToFile(path.toFile(), sb.toString(), (Charset) null);
-		return path;
-	}
+
 	
 	/**
 	 * Creates an Ansible configuration at the given path linking to a private key file given by a path.
@@ -406,6 +350,15 @@ public final class AnsibleHelper {
 	
 	public boolean isPlacedOnContainer(Resource resource) {
 		return getCompute(resource) instanceof Container;
+	}
+	
+	public String getSshKey(Resource resource) {
+		for(MixinBase mixB: resource.getParts()) {
+			if(mixB instanceof Ssh_key) {
+				return ((Ssh_key) mixB).getOcciCredentialsSshPublickey();
+			}
+		}
+		return "";
 	}
 	
 	public Ansibleendpoint getAnsibleEndboint(Resource resource) {
