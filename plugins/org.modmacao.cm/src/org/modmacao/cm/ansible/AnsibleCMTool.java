@@ -34,7 +34,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(app, roles, "DEPLOY");
+			status = executeRoles(app, roles, "DEPLOY").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -51,7 +51,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(app, roles, "CONFIGURE");
+			status = executeRoles(app, roles, "CONFIGURE").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -69,7 +69,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(app, roles, "START");
+			status = executeRoles(app, roles, "START").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -86,7 +86,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(app, roles, "STOP");
+			status = executeRoles(app, roles, "STOP").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -105,7 +105,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(app, roles, "UNDEPLOY");
+			status = executeRoles(app, roles, "UNDEPLOY").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -123,7 +123,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(comp, roles, "DEPLOY");
+			status = executeRoles(comp, roles, "DEPLOY").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -140,7 +140,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(comp, roles, "CONFIGURE");
+			status = executeRoles(comp, roles, "CONFIGURE").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -157,7 +157,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(comp, roles, "START");
+			status = executeRoles(comp, roles, "START").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -174,7 +174,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(comp, roles, "STOP");
+			status = executeRoles(comp, roles, "STOP").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -191,7 +191,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		int status = -1;
 		
 		try {
-			status = executeRoles(comp, roles, "UNDEPLOY");
+			status = executeRoles(comp, roles, "UNDEPLOY").getExitValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -226,7 +226,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		return rolepath;
 	}
 
-	private int executeRoles(Resource resource, List<String> roles, String task) throws Exception{
+	private AnsibleReturnState executeRoles(Resource resource, List<String> roles, String task) throws Exception{
 		AnsibleHelper helper = new AnsibleHelper();
 
 		String ipaddress = "";
@@ -306,13 +306,8 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		}
 		
 		if (state.getStateMessage() != null) {
-			LOGGER.info("Received state message.");
+			LOGGER.info("Received state message.(" + state.getExitValue() +")");
 			LOGGER.info(state.getStateMessage());
-			if (resource instanceof Component) {
-				((Component) resource).setOcciComponentStateMessage(state.getStateMessage());
-			} else if (resource instanceof Application) {
-				((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
-			}
 		}
 		
 		if(state.getStateMessage().contains("UNREACHABLE!")) {
@@ -321,14 +316,19 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 						+ "Retrying Connection after: " + RETRYSLEEP);
 				Thread.sleep(RETRYSLEEP);
 				notReachableRetries++;
-				executeRoles(resource, roles, task);
+				state = executeRoles(resource, roles, task);
 			} else {
 				LOGGER.info("Connection could not be established after  " + MAXREACHEABLERETRIES + " tries!");
-				return state.getExitValue();
 			}
 		}
 		notReachableRetries = 0;
-		return state.getExitValue();
+		
+		if (resource instanceof Component) {
+			((Component) resource).setOcciComponentStateMessage(state.getStateMessage());
+		} else if (resource instanceof Application) {
+			((Application) resource).setOcciAppStateMessage(state.getStateMessage());	
+		}
+		return state;
 	}
 
 }

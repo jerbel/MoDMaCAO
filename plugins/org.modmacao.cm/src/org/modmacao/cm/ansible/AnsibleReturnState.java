@@ -16,8 +16,4 @@ public class AnsibleReturnState {
 		this.exitValue = exitValue;
 		this.stateMessage = stateMessage;
 	}
-	
-	
-	
-	
 }
