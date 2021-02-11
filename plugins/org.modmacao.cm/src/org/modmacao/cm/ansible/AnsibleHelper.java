@@ -202,6 +202,7 @@ public final class AnsibleHelper {
 		System.out.println("Command zum starten des Playbooks: ");
 		System.out.println(command + " --inventory " + inventory.toString() + " -e " + " task=" + task + " " + playbook.toString() + " " + options);
 		
+		
 		if (options == null) {
 			process = new ProcessBuilder(command, "--inventory", inventory.toString(),
 				"-e", "task=" + task, 
@@ -212,6 +213,8 @@ public final class AnsibleHelper {
 					"-e", "task=" + task, 
 					playbook.toString(), options).start();
 		}
+		
+		
 		
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(new BufferedReader(new InputStreamReader(process.getInputStream()))
@@ -558,5 +561,9 @@ public final class AnsibleHelper {
 		process.waitFor();
 		process.destroy();
 		return process.exitValue() == 0;
+	}
+	
+	private static int getRandomInt(int min, int max) {
+		return (int) (Math.random() * ((min - max) + 1)) + min;
 	}
 }

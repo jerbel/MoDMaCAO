@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
@@ -24,6 +25,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 	private static final int MAXREACHEABLERETRIES = 2;
 	private static final int RETRYSLEEP = 10000;
 	static Logger LOGGER = LoggerFactory.getLogger(AnsibleCMTool.class);
+	private static final boolean ISDUMMY = isDummy();
 
 	@Override
 	public int deploy(Application app) {
@@ -199,10 +201,6 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 
 	}
 	
-	private String getUser() {
-		return new AnsibleHelper().getProperties().getProperty("ansible_user");
-	}
-	
 	private List<String> getRoles(Resource resource) {
 		List<String> roles = new ArrayList<String>();
 		for (MixinBase mixin : resource.getParts()) {
@@ -229,6 +227,13 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 	private AnsibleReturnState executeRoles(Resource resource, List<String> roles, String task) throws Exception{
 		AnsibleHelper helper = new AnsibleHelper();
 
+		if(ISDUMMY) {
+			int ran = getRandomInt(getSimMin(), getSimMax());
+			LOGGER.info("Simulate " + task +": " + resource.getTitle() + " | Running: " + ran + "ms");
+			Thread.sleep(ran);
+			return new AnsibleReturnState(0, "Performed dummy simulation for: " + resource.getTitle());
+		}
+		
 		String ipaddress = "";
 		if(helper.isPlacedOnContainer(resource)) {
 			Container container = (Container)helper.getCompute(resource);
@@ -292,8 +297,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		LOGGER.info("Executing role " + roles + " with task " + task + " on host " + ipaddress + " with user " + user + ".");
 		
 		AnsibleReturnState state = null;
-		
-			 
+			
 		if(helper.isPlacedOnContainer(resource) 
 				&& DockerClientManager.checkSshPortKonfiguration((Container)helper.getCompute(resource)) == false) {
 			Machine machine = helper.getMachine((Container)helper.getCompute(resource));
@@ -331,4 +335,29 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		return state;
 	}
 
+	private static int getRandomInt(int min, int max) {
+		return  ThreadLocalRandom.current().nextInt(min, max + 1);
+	}
+	
+	private String getUser() {
+		return new AnsibleHelper().getProperties().getProperty("ansible_user");
+	}
+	
+	private static boolean isDummy() {
+		String simulation = new AnsibleHelper().getProperties().getProperty("simulation");
+		LOGGER.info("SIMULATION: " + simulation);
+		if(simulation.equals("true")) {
+			return true;
+		}
+		return false;
+	}
+	
+	private int getSimMin() {
+		return Integer.parseInt(new AnsibleHelper().getProperties().getProperty("simulation_min"));
+	}
+	
+	private int getSimMax() {
+		return Integer.parseInt(new AnsibleHelper().getProperties().getProperty("simulation_max"));
+	}
+	
 }
