@@ -209,11 +209,19 @@ public class ComponentConnector extends org.modmacao.occi.platform.impl.Componen
 		switch(getOcciComponentState().getValue()) {
 
 		case Status.INACTIVE_VALUE:
+			
+			
 			LOGGER.debug("Fire transition(state=inactive, action=\"start\")...");
 			for (Component component: this.getExecutionDependendComps()) {
 				component.start();
 			}
 			
+			//Small workaround to represent accurate state of task executable
+			if(isExecutable()) {
+				LOGGER.info("                       Set Executable to ACTIVE!");
+				setOcciComponentState(Status.ACTIVE);
+			}
+	
 			status = cmtool.start(this);
 						
 			if (status == 0 && assertCompsStatusEquals(getExecutionDependendComps(), Status.ACTIVE))
@@ -251,6 +259,8 @@ public class ComponentConnector extends org.modmacao.occi.platform.impl.Componen
 			break;
 		}
 	}
+	
+	
 	// End of user code
 	// Start of user code Component_Kind_configure_action
 	/**
@@ -358,5 +368,16 @@ public class ComponentConnector extends org.modmacao.occi.platform.impl.Componen
 		}	
 		return true;
 	}
+	
+	private boolean isExecutable() {
+		for(Link rlink: this.getRlinks()) {
+			if(rlink.getKind().getScheme().equals("http://schemas.ugoe.cs.rwm/workflow#")
+					&& rlink.getKind().getTitle().toLowerCase().equals("executionlink")){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 
 }	
