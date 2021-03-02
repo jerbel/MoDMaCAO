@@ -75,7 +75,7 @@ links:
       [/for]
       [/if]
       [if (link.target.oclIsKindOf(platform::Component))]
-      [let host : Resource = link.target.links
+      [let host : Compute = link.target.links
            ->select(l : Link | l.kind.term = 'placementlink')
            ->first().target ]
       [let ipaddresses : Sequence(String) = host.links->select(l: Link | l.oclIsKindOf(infrastructure::Networkinterface))
@@ -90,7 +90,7 @@ links:
         - [container.ipaddress/]
         [/let]
       [/if]
-      hostname: [host.title/]
+      hostname: [host.occiComputeHostname/]
       [/let]
       [/let]
       [/if]
@@ -129,7 +129,7 @@ rlinks:
       [/for]
       [/if]
       [if (rlink.source.oclIsKindOf(platform::Component))]
-      [let host : Resource = rlink.source.links
+      [let host : Compute = rlink.source.links
            ->select(l : Link | l.kind.term = 'placementlink')
            ->first().target ]
       [let ipaddresses : Sequence(String) = host.links->select(l: Link | l.oclIsKindOf(infrastructure::Networkinterface))
@@ -139,7 +139,12 @@ rlinks:
       [for (ip : String | ipaddresses) ]
         - [ip/]
       [/for]
-      hostname: [host.title/]
+      [if (host.kind.term = 'container')]
+        [let container : Container = host]
+        - [container.ipaddress/]
+        [/let]
+      [/if]
+      hostname: [host.occiComputeHostname/]
       [/let]
       [/let]
       [/if]
