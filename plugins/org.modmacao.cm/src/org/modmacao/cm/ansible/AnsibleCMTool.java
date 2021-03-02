@@ -4,17 +4,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.eclipse.cmf.occi.core.MixinBase;
 import org.eclipse.cmf.occi.core.Resource;
 import org.eclipse.cmf.occi.docker.Container;
 import org.eclipse.cmf.occi.docker.Machine;
-import org.eclipse.cmf.occi.docker.connector.helpers.DockerMachineHelper;
 import org.eclipse.cmf.occi.docker.connector.manager.DockerClientManager;
-import org.eclipse.cmf.occi.infrastructure.Compute;
 import org.modmacao.ansibleconfiguration.Ansibleendpoint;
 import org.modmacao.cm.ConfigurationManagementTool;
+import org.modmacao.cm.simulation.AbsSimulation;
+import org.modmacao.cm.simulation.ComponentSimulation;
 import org.modmacao.occi.platform.Application;
 import org.modmacao.occi.platform.Component;
 import org.slf4j.Logger;
@@ -226,12 +225,21 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 
 	private AnsibleReturnState executeRoles(Resource resource, List<String> roles, String task) throws Exception{
 		AnsibleHelper helper = new AnsibleHelper();
-
+		if(AbsSimulation.getSimulationMixin(resource) != null) {
+				System.out.println("Simulation Mixin Detected!");
+				if(AbsSimulation.getSimWeight(resource) < 100) {
+					ComponentSimulation sim = new ComponentSimulation(resource);
+					AnsibleReturnState rs = sim.startSimulation();
+					return rs;
+				}
+		}
 		if(ISDUMMY) {
-			int ran = getRandomInt(getSimMin(), getSimMax());
-			LOGGER.info("Simulate " + task +": " + resource.getTitle() + " | Running: " + ran + "ms");
-			Thread.sleep(ran);
-			return new AnsibleReturnState(0, "Performed dummy simulation for: " + resource.getTitle());
+			if(AbsSimulation.getSimulationMixin(resource) != null
+				 	&& AbsSimulation.getSimWeight(resource) >= 100) {
+				
+			} else {
+				return new AnsibleReturnState(0, "Dummy detected");
+			}
 		}
 		
 		String ipaddress = "";
@@ -334,10 +342,6 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		}
 		return state;
 	}
-
-	private static int getRandomInt(int min, int max) {
-		return  ThreadLocalRandom.current().nextInt(min, max + 1);
-	}
 	
 	private String getUser() {
 		return new AnsibleHelper().getProperties().getProperty("ansible_user");
@@ -345,19 +349,11 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 	
 	private static boolean isDummy() {
 		String simulation = new AnsibleHelper().getProperties().getProperty("simulation");
-		LOGGER.info("SIMULATION: " + simulation);
+		LOGGER.info("Configuration management dummy: " + simulation);
 		if(simulation.equals("true")) {
 			return true;
 		}
 		return false;
 	}
-	
-	private int getSimMin() {
-		return Integer.parseInt(new AnsibleHelper().getProperties().getProperty("simulation_min"));
-	}
-	
-	private int getSimMax() {
-		return Integer.parseInt(new AnsibleHelper().getProperties().getProperty("simulation_max"));
-	}
-	
+		
 }
