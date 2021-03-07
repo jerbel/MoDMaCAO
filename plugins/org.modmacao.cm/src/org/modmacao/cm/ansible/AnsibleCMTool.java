@@ -227,7 +227,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		AnsibleHelper helper = new AnsibleHelper();
 		if(AbsSimulation.getSimulationMixin(resource) != null) {
 				System.out.println("Simulation Mixin Detected!");
-				if(AbsSimulation.getSimWeight(resource) < 100) {
+				if(AbsSimulation.getSimWeight(resource) < 3) {
 					ComponentSimulation sim = new ComponentSimulation(resource);
 					AnsibleReturnState rs = sim.startSimulation();
 					return rs;
@@ -235,7 +235,7 @@ public class AnsibleCMTool implements ConfigurationManagementTool {
 		}
 		if(ISDUMMY) {
 			if(AbsSimulation.getSimulationMixin(resource) != null
-				 	&& AbsSimulation.getSimWeight(resource) >= 100) {
+				 	&& AbsSimulation.getSimWeight(resource) < 3) {
 				
 			} else {
 				return new AnsibleReturnState(0, "Dummy detected");

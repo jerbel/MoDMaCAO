@@ -22,15 +22,13 @@ public class ComponentSimulation extends AbsSimulation {
 
 	@Override
 	public AnsibleReturnState startSimulation() {
-		if(simWeight < 25) {
+		if(simWeight  == 0) {
 			System.out.println("State sim only triggered");
-		} else if (simWeight >= 25 && simWeight < 50) {
-			System.out.println("Simulate Random Execution Time");
+		} else if (simWeight == 1) {
+			System.out.println("Simulate Execution Time");
 			simulateRandomExecutionTime();
-		} else if (simWeight >= 50 && simWeight < 75) {
-		
-		} else if (simWeight >= 75 && simWeight < 100) {
-			
+		} else if (simWeight == 2) {
+			System.out.println("Simulate Load");
 		}
 		
 		return new AnsibleReturnState(0, "Performed dummy simulation for: " + res.getTitle());

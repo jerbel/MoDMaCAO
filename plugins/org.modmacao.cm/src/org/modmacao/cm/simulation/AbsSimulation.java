@@ -15,7 +15,7 @@ public abstract class AbsSimulation {
 	
 	public static int getSimWeight(Resource res) {
 		for(AttributeState attr: getSimulationMixin(res).getAttributes()) {
-			if(attr.getName().toLowerCase().equals("simulation.weight")) {
+			if(attr.getName().toLowerCase().equals("sim.level")) {
 				return Integer.parseInt(attr.getValue());
 			}
 			
@@ -27,7 +27,7 @@ public abstract class AbsSimulation {
 	
 	public static MixinBase getSimulationMixin(Resource res) {
 		for(MixinBase mixB: res.getParts()) {
-			if(mixB.getMixin().getTerm().equals("simulation")) {
+			if(mixB.getMixin().getTerm().equals("componentsim")) {
 				return mixB;
 			}
 		}
