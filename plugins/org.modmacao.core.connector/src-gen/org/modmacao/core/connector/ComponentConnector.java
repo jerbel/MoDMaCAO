@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import modmacao.Executiondependency;
 import modmacao.Installationdependency;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -358,8 +359,9 @@ public class ComponentConnector extends org.modmacao.occi.platform.impl.Componen
 	}
 	
 	private boolean assertCompsStatusEquals(List<Component> components, Status status) {
+		List<String> acceptableStatus = getAcceptableStatus(status);
 		for (Component component: components) {
-			if (component.getOcciComponentState().getValue() != status.getValue()) {
+			if (acceptableStatus.contains(component.getOcciComponentState().getLiteral()) == false) {
 				LOGGER.debug("Missmatching state of component " + component.getTitle() + " detected. "
 						+ "Expected " + status.getName() + " but was " 
 						+ component.getOcciComponentState().getName() + ".");
@@ -367,6 +369,22 @@ public class ComponentConnector extends org.modmacao.occi.platform.impl.Componen
 			}
 		}	
 		return true;
+	}
+	
+	private List<String> getAcceptableStatus(Status status) {
+		List<String> acceptableStatus = new ArrayList<String>();
+		switch(status.getName()) {
+			case "deployed":
+				acceptableStatus.add("deployed");
+				acceptableStatus.add("inactive");
+				acceptableStatus.add("active");
+			case "inactive":
+				acceptableStatus.add("inactive");
+				acceptableStatus.add("active");
+			case "active":
+				acceptableStatus.add("active");
+		}
+		return acceptableStatus;
 	}
 	
 	private boolean isExecutable() {
